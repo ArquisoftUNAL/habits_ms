@@ -1,20 +1,24 @@
-use diesel::pg::PgConnection;
-use diesel::prelude::*;
+use diesel::{
+    prelude::*,
+    r2d2::{ConnectionManager, Pool},
+};
 use dotenvy::dotenv;
-use std::env;
-use std::fmt;
+use std::{env, error::Error};
 
-pub fn establish_connection() -> PgConnection {
+pub fn establish_connection() -> Result<Pool<ConnectionManager<PgConnection>>, Box<dyn Error>> {
     dotenv().ok();
 
-    let DATABASE_URL : String = format!(
+    let database_url: String = format!(
         "postgres://{}:{}@{}:{}/{}",
-        env::var("DATABASE_USER").unwrap(),
-        env::var("DATABASE_PASSWORD").unwrap(),
-        env::var("DATABASE_HOST").unwrap(),
-        env::var("DATABASE_PORT").unwrap(),
-        env::var("DATABASE_NAME").unwrap()
+        env::var("POSTGRES_USER").unwrap(),
+        env::var("POSTGRES_PASSWORD").unwrap(),
+        env::var("POSTGRES_HOST").unwrap(),
+        env::var("POSTGRES_PORT").unwrap(),
+        env::var("POSTGRES_DB").unwrap()
     );
-    PgConnection::establish(&DATABASE_URL)
-        .unwrap_or_else(|_| panic!("Error connecting to {}", DATABASE_URL))
+
+    let manager = ConnectionManager::<PgConnection>::new(database_url);
+    let pool = Pool::builder().build(manager)?;
+
+    Ok(pool)
 }
