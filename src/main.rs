@@ -12,8 +12,6 @@ mod schema;
 #[tokio::main]
 async fn main() {
     let pool = db::establish_connection().expect("Failed to create pool");
-
-    warp::serve(routes::get_routes(pool))
-        .run(([127, 0, 0, 1], 3030))
-        .await;
+    let routes = routes::get_routes(pool);
+    warp::serve(routes).run(([127, 0, 0, 1], 3030)).await;
 }

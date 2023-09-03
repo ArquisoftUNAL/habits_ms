@@ -4,7 +4,7 @@ use diesel::prelude::*;
 use serde_derive::Deserialize;
 use uuid::Uuid;
 
-#[derive(Debug, Deserialize, Queryable, Selectable)]
+#[derive(Debug, Deserialize, Queryable, Selectable, Insertable)]
 #[diesel(table_name=crate::schema::habit)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct Habit {

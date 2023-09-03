@@ -12,3 +12,5 @@ RUN cargo install --path .
 WORKDIR /src/
 
 CMD bash -c "diesel setup && cargo run"
+
+EXPOSE 3030
