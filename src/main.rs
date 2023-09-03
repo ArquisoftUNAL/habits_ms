@@ -8,10 +8,13 @@ mod db;
 mod models;
 mod routes;
 mod schema;
+mod utils;
+
+#[macro_use]
+extern crate lazy_static;
 
 #[tokio::main]
 async fn main() {
-    let pool = db::establish_connection().expect("Failed to create pool");
-    let routes = routes::get_routes(pool);
+    let routes = routes::get_routes();
     warp::serve(routes).run(([127, 0, 0, 1], 3030)).await;
 }

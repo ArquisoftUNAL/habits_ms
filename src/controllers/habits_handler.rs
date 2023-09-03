@@ -1,4 +1,5 @@
 use crate::{
+    db::POSTGRES_POOL as pool,
     models::api::{GeneralResponse, HabitCreateRequest},
     models::database::Habit,
     schema::*,
@@ -10,10 +11,7 @@ use diesel::{
 
 use warp::{reply::json, Rejection, Reply};
 
-pub async fn create_habit_handler(
-    pool: Pool<ConnectionManager<PgConnection>>,
-    body: HabitCreateRequest,
-) -> Result<impl Reply, Rejection> {
+pub async fn create_habit_handler(body: HabitCreateRequest) -> Result<impl Reply, Rejection> {
     // Create model from request body
     let habit = Habit {
         id: uuid::Uuid::new_v4(),
@@ -46,9 +44,7 @@ pub async fn create_habit_handler(
     Ok(json(&response))
 }
 
-pub async fn get_habits_handler(
-    pool: Pool<ConnectionManager<PgConnection>>,
-) -> Result<impl Reply, Rejection> {
+pub async fn get_habits_handler() -> Result<impl Reply, Rejection> {
     let response = GeneralResponse {
         status: 200,
         message: "Gotten habits successfully".to_string(),

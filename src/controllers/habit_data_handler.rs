@@ -10,9 +10,7 @@ use diesel::{
 
 use warp::{reply::json, Rejection, Reply};
 
-pub async fn add_habit_data(
-    pool: Pool<ConnectionManager<PgConnection>>,
-) -> Result<impl Reply, Rejection> {
+pub async fn add_habit_data() -> Result<impl Reply, Rejection> {
     let response = GeneralResponse {
         status: 200,
         message: "Gotten habits successfully".to_string(),
@@ -20,10 +18,7 @@ pub async fn add_habit_data(
     Ok(json(&response))
 }
 
-pub async fn get_habit_data(
-    pool: Pool<ConnectionManager<PgConnection>>,
-    habitId: uuid::Uuid,
-) -> Result<impl Reply, Rejection> {
+pub async fn get_habit_data(habitId: uuid::Uuid) -> Result<impl Reply, Rejection> {
     let response = GeneralResponse {
         status: 200,
         message: "Gotten habits successfully".to_string(),

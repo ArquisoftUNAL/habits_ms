@@ -5,20 +5,24 @@ use diesel::{
 use dotenvy::dotenv;
 use std::{env, error::Error};
 
-pub fn establish_connection() -> Result<Pool<ConnectionManager<PgConnection>>, Box<dyn Error>> {
-    dotenv().ok();
+pub type PostgresPool = Pool<ConnectionManager<PgConnection>>;
 
-    let database_url: String = format!(
-        "postgres://{}:{}@{}:{}/{}",
-        env::var("POSTGRES_USER").unwrap(),
-        env::var("POSTGRES_PASSWORD").unwrap(),
-        env::var("POSTGRES_HOST").unwrap(),
-        env::var("POSTGRES_PORT").unwrap(),
-        env::var("POSTGRES_DB").unwrap()
-    );
+lazy_static! {
+    pub static ref POSTGRES_POOL: PostgresPool = {
+        dotenv().ok();
 
-    let manager = ConnectionManager::<PgConnection>::new(database_url);
-    let pool = Pool::builder().build(manager)?;
+        let database_url: String = format!(
+            "postgres://{}:{}@{}:{}/{}",
+            env::var("POSTGRES_USER").unwrap(),
+            env::var("POSTGRES_PASSWORD").unwrap(),
+            env::var("POSTGRES_HOST").unwrap(),
+            env::var("POSTGRES_PORT").unwrap(),
+            env::var("POSTGRES_DB").unwrap()
+        );
 
-    Ok(pool)
+        let manager = ConnectionManager::<PgConnection>::new(database_url);
+        let pool = Pool::builder().build(manager).unwrap();
+
+        pool
+    };
 }

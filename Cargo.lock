@@ -10,6 +10,7 @@ dependencies = [
  "chrono",
  "diesel",
  "dotenvy",
+ "lazy_static",
  "mobc",
  "mobc-postgres",
  "parking_lot 0.10.2",

@@ -10,9 +10,7 @@ use diesel::{
 
 use warp::{reply::json, Rejection, Reply};
 
-pub async fn insert_recurrency(
-    pool: Pool<ConnectionManager<PgConnection>>,
-) -> Result<impl Reply, Rejection> {
+pub async fn insert_recurrency() -> Result<impl Reply, Rejection> {
     let response = GeneralResponse {
         status: 200,
         message: "Gotten habits successfully".to_string(),
@@ -20,10 +18,7 @@ pub async fn insert_recurrency(
     Ok(json(&response))
 }
 
-pub async fn get_habit_recurrencies(
-    pool: Pool<ConnectionManager<PgConnection>>,
-    habitId: uuid::Uuid,
-) -> Result<impl Reply, Rejection> {
+pub async fn get_habit_recurrencies(habitId: uuid::Uuid) -> Result<impl Reply, Rejection> {
     let response = GeneralResponse {
         status: 200,
         message: "Gotten habits successfully".to_string(),
