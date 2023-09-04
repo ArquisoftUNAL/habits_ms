@@ -1,10 +1,10 @@
 use bigdecimal::BigDecimal;
 use chrono::prelude::*;
 use diesel::prelude::*;
-use serde_derive::Deserialize;
+use serde_derive::{Deserialize, Serialize};
 use uuid::Uuid;
 
-#[derive(Debug, Deserialize, Queryable, Selectable, Insertable)]
+#[derive(Debug, Deserialize, Queryable, Selectable, Insertable, Serialize, AsChangeset)]
 #[diesel(table_name=crate::schema::habit)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct Habit {
@@ -18,22 +18,22 @@ pub struct Habit {
     pub description: String,
 
     #[diesel(column_name = "hab_created_at")]
-    pub createdAt: chrono::NaiveDateTime,
+    pub created_at: chrono::NaiveDateTime,
 
     #[diesel(column_name = "hab_updated_at")]
-    pub updatedAt: chrono::NaiveDateTime,
+    pub updated_at: chrono::NaiveDateTime,
 
     #[diesel(column_name = "hab_is_favorite")]
-    pub isFavorite: bool,
+    pub is_favorite: bool,
 
     #[diesel(column_name = "hab_type")]
     pub kind: String,
 
     #[diesel(column_name = "user_id")]
-    pub userId: Uuid,
+    pub user_id: Uuid,
 }
 
-#[derive(Debug, Deserialize, Queryable, Associations, Selectable)]
+#[derive(Debug, Deserialize, Queryable, Selectable, Insertable, Serialize, AsChangeset)]
 #[diesel(belongs_to(Habit, foreign_key = hab_id))]
 #[diesel(table_name=crate::schema::habit_recurrency)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
@@ -42,16 +42,16 @@ pub struct HabitRecurrency {
     pub id: Uuid,
 
     #[diesel(column_name = "hab_id")]
-    pub habitId: Uuid,
+    pub habit_id: Uuid,
 
     #[diesel(column_name = "hab_rec_frequency_type")]
-    pub frequencyType: String,
+    pub frequency_type: String,
 
     #[diesel(column_name = "hab_rec_frequency_data")]
-    pub frequencyData: NaiveDateTime,
+    pub frequency_data: NaiveDateTime,
 }
 
-#[derive(Debug, Deserialize, Queryable, Associations, Selectable)]
+#[derive(Debug, Deserialize, Queryable, Selectable, Insertable, Serialize, AsChangeset)]
 #[diesel(belongs_to(HabitRecurrency, foreign_key = hab_rec_id))]
 #[diesel(table_name=crate::schema::habit_data_collected)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
@@ -62,9 +62,9 @@ pub struct HabitDataCollected {
     #[diesel(column_name = "hab_dat_amount")]
     pub amount: BigDecimal,
 
-    #[diesel(column_name = "hab_collected_at")]
-    pub collecteddAt: NaiveDateTime,
+    #[diesel(column_name = "hab_dat_collected_at")]
+    pub collectedd_at: NaiveDateTime,
 
     #[diesel(column_name = "hab_rec_id")]
-    pub habitRecurrencyId: Uuid,
+    pub habit_recurrency_id: Uuid,
 }

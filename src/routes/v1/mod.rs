@@ -1,11 +1,15 @@
+pub mod habit_data_handler;
 pub mod habits_route;
+pub mod recurrency_route;
 
 use warp::filters::BoxedFilter;
 use warp::Filter;
 use warp::Reply;
 
 pub fn get_routes() -> BoxedFilter<(impl Reply,)> {
-    warp::path!("v1" / ..)
-        .and(habits_route::get_routes())
+    let v1 = warp::path("v1");
+    v1.and(habits_route::get_routes())
+        //     // .or(v1.and(recurrency_route::get_routes()))
+        //     // .or(v1.and(habit_data_handler::get_routes()))
         .boxed()
 }

@@ -3,12 +3,13 @@ use diesel::{
     r2d2::{ConnectionManager, Pool},
 };
 use dotenvy::dotenv;
-use std::{env, error::Error};
+use std::env;
 
 pub type PostgresPool = Pool<ConnectionManager<PgConnection>>;
 
 lazy_static! {
     pub static ref POSTGRES_POOL: PostgresPool = {
+        println!("Connecting to database");
         dotenv().ok();
 
         let database_url: String = format!(
@@ -21,8 +22,16 @@ lazy_static! {
         );
 
         let manager = ConnectionManager::<PgConnection>::new(database_url);
-        let pool = Pool::builder().build(manager).unwrap();
 
-        pool
+        let pool = Pool::builder().build(manager);
+
+        if pool.is_err() {
+            let error = pool.err().unwrap();
+            panic!("Error connecting to database: {}", error);
+        }
+
+        println!("Connected to database");
+
+        pool.unwrap()
     };
 }

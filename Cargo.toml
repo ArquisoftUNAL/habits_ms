@@ -1,22 +1,20 @@
 [package]
-name = "Activity"
+name = "activity"
 version = "0.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-warp = "0.2"
-mobc-postgres = { version = "0.5", features = ["with-chrono-0_4"] }
-mobc = "0.5"
-parking_lot = "0.10.0"
+warp = "0.3"
+parking_lot = "0.12.1"
 serde = { version = "1.0", features = ["derive"] }
 serde_derive = "1.0"
-tokio = { version = "0.2", features = ["macros"] }
+tokio = { version = "1.2", features = ["macros", "rt-multi-thread"] }
 chrono = { version = "0.4", features = ["serde"] }
 serde_json = "1.0"
 diesel = { version = "2.1.0", features = ["postgres", "uuid", "chrono", "r2d2", "numeric"] }
 dotenvy = "0.15.0"
-bigdecimal = { version = "0.2.0", features = ["serde"] }
+bigdecimal = { version = "0.4.1", features = ["serde"] }
 uuid = { version = "1.4.0", features = ["v4", "serde"] }
 lazy_static = "1.4.0"

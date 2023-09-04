@@ -6,5 +6,5 @@ CREATE TABLE habit (
     hab_updated_at TIMESTAMP NOT NULL,
     hab_type VARCHAR(10) NOT NULL,
     hab_is_favorite BOOLEAN NOT NULL,
-    user_id UUID NOT NULL UNIQUE
+    user_id UUID NOT NULL
 );
