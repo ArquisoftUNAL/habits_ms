@@ -1,0 +1,82 @@
+{
+	"info": {
+		"_postman_id": "f9fa8fd5-cbee-42c7-91fb-c3a6d9d74ffe",
+		"name": "Habitus",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25456599"
+	},
+	"item": [
+		{
+			"name": "HabitCreate",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Eat pizza\",\r\n    \"description\": \"For getting beauty!\",\r\n    \"is_favourite\": true,\r\n    \"kind\": \"Count\",\r\n    \"user_id\": \"12f54575-857a-4cdf-a53e-763f6351fe39\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3030/api/v1/habits/",
+					"host": [
+						"localhost"
+					],
+					"port": "3030",
+					"path": [
+						"api",
+						"v1",
+						"habits",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Habits",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3030/api/v1/habits/12f54575-857a-4cdf-a53e-763f6351fe39",
+					"host": [
+						"localhost"
+					],
+					"port": "3030",
+					"path": [
+						"api",
+						"v1",
+						"habits",
+						"12f54575-857a-4cdf-a53e-763f6351fe39"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "tests",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3030/api/v1/habits/",
+					"host": [
+						"localhost"
+					],
+					"port": "3030",
+					"path": [
+						"api",
+						"v1",
+						"habits",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

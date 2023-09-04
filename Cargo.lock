@@ -3,24 +3,6 @@
 version = 3
 
 [[package]]
-name = "activity"
-version = "0.1.0"
-dependencies = [
- "bigdecimal",
- "chrono",
- "diesel",
- "dotenvy",
- "lazy_static",
- "parking_lot",
- "serde",
- "serde_derive",
- "serde_json",
- "tokio",
- "uuid",
- "warp",
-]
-
-[[package]]
 name = "addr2line"
 version = "0.21.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -359,6 +341,24 @@ dependencies = [
  "tokio",
  "tokio-util",
  "tracing",
+]
+
+[[package]]
+name = "habitus_activities"
+version = "0.1.0"
+dependencies = [
+ "bigdecimal",
+ "chrono",
+ "diesel",
+ "dotenvy",
+ "lazy_static",
+ "parking_lot",
+ "serde",
+ "serde_derive",
+ "serde_json",
+ "tokio",
+ "uuid",
+ "warp",
 ]
 
 [[package]]
