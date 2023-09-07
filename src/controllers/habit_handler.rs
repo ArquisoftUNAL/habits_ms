@@ -1,6 +1,6 @@
 use crate::{
     db::POSTGRES_POOL as pool,
-    models::api::{GeneralResponse, HabitCreateRequest, HabitMultipleQuery},
+    models::api::{habit_api_models::*, *},
     models::database::Habit,
     schema::*,
 };
@@ -14,14 +14,15 @@ use uuid::Uuid;
 pub async fn create_habit_handler(body: HabitCreateRequest) -> Result<impl Reply, Rejection> {
     // Create model from request body
     let habit = Habit {
-        id: uuid::Uuid::new_v4(),
-        name: body.name,
-        description: body.description,
-        created_at: chrono::Local::now().naive_local(),
-        updated_at: chrono::Local::now().naive_local(),
-        is_favorite: body.is_favourite,
-        kind: body.kind,
-        user_id: body.user_id,
+        hab_id: uuid::Uuid::new_v4(),
+        hab_name: body.name,
+        hab_description: body.description,
+        hab_created_at: chrono::Local::now().naive_local(),
+        hab_updated_at: chrono::Local::now().naive_local(),
+        hab_is_favorite: body.is_favourite,
+        hab_type: body.kind,
+        usr_id: body.user_id,
+        cat_id: body.category,
     };
     // Add habit to database
     let result = diesel::insert_into(habit::table)
@@ -38,19 +39,20 @@ pub async fn create_habit_handler(body: HabitCreateRequest) -> Result<impl Reply
     }
 
     // Return response
-    let response = GeneralResponse {
+    let response = HabitCreateResponse {
         status: 201,
         message: "Habit created successfully".to_string(),
+        hab_id: habit.hab_id,
     };
     Ok(json(&response))
 }
 
 // READ Route
-pub async fn get_habits_handler(user_id: Uuid) -> Result<impl Reply, Rejection> {
+pub async fn get_habits_handler(user_id: String) -> Result<impl Reply, Rejection> {
     // Get habits from database
     let result = habit::table
         .select(Habit::as_select())
-        .filter(habit::user_id.eq(user_id))
+        .filter(habit::usr_id.eq(user_id))
         .load::<Habit>(&mut pool.get().unwrap());
 
     if result.is_err() {
@@ -74,7 +76,7 @@ pub async fn get_habits_handler(user_id: Uuid) -> Result<impl Reply, Rejection> 
     }
 
     // Return response
-    let response = HabitMultipleQuery {
+    let response = HabitMultipleQueryResponse {
         status: 200,
         habits: result,
     };
@@ -116,7 +118,8 @@ pub async fn update_habits_handler(
             habit::hab_description.eq(body.description),
             habit::hab_is_favorite.eq(body.is_favourite),
             habit::hab_type.eq(body.kind),
-            habit::user_id.eq(body.user_id),
+            habit::usr_id.eq(body.user_id),
+            habit::hab_updated_at.eq(chrono::Local::now().naive_local()),
         ))
         .execute(&mut pool.get().unwrap());
 

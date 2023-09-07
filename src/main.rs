@@ -3,6 +3,7 @@
 mod controllers;
 mod db;
 mod models;
+mod queries;
 mod routes;
 mod schema;
 mod utils;
@@ -16,5 +17,5 @@ async fn main() {
     let routes = routes::get_routes();
     print!("Preparing server to listen on port 3030");
 
-    warp::serve(routes).run(([127, 0, 0, 1], 3030)).await;
+    warp::serve(routes).run(([0, 0, 0, 0], 3030)).await;
 }

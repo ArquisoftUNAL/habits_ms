@@ -5,32 +5,36 @@ use serde_derive::{Deserialize, Serialize};
 use uuid::Uuid;
 
 #[derive(Debug, Deserialize, Queryable, Selectable, Insertable, Serialize, AsChangeset)]
+#[diesel(table_name=crate::schema::category)]
+#[diesel(check_for_backend(diesel::pg::Pg))]
+pub struct Category {
+    pub cat_id: Uuid,
+
+    pub cat_name: String,
+}
+
+#[derive(Debug, Deserialize, Queryable, Selectable, Insertable, Serialize, AsChangeset)]
+#[diesel(belongs_to(Category, foreign_key = cat_id))]
 #[diesel(table_name=crate::schema::habit)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct Habit {
-    #[diesel(column_name = "hab_id")]
-    pub id: Uuid,
+    pub hab_id: Uuid,
 
-    #[diesel(column_name = "hab_name")]
-    pub name: String,
+    pub hab_name: String,
 
-    #[diesel(column_name = "hab_description")]
-    pub description: String,
+    pub hab_description: String,
 
-    #[diesel(column_name = "hab_created_at")]
-    pub created_at: chrono::NaiveDateTime,
+    pub hab_created_at: chrono::NaiveDateTime,
 
-    #[diesel(column_name = "hab_updated_at")]
-    pub updated_at: chrono::NaiveDateTime,
+    pub hab_updated_at: chrono::NaiveDateTime,
 
-    #[diesel(column_name = "hab_is_favorite")]
-    pub is_favorite: bool,
+    pub hab_is_favorite: bool,
 
-    #[diesel(column_name = "hab_type")]
-    pub kind: String,
+    pub hab_type: String,
 
-    #[diesel(column_name = "user_id")]
-    pub user_id: Uuid,
+    pub usr_id: String,
+
+    pub cat_id: Uuid,
 }
 
 #[derive(Debug, Deserialize, Queryable, Selectable, Insertable, Serialize, AsChangeset)]
@@ -38,17 +42,13 @@ pub struct Habit {
 #[diesel(table_name=crate::schema::habit_recurrency)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct HabitRecurrency {
-    #[diesel(column_name = "hab_rec_id")]
-    pub id: Uuid,
+    pub hab_rec_id: Uuid,
 
-    #[diesel(column_name = "hab_id")]
-    pub habit_id: Uuid,
+    pub hab_id: Uuid,
 
-    #[diesel(column_name = "hab_rec_frequency_type")]
-    pub frequency_type: String,
+    pub hab_rec_freq_type: String,
 
-    #[diesel(column_name = "hab_rec_frequency_data")]
-    pub frequency_data: NaiveDateTime,
+    pub hab_rec_freq_data: NaiveDateTime,
 }
 
 #[derive(Debug, Deserialize, Queryable, Selectable, Insertable, Serialize, AsChangeset)]
@@ -56,15 +56,11 @@ pub struct HabitRecurrency {
 #[diesel(table_name=crate::schema::habit_data_collected)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct HabitDataCollected {
-    #[diesel(column_name = "hab_dat_id")]
-    pub id: Uuid,
+    pub hab_dat_id: Uuid,
 
-    #[diesel(column_name = "hab_dat_amount")]
-    pub amount: BigDecimal,
+    pub hab_dat_amount: BigDecimal,
 
-    #[diesel(column_name = "hab_dat_collected_at")]
-    pub collectedd_at: NaiveDateTime,
+    pub hab_dat_collected_at: NaiveDateTime,
 
-    #[diesel(column_name = "hab_rec_id")]
-    pub habit_recurrency_id: Uuid,
+    pub hab_rec_id: Uuid,
 }

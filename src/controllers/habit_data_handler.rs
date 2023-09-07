@@ -1,7 +1,7 @@
 use crate::{
     db::POSTGRES_POOL as pool,
     models::{
-        api::{GeneralResponse, HabitDataMultipleQuery, HabitDataRequest},
+        api::{data_api_models::*, *},
         database::HabitDataCollected,
     },
     schema::*,
@@ -19,10 +19,10 @@ pub async fn create_habit_data_handler(
 ) -> Result<impl Reply, Rejection> {
     // Create model from request body
     let data = HabitDataCollected {
-        id: uuid::Uuid::new_v4(),
-        amount: body.amount,
-        collectedd_at: chrono::Local::now().naive_local(),
-        habit_recurrency_id: recurrency_id,
+        hab_dat_id: uuid::Uuid::new_v4(),
+        hab_dat_amount: body.amount,
+        hab_dat_collected_at: chrono::Local::now().naive_local(),
+        hab_rec_id: recurrency_id,
     };
     // Add habit to database
     let result = diesel::insert_into(habit_data_collected::table)
@@ -111,15 +111,15 @@ pub async fn delete_habit_data_handler(habit_data_id: Uuid) -> Result<impl Reply
 // UPDATE (PATCH) Route
 pub async fn update_habit_data_handler(
     habit_data_id: Uuid,
-    body: HabitDataCollected,
+    body: HabitDataRequest,
 ) -> Result<impl Reply, Rejection> {
     let result = diesel::update(
         habit_data_collected::table.filter(habit_data_collected::hab_dat_id.eq(habit_data_id)),
     )
     .set((
         habit_data_collected::hab_dat_amount.eq(body.amount),
-        habit_data_collected::hab_dat_collected_at.eq(body.collectedd_at),
-        habit_data_collected::hab_rec_id.eq(body.habit_recurrency_id),
+        habit_data_collected::hab_dat_collected_at.eq(chrono::Local::now().naive_local()),
+        habit_data_collected::hab_rec_id.eq(body.recurrency_id),
     ))
     .execute(&mut pool.get().unwrap());
 

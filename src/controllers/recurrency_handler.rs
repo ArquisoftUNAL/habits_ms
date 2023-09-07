@@ -1,7 +1,7 @@
 use crate::{
     db::POSTGRES_POOL as pool,
     models::{
-        api::{GeneralResponse, RecurrencesMultipleQuery, RecurrencyCreateRequest},
+        api::{recurrency_api_models::*, *},
         database::HabitRecurrency,
     },
     schema::*,
@@ -19,10 +19,10 @@ pub async fn create_recurrency_handler(
 ) -> Result<impl Reply, Rejection> {
     // Create model from request body
     let recurrency = HabitRecurrency {
-        id: uuid::Uuid::new_v4(),
-        frequency_type: body.frequency_type,
-        frequency_data: body.frequency_data,
-        habit_id,
+        hab_rec_id: uuid::Uuid::new_v4(),
+        hab_rec_freq_type: body.frequency_type,
+        hab_rec_freq_data: body.frequency_data,
+        hab_id: habit_id,
     };
     // Add habit to database
     let result = diesel::insert_into(habit_recurrency::table)
@@ -110,8 +110,8 @@ pub async fn update_recurrence_handler(
     )
     .set((
         habit_recurrency::hab_id.eq(body.habit_id),
-        habit_recurrency::hab_rec_frequency_type.eq(body.frequency_type),
-        habit_recurrency::hab_rec_frequency_data.eq(body.frequency_data),
+        habit_recurrency::hab_rec_freq_type.eq(body.frequency_type),
+        habit_recurrency::hab_rec_freq_data.eq(body.frequency_data),
     ))
     .execute(&mut pool.get().unwrap());
 
