@@ -4,23 +4,21 @@ use serde_derive::{Deserialize, Serialize};
 // use bigdecimal::BigDecimal;
 use uuid::Uuid;
 
-#[derive(Debug, Serialize)]
-pub struct HabitMultipleQueryResponse {
-    pub status: i16,
+use validator::Validate;
 
-    pub habits: Vec<Habit>,
-}
-
-#[derive(Debug, Deserialize)]
-pub struct HabitCreateRequest {
+#[derive(Debug, Deserialize, Validate)]
+pub struct HabitCreateSchema {
+    #[validate(length(min = 1, max = 255))]
     pub name: String,
 
+    #[validate(length(min = 1, max = 255))]
     pub description: String,
 
     pub is_favourite: bool,
 
     pub kind: String,
 
+    #[validate(length(min = 6, max = 6))]
     pub color: String,
 
     pub units: String,
@@ -32,9 +30,21 @@ pub struct HabitCreateRequest {
 
 #[derive(Debug, Serialize)]
 pub struct HabitCreateResponse {
-    pub status: i16,
-
     pub message: String,
 
-    pub hab_id: Uuid,
+    pub id: Uuid,
+}
+
+#[derive(Debug, Serialize)]
+pub struct HabitMultipleQueryResponse {
+    pub message: String,
+
+    pub habits: Vec<Habit>,
+}
+
+#[derive(Debug, Serialize)]
+pub struct HabitSingleQueryResponse {
+    pub message: String,
+
+    pub habit: Habit,
 }

@@ -1,53 +1,66 @@
 use crate::{
-    db::POSTGRES_POOL as pool, models::api::CategoryCreateSchema, models::database::Habit,
+    db::POSTGRES_POOL as pool,
+    models::{api::habit_api_models::*, database::Habit},
     schema::*,
 };
 
 use diesel::{prelude::*, result::Error};
-
-use warp::{reply::json, Rejection, Reply};
 
 use uuid::Uuid;
 
 // TODO: Implement custom errors
 
 // Get all of user habits
-pub async fn get_all_user_habits(id: String) -> Result<Vec<Category>, Error> {
-    habits::table
+pub async fn get_all_user_habits(id: &String) -> Result<Vec<Habit>, Error> {
+    habit::table
         .select(Habit::as_select())
         .filter(habit::usr_id.eq(id))
-        .load::<Category>(&mut pool.get().unwrap())
+        .load::<Habit>(&mut pool.get().unwrap())
 }
 
-// Add a habit
-pub async fn add_habit(data: CategoryCreateSchema) -> Result<usize, Error> {
-    let category = Category {
-        cat_id: Uuid::new_v4(),
-        cat_name: data.name,
+// Add an habit
+pub async fn add_habit(data: HabitCreateSchema) -> Result<usize, Error> {
+    let habit = Habit {
+        hab_id: Uuid::new_v4(),
+        hab_name: data.name,
+        hab_description: data.description,
+        hab_created_at: chrono::Local::now().naive_local(),
+        hab_updated_at: chrono::Local::now().naive_local(),
+        hab_is_favorite: data.is_favourite,
+        hab_type: data.kind,
+        usr_id: data.user_id,
+        cat_id: data.category,
     };
 
-    diesel::insert_into(category::table)
-        .values(&category)
+    diesel::insert_into(habit::table)
+        .values(&habit)
         .execute(&mut pool.get().unwrap())
 }
 
-// Delete category
-pub async fn delete_category(id: Uuid) -> Result<usize, Error> {
-    diesel::delete(category::table.filter(category::cat_id.eq(id)))
+// Delete habit
+pub async fn delete_habit(id: Uuid) -> Result<usize, Error> {
+    diesel::delete(habit::table.filter(habit::hab_id.eq(id))).execute(&mut pool.get().unwrap())
+}
+
+// Update an habit
+pub async fn update_habit(id: Uuid, data: HabitCreateSchema) -> Result<usize, Error> {
+    diesel::update(habit::table.filter(habit::hab_id.eq(id)))
+        .set((
+            habit::hab_name.eq(data.name),
+            habit::hab_description.eq(data.description),
+            habit::hab_is_favorite.eq(data.is_favourite),
+            habit::hab_type.eq(data.kind),
+            habit::usr_id.eq(data.user_id),
+            habit::hab_updated_at.eq(chrono::Local::now().naive_local()),
+            habit::cat_id.eq(data.category),
+        ))
         .execute(&mut pool.get().unwrap())
 }
 
-// Update a category
-pub async fn update_category(id: Uuid, data: CategoryCreateSchema) -> Result<usize, Error> {
-    diesel::update(category::table.filter(category::cat_id.eq(id)))
-        .set((category::cat_name.eq(data.name),))
-        .execute(&mut pool.get().unwrap())
-}
-
-// Filter a specific category
-pub async fn get_category_by_id(id: Uuid) -> Result<Category, Error> {
-    category::table
-        .select(Category::as_select())
+// Filter a specific habit
+pub async fn get_habit_by_id(id: Uuid) -> Result<Habit, Error> {
+    habit::table
+        .select(Habit::as_select())
         .find(id)
         .first(&mut pool.get().unwrap())
 }

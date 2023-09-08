@@ -3,15 +3,24 @@ use chrono::NaiveDateTime;
 use serde_derive::{Deserialize, Serialize};
 use uuid::Uuid;
 
+use validator::Validate;
+
 #[derive(Debug, Serialize)]
-pub struct RecurrencesMultipleQuery {
-    pub status: i16,
+pub struct RecurrencesMultipleQueryResponse {
+    pub message: String,
 
     pub habits: Vec<HabitRecurrency>,
 }
 
-#[derive(Debug, Deserialize)]
-pub struct RecurrencyCreateRequest {
+#[derive(Debug, Serialize)]
+pub struct RecurrencesSingleQueryResponse {
+    pub message: String,
+
+    pub habits: HabitRecurrency,
+}
+
+#[derive(Debug, Deserialize, Validate)]
+pub struct RecurrencyCreateSchema {
     pub frequency_type: String,
 
     pub frequency_data: NaiveDateTime,

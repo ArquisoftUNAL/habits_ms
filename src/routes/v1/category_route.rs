@@ -1,4 +1,4 @@
-use crate::controllers::category_handler;
+use crate::handlers::category_handler;
 
 use warp::filters::BoxedFilter;
 use warp::Filter;
@@ -18,7 +18,8 @@ pub fn get_routes() -> BoxedFilter<(impl Reply,)> {
             categories_path
                 .and(warp::get())
                 //.and(warp::path::param::<String>())
-                .and_then(category_handler::get_categories_handler),
+                .and_then(category_handler::get_categories_handler)
+                .and(warp::path::end()),
         )
         .or(
             // Get a category from database by ID

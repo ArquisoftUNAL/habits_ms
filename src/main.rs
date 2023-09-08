@@ -1,12 +1,14 @@
 // https://levelup.gitconnected.com/building-an-api-using-warp-and-tokio-26a52173860a
 
-mod controllers;
 mod db;
+mod error;
+mod handlers;
 mod models;
 mod queries;
 mod routes;
 mod schema;
 mod utils;
+mod validators;
 
 #[macro_use]
 extern crate lazy_static;

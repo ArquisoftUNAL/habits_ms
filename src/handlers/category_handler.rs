@@ -1,13 +1,7 @@
 use crate::{
-    db::POSTGRES_POOL as pool,
-    models::{
-        api::{category_api_models::*, *},
-        database::Category,
-    },
+    models::api::{category_api_models::*, *},
     queries::categories_queries,
-    schema::*,
 };
-use diesel::prelude::*;
 
 use warp::{reply::json, Rejection, Reply};
 
@@ -20,14 +14,13 @@ pub async fn get_categories_handler() -> Result<impl Reply, Rejection> {
     if result.is_err() {
         let error = result.err().unwrap();
         let response = GeneralResponse {
-            status: 400,
             message: format!("Error getting categories: {}", error),
         };
         return Ok(json(&response));
     }
 
     let response = CategoryMultipleQueryResponse {
-        status: 200,
+        message: format!("Successfully retrieved categories"),
         categories: result.unwrap(),
     };
 
@@ -41,14 +34,13 @@ pub async fn get_category_by_id_handler(id: Uuid) -> Result<impl Reply, Rejectio
     if result.is_err() {
         let error = result.err().unwrap();
         let response = GeneralResponse {
-            status: 400,
             message: format!("Error getting category: {}", error),
         };
         return Ok(json(&response));
     }
 
     let response = CategorySingleQueryResponse {
-        status: 200,
+        message: format!("Successfully retrieved category"),
         category: result.unwrap(),
     };
 
@@ -62,14 +54,12 @@ pub async fn create_category_handler(data: CategoryCreateSchema) -> Result<impl 
     if result.is_err() {
         let error = result.err().unwrap();
         let response = GeneralResponse {
-            status: 400,
             message: format!("Error creating category: {}", error),
         };
         return Ok(json(&response));
     }
 
     let response = GeneralResponse {
-        status: 200,
         message: "Successfully added category".to_string(),
     };
 
@@ -83,7 +73,6 @@ pub async fn delete_category_handler(id: Uuid) -> Result<impl Reply, Rejection> 
     if result.is_err() {
         let error = result.err().unwrap();
         let response = GeneralResponse {
-            status: 203,
             message: format!("Error deleting category {}", error),
         };
 
@@ -91,7 +80,6 @@ pub async fn delete_category_handler(id: Uuid) -> Result<impl Reply, Rejection> 
     }
 
     let response = GeneralResponse {
-        status: 200,
         message: "Successfully deleted category".to_string(),
     };
 
@@ -108,7 +96,6 @@ pub async fn update_category_handler(
     if result.is_err() {
         let error = result.err().unwrap();
         let response = GeneralResponse {
-            status: 200,
             message: format!("Error updating category {}", error),
         };
 
@@ -116,7 +103,6 @@ pub async fn update_category_handler(
     }
 
     let response = GeneralResponse {
-        status: 200,
         message: "Successfully updated category".to_string(),
     };
 

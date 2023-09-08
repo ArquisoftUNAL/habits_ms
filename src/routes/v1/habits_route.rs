@@ -1,5 +1,6 @@
-use crate::controllers::habit_handler;
+use crate::handlers::habit_handler;
 
+use uuid::Uuid;
 use warp::filters::BoxedFilter;
 use warp::Filter;
 use warp::Reply;
@@ -14,15 +15,23 @@ pub fn get_routes() -> BoxedFilter<(impl Reply,)> {
         .or(
             // Get habits from database (for a given user)
             habits_path
+                .and(warp::path("user"))
                 .and(warp::get())
                 .and(warp::path::param::<String>())
                 .and_then(habit_handler::get_habits_handler),
         )
         .or(
+            // Get habits from database (for a given user)
+            habits_path
+                .and(warp::get())
+                .and(warp::path::param::<Uuid>())
+                .and_then(habit_handler::get_habit_by_id_handler),
+        )
+        .or(
             // Update an habit from database
             habits_path
                 .and(warp::patch())
-                .and(warp::path::param::<uuid::Uuid>())
+                .and(warp::path::param::<Uuid>())
                 .and(warp::body::json())
                 .and_then(habit_handler::update_habits_handler),
         )

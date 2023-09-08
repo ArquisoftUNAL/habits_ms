@@ -13,8 +13,11 @@ pub struct Category {
     pub cat_name: String,
 }
 
-#[derive(Debug, Deserialize, Queryable, Selectable, Insertable, Serialize, AsChangeset)]
+#[derive(
+    Debug, Deserialize, Queryable, Selectable, Insertable, Serialize, AsChangeset, Identifiable,
+)]
 #[diesel(belongs_to(Category, foreign_key = cat_id))]
+#[diesel(primary_key(hab_id))]
 #[diesel(table_name=crate::schema::habit)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct Habit {
@@ -37,8 +40,19 @@ pub struct Habit {
     pub cat_id: Uuid,
 }
 
-#[derive(Debug, Deserialize, Queryable, Selectable, Insertable, Serialize, AsChangeset)]
+#[derive(
+    Debug,
+    Deserialize,
+    Queryable,
+    Selectable,
+    Insertable,
+    Serialize,
+    AsChangeset,
+    Associations,
+    Identifiable,
+)]
 #[diesel(belongs_to(Habit, foreign_key = hab_id))]
+#[diesel(primary_key(hab_rec_id))]
 #[diesel(table_name=crate::schema::habit_recurrency)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct HabitRecurrency {

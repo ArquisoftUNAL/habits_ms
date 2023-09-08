@@ -1,4 +1,4 @@
-use crate::controllers::recurrency_handler;
+use crate::handlers::recurrency_handler;
 
 use warp::filters::BoxedFilter;
 use warp::Filter;
@@ -9,15 +9,22 @@ pub fn get_routes() -> BoxedFilter<(impl Reply,)> {
     recurrences_path
         // Insert an Habit into databases
         .and(warp::post())
-        .and(warp::path::param::<uuid::Uuid>())
         .and(warp::body::json())
         .and_then(recurrency_handler::create_recurrency_handler)
         .or(
-            // Get habits from database (for a given user)
+            // Get recurrences from database (for a given habit)
+            recurrences_path
+                .and(warp::path("habit"))
+                .and(warp::get())
+                .and(warp::path::param::<uuid::Uuid>())
+                .and_then(recurrency_handler::get_habit_recurrences_handler),
+        )
+        .or(
+            // Get recurrences from database (for a given database)
             recurrences_path
                 .and(warp::get())
                 .and(warp::path::param::<uuid::Uuid>())
-                .and_then(recurrency_handler::get_recurrences_handler),
+                .and_then(recurrency_handler::get_recurrence_by_id_handler),
         )
         .or(
             // Update an habit from database

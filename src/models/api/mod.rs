@@ -8,7 +8,5 @@ use serde_derive::Serialize;
 // General purpose response for common requests
 #[derive(Debug, Serialize)]
 pub struct GeneralResponse {
-    pub status: i16,
-
     pub message: String,
 }
