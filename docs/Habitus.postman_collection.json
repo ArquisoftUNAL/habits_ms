@@ -7,9 +7,9 @@
 	},
 	"item": [
 		{
-			"name": "HabitCreate",
+			"name": "Update Category",
 			"request": {
-				"method": "POST",
+				"method": "PATCH",
 				"header": [],
 				"body": {
 					"mode": "raw",
@@ -21,7 +21,7 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3030/api/v1/habits/",
+					"raw": "localhost:3030/api/v1/categories/471bbb20-802a-4f54-bebd-ca1dc0bd7696",
 					"host": [
 						"localhost"
 					],
@@ -29,7 +29,28 @@
 					"path": [
 						"api",
 						"v1",
-						"habits",
+						"categories",
+						"471bbb20-802a-4f54-bebd-ca1dc0bd7696"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Categories",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3030/api/v1/categories/",
+					"host": [
+						"localhost"
+					],
+					"port": "3030",
+					"path": [
+						"api",
+						"v1",
+						"categories",
 						""
 					]
 				}
@@ -37,12 +58,12 @@
 			"response": []
 		},
 		{
-			"name": "Get Habits",
+			"name": "Delete Category",
 			"request": {
-				"method": "GET",
+				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "localhost:3030/api/v1/habits/12f54575-857a-4cdf-a53e-763f6351fe39",
+					"raw": "localhost:3030/api/v1/categories/471bbb20-802a-4f54-bebd-ca1dc0bd7696/",
 					"host": [
 						"localhost"
 					],
@@ -50,20 +71,30 @@
 					"path": [
 						"api",
 						"v1",
-						"habits",
-						"12f54575-857a-4cdf-a53e-763f6351fe39"
+						"categories",
+						"471bbb20-802a-4f54-bebd-ca1dc0bd7696",
+						""
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "tests",
+			"name": "Create Category",
 			"request": {
-				"method": "GET",
+				"method": "POST",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name2\": \"Carreras\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": "localhost:3030/api/v1/habits/",
+					"raw": "localhost:3030/api/v1/categories/",
 					"host": [
 						"localhost"
 					],
@@ -71,7 +102,29 @@
 					"path": [
 						"api",
 						"v1",
-						"habits",
+						"categories",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Category by ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3030/api/v1/categories/471bbb20-802a-4f54-bebd-ca1dc0bd7696/",
+					"host": [
+						"localhost"
+					],
+					"port": "3030",
+					"path": [
+						"api",
+						"v1",
+						"categories",
+						"471bbb20-802a-4f54-bebd-ca1dc0bd7696",
 						""
 					]
 				}

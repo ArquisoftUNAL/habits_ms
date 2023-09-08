@@ -1,4 +1,4 @@
-use crate::handlers::habit_handler;
+use crate::handlers::{habit_handler, recurrency_handler};
 
 use uuid::Uuid;
 use warp::filters::BoxedFilter;
@@ -19,6 +19,14 @@ pub fn get_routes() -> BoxedFilter<(impl Reply,)> {
                 .and(warp::get())
                 .and(warp::path::param::<String>())
                 .and_then(habit_handler::get_habits_handler),
+        )
+        .or(
+            // Get habits from database (for a given user)
+            habits_path
+                .and(warp::path("recurrency"))
+                .and(warp::get())
+                .and(warp::path::param::<String>())
+                .and_then(recurrency_handler::get_habits_recurrences_by_user_id),
         )
         .or(
             // Get habits from database (for a given user)

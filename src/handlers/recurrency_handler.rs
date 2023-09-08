@@ -1,6 +1,6 @@
 use crate::{
-    models::api::{recurrency_api_models::*, *},
-    queries::recurrences_queries,
+    models::api::{habit_api_models::*, recurrency_api_models::*, *},
+    queries::{habits_queries, recurrences_queries},
 };
 
 use warp::{reply::json, Rejection, Reply};
@@ -70,6 +70,24 @@ pub async fn get_recurrence_by_id_handler(id: Uuid) -> Result<impl Reply, Reject
     let response = RecurrencesSingleQueryResponse {
         message: format!("Successfully retrieved recurrence"),
         habits: result.unwrap(),
+    };
+
+    Ok(json(&response))
+}
+
+// GET Route
+pub async fn get_habits_recurrences_by_user_id(id: String) -> Result<impl Reply, Rejection> {
+    let user_id = id.clone();
+    let result = habits_queries::get_all_user_habits(&user_id).await;
+    let result = recurrences_queries::join_habits_recurrences(result.unwrap());
+
+    // Return response
+    let response = HabitsAndRecurrencesQueryResponse {
+        message: format!(
+            "Successfully retrieved habits & recurrences for user with ID: {}",
+            &user_id
+        ),
+        habits: result.await,
     };
 
     Ok(json(&response))

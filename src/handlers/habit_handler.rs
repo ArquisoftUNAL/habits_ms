@@ -67,7 +67,6 @@ pub async fn get_habits_handler(id: String) -> Result<impl Reply, Rejection> {
 
     Ok(json(&response))
 }
-
 // GET Route
 pub async fn get_habit_by_id_handler(id: Uuid) -> Result<impl Reply, Rejection> {
     // Get habits from database

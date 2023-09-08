@@ -4,7 +4,10 @@ use diesel::prelude::*;
 use serde_derive::{Deserialize, Serialize};
 use uuid::Uuid;
 
-#[derive(Debug, Deserialize, Queryable, Selectable, Insertable, Serialize, AsChangeset)]
+#[derive(
+    Debug, Deserialize, Queryable, Selectable, Insertable, Serialize, AsChangeset, Identifiable,
+)]
+#[diesel(primary_key(cat_id))]
 #[diesel(table_name=crate::schema::category)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct Category {
@@ -14,7 +17,15 @@ pub struct Category {
 }
 
 #[derive(
-    Debug, Deserialize, Queryable, Selectable, Insertable, Serialize, AsChangeset, Identifiable,
+    Debug,
+    Deserialize,
+    Queryable,
+    Selectable,
+    Insertable,
+    Serialize,
+    AsChangeset,
+    Identifiable,
+    Associations,
 )]
 #[diesel(belongs_to(Category, foreign_key = cat_id))]
 #[diesel(primary_key(hab_id))]
@@ -34,6 +45,8 @@ pub struct Habit {
     pub hab_is_favorite: bool,
 
     pub hab_type: String,
+
+    pub hab_color: String,
 
     pub usr_id: String,
 
@@ -65,8 +78,19 @@ pub struct HabitRecurrency {
     pub hab_rec_freq_data: NaiveDateTime,
 }
 
-#[derive(Debug, Deserialize, Queryable, Selectable, Insertable, Serialize, AsChangeset)]
+#[derive(
+    Debug,
+    Deserialize,
+    Queryable,
+    Selectable,
+    Insertable,
+    Serialize,
+    AsChangeset,
+    Identifiable,
+    Associations,
+)]
 #[diesel(belongs_to(HabitRecurrency, foreign_key = hab_rec_id))]
+#[diesel(primary_key(hab_dat_id))]
 #[diesel(table_name=crate::schema::habit_data_collected)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct HabitDataCollected {

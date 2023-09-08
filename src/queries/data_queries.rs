@@ -1,6 +1,9 @@
 use crate::{
     db::POSTGRES_POOL as pool,
-    models::{api::data_api_models::*, database::HabitDataCollected},
+    models::{
+        api::data_api_models::*,
+        database::{Habit, HabitDataCollected, HabitRecurrency},
+    },
     schema::*,
 };
 
@@ -55,4 +58,24 @@ pub async fn get_habit_data_by_id(id: Uuid) -> Result<HabitDataCollected, Error>
         .select(HabitDataCollected::as_select())
         .find(id)
         .first(&mut pool.get().unwrap())
+}
+
+// Join habit data with a set set of habits (including recurrences as well)
+pub async fn join_habits_recurrences(
+    habits: Vec<Habit>,
+) -> Vec<(Habit, Vec<(HabitRecurrency, Vec<HabitDataCollected>)>)> {
+    let recurrences = HabitRecurrency::belonging_to(&habits)
+        .select(HabitRecurrency::as_select())
+        .load::<HabitRecurrency>(&mut pool.get().unwrap())
+        .unwrap();
+    let habits_data = HabitDataCollected::belonging_to(&recurrences)
+        .select(HabitDataCollected::as_select())
+        .load::<HabitDataCollected>(&mut pool.get().unwrap())
+        .unwrap();
+    let grouped_habits_data = habits_data.grouped_by(&recurrences);
+    let recurrences_and_data = recurrences
+        .into_iter()
+        .zip(grouped_habits_data)
+        .grouped_by(&habits);
+    habits.into_iter().zip(recurrences_and_data).collect()
 }

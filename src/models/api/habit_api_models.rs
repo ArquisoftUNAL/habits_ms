@@ -1,4 +1,4 @@
-use crate::models::database::Habit;
+use crate::models::database::{Habit, HabitRecurrency};
 use serde_derive::{Deserialize, Serialize};
 
 // use bigdecimal::BigDecimal;
@@ -47,4 +47,11 @@ pub struct HabitSingleQueryResponse {
     pub message: String,
 
     pub habit: Habit,
+}
+
+#[derive(Debug, Serialize)]
+pub struct HabitsAndRecurrencesQueryResponse {
+    pub message: String,
+
+    pub habits: Vec<(Habit, Vec<HabitRecurrency>)>,
 }

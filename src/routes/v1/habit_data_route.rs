@@ -19,7 +19,7 @@ pub fn get_routes() -> BoxedFilter<(impl Reply,)> {
                 .and(warp::path("recurrency"))
                 .and(warp::get())
                 .and(warp::path::param::<Uuid>())
-                .and_then(habit_data_handler::get_data_by_id_handler),
+                .and_then(habit_data_handler::get_recurrency_data_handler),
         )
         .or(
             // Get habits from database (for a given user)

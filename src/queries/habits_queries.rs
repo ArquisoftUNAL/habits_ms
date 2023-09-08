@@ -28,6 +28,7 @@ pub async fn add_habit(data: HabitCreateSchema) -> Result<usize, Error> {
         hab_updated_at: chrono::Local::now().naive_local(),
         hab_is_favorite: data.is_favourite,
         hab_type: data.kind,
+        hab_color: data.color,
         usr_id: data.user_id,
         cat_id: data.category,
     };
