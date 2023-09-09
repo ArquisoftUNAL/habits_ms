@@ -1,6 +1,6 @@
 
 
-CREATE TYPE rec_data_type AS ENUM('DA', 'WE', 'W2', 'MO', 'M2' );
+CREATE TYPE rec_data_type AS ENUM('daily', 'weekly', 'weekly2', 'monthly', 'monthly2' );
 
 CREATE TABLE habit_recurrency (
     hab_rec_id UUID PRIMARY KEY,

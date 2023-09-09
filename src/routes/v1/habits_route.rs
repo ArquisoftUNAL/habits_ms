@@ -23,6 +23,7 @@ pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
         .and(warp::get())
         .and(with_db_manager(pool.clone()))
         .and(warp::path::param::<String>())
+        .and(warp::path::end())
         .and_then(habit_handler::get_habits_handler);
 
     let get_habits_recurrences = warp::path("habits")
@@ -31,6 +32,7 @@ pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
         .and(with_db_manager(pool.clone()))
         .and(warp::path::param::<String>())
         .and(warp::path("recurrences"))
+        .and(warp::path::end())
         .and_then(habit_handler::get_habits_recurrences_by_user_id);
 
     let get_habits_recurrences_data = warp::path("habits")

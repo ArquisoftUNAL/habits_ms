@@ -89,7 +89,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Other GTA\"\r\n}",
+							"raw": "{\r\n    \"name\": \"And Other one\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -145,7 +145,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Voleibol\",\r\n    \"description\": \"ola\",\r\n    \"is_favourite\": true,\r\n    \"kind\": \"ME\",\r\n    \"color\": \"abcdef\",\r\n    \"units\": \"meters\",\r\n    \"user_id\": \"fasdfadsf\",\r\n    \"category\" : \"fa4b7e6b-0a7e-493d-9010-ee0dac513033\"\r\n}",
+							"raw": "{\r\n    \"name\": \"Voleibol\",\r\n    \"description\": \"ola\",\r\n    \"is_favourite\": true,\r\n    \"kind\": \"ME\",\r\n    \"color\": \"abcdef\",\r\n    \"units\": \"meters\",\r\n    \"user_id\": \"fasdfadsf\",\r\n    \"category\" : \"917c7f37-ae6f-416d-8070-f67ff26fc13d\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -219,7 +219,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:3030/api/v1/habits/recurrences/data",
+							"raw": "localhost:3030/api/v1/habits/user/fasdfadsf/recurrences/data",
 							"host": [
 								"localhost"
 							],
@@ -228,6 +228,8 @@
 								"api",
 								"v1",
 								"habits",
+								"user",
+								"fasdfadsf",
 								"recurrences",
 								"data"
 							]
@@ -250,7 +252,7 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:3030/api/v1/habits/recurrences/data",
+							"raw": "localhost:3030/api/v1/habits/471bbb20-802a-4f54-bebd-ca1dc0bd7696",
 							"host": [
 								"localhost"
 							],
@@ -259,8 +261,7 @@
 								"api",
 								"v1",
 								"habits",
-								"recurrences",
-								"data"
+								"471bbb20-802a-4f54-bebd-ca1dc0bd7696"
 							]
 						}
 					},
@@ -272,7 +273,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "localhost:3030/api/v1/habits/",
+							"raw": "localhost:3030/api/v1/habits/471bbb20-802a-4f54-bebd-ca1dc0bd7696",
 							"host": [
 								"localhost"
 							],
@@ -281,7 +282,28 @@
 								"api",
 								"v1",
 								"habits",
-								""
+								"471bbb20-802a-4f54-bebd-ca1dc0bd7696"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Habit by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3030/api/v1/habits/471bbb20-802a-4f54-bebd-ca1dc0bd7696",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"habits",
+								"471bbb20-802a-4f54-bebd-ca1dc0bd7696"
 							]
 						}
 					},
@@ -299,7 +321,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"frequency_type\":\"Weekly\",\r\n    \"frequency_data\":\"2023-09-08T14:30:00Z\",\r\n    \"habit_id\":\"69a70399-3bfe-4f7c-b80f-c6cce600449a\"\r\n}",
+							"raw": "{\r\n    \"frequency_type\":\"weekly\",\r\n    \"frequency_data\":\"2023-09-08\",\r\n    \"habit_id\":\"cea98048-bd39-4890-92c9-43b7eaa22484\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -328,7 +350,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:3030/api/v1/recurrences/habit/b0e5acb7-4898-4207-bf1b-dbafe9884afa",
+							"raw": "localhost:3030/api/v1/recurrences/habit/cea98048-bd39-4890-92c9-43b7eaa22484",
 							"host": [
 								"localhost"
 							],
@@ -338,7 +360,7 @@
 								"v1",
 								"recurrences",
 								"habit",
-								"b0e5acb7-4898-4207-bf1b-dbafe9884afa"
+								"cea98048-bd39-4890-92c9-43b7eaa22484"
 							]
 						}
 					},
@@ -372,7 +394,7 @@
 						"method": "PATCH",
 						"header": [],
 						"url": {
-							"raw": "localhost:3030/api/v1/recurrences/fadsfdasf",
+							"raw": "localhost:3030/api/v1/recurrences/69a70399-3bfe-4f7c-b80f-c6cce600449a",
 							"host": [
 								"localhost"
 							],
@@ -381,7 +403,7 @@
 								"api",
 								"v1",
 								"recurrences",
-								"fadsfdasf"
+								"69a70399-3bfe-4f7c-b80f-c6cce600449a"
 							]
 						}
 					},
@@ -393,7 +415,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "localhost:3030/api/v1/recurrences/sadfsadf",
+							"raw": "localhost:3030/api/v1/recurrences/69a70399-3bfe-4f7c-b80f-c6cce600449a",
 							"host": [
 								"localhost"
 							],
@@ -402,7 +424,7 @@
 								"api",
 								"v1",
 								"recurrences",
-								"sadfsadf"
+								"69a70399-3bfe-4f7c-b80f-c6cce600449a"
 							]
 						}
 					},
@@ -419,7 +441,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:3030/api/v1/habitdata/",
+							"raw": "localhost:3030/api/v1/habitdata/1f5fa607-7b76-406d-8323-ac47575ada03",
 							"host": [
 								"localhost"
 							],
@@ -428,7 +450,7 @@
 								"api",
 								"v1",
 								"habitdata",
-								""
+								"1f5fa607-7b76-406d-8323-ac47575ada03"
 							]
 						}
 					},
@@ -440,7 +462,7 @@
 						"method": "PATCH",
 						"header": [],
 						"url": {
-							"raw": "localhost:3030/api/v1/habitdata/",
+							"raw": "localhost:3030/api/v1/habitdata/69a70399-3bfe-4f7c-b80f-c6cce600449a",
 							"host": [
 								"localhost"
 							],
@@ -449,7 +471,7 @@
 								"api",
 								"v1",
 								"habitdata",
-								""
+								"69a70399-3bfe-4f7c-b80f-c6cce600449a"
 							]
 						}
 					},
@@ -461,7 +483,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "localhost:3030/api/v1/habitdata/",
+							"raw": "localhost:3030/api/v1/habitdata/69a70399-3bfe-4f7c-b80f-c6cce600449a",
 							"host": [
 								"localhost"
 							],
@@ -470,7 +492,7 @@
 								"api",
 								"v1",
 								"habitdata",
-								""
+								"69a70399-3bfe-4f7c-b80f-c6cce600449a"
 							]
 						}
 					},
@@ -481,6 +503,15 @@
 					"request": {
 						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"amount\": 10000,\r\n\r\n    \"recurrency_id\": \"5c14b7db-3985-4ab8-9473-6beb5213a511\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "localhost:3030/api/v1/habitdata/",
 							"host": [
@@ -503,7 +534,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:3030/api/v1/habitdata/recurrence/",
+							"raw": "localhost:3030/api/v1/habitdata/recurrence/5c14b7db-3985-4ab8-9473-6beb5213a511",
 							"host": [
 								"localhost"
 							],
@@ -513,7 +544,7 @@
 								"v1",
 								"habitdata",
 								"recurrence",
-								""
+								"5c14b7db-3985-4ab8-9473-6beb5213a511"
 							]
 						}
 					},

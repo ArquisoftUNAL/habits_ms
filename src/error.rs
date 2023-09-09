@@ -85,6 +85,20 @@ pub async fn handle_rejection(err: Rejection) -> std::result::Result<impl Reply,
                 None,
             ),
         }
+    } else if let Some(e) = err.find::<warp::filters::body::BodyDeserializeError>() {
+        (
+            StatusCode::BAD_REQUEST,
+            format!("Invalid body: {}", e),
+            None,
+        )
+    } else if let Some(_) = err.find::<warp::reject::MethodNotAllowed>() {
+        // Have care with this errror, it will catch all method not allowed errors (including those from other routes, so all other
+        // possible errors should be cached from here)
+        (
+            StatusCode::METHOD_NOT_ALLOWED,
+            "Method Not Allowed".to_string(),
+            None,
+        )
     // } else if let Some(_) = err.find::<warp::reject::MethodNotAllowed>() {
     //     (
     //         StatusCode::METHOD_NOT_ALLOWED,
