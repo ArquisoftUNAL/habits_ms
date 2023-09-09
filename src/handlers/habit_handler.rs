@@ -47,8 +47,11 @@ pub async fn get_habits_handler(manager: DBManager, id: String) -> Result<impl R
     // Get habits from database
     let user_id = id.clone();
 
+    println!("ola");
+
     let result = manager.get_all_user_habits(&user_id);
 
+    println!("ola2");
     if result.is_err() {
         let error = result.err().unwrap();
         let response = GeneralResponse {
@@ -78,6 +81,8 @@ pub async fn get_habits_handler(manager: DBManager, id: String) -> Result<impl R
         ),
         habits: result,
     };
+
+    println!("{:?}", response);
 
     Ok(json(&response))
 }

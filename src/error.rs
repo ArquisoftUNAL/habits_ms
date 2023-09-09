@@ -34,6 +34,7 @@ struct ErrorResponse {
 impl warp::reject::Reject for Error {}
 
 pub async fn handle_rejection(err: Rejection) -> std::result::Result<impl Reply, Infallible> {
+    println!("err: {:?}", err);
     let (code, message, errors) = if err.is_not_found() {
         (StatusCode::NOT_FOUND, "Not Found".to_string(), None)
     } else if let Some(e) = err.find::<Error>() {
@@ -84,12 +85,12 @@ pub async fn handle_rejection(err: Rejection) -> std::result::Result<impl Reply,
                 None,
             ),
         }
-    } else if let Some(_) = err.find::<warp::reject::MethodNotAllowed>() {
-        (
-            StatusCode::METHOD_NOT_ALLOWED,
-            "Method Not Allowed".to_string(),
-            None,
-        )
+    // } else if let Some(_) = err.find::<warp::reject::MethodNotAllowed>() {
+    //     (
+    //         StatusCode::METHOD_NOT_ALLOWED,
+    //         "Method Not Allowed".to_string(),
+    //         None,
+    //     )
     } else if let Some(_) = err.find::<warp::reject::InvalidQuery>() {
         (
             StatusCode::BAD_REQUEST,

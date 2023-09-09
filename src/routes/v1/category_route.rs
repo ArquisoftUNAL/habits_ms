@@ -7,45 +7,40 @@ use warp::Reply;
 use uuid::Uuid;
 
 pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
-    let categories_path = warp::path("categories");
-    categories_path
-        // Insert an Habit into databases
+    let create_category = warp::path("categories")
         .and(warp::post())
         .and(with_db_manager(pool.clone()))
         .and(warp::body::json())
-        .and_then(category_handler::create_category_handler)
-        .or(
-            // Get all categories from database
-            categories_path
-                .and(warp::get())
-                .and(with_db_manager(pool.clone()))
-                .and_then(category_handler::get_categories_handler)
-                .and(warp::path::end()),
-        )
-        .or(
-            // Get a category from database by ID
-            categories_path
-                .and(warp::get())
-                .and(with_db_manager(pool.clone()))
-                .and(warp::path::param::<Uuid>())
-                .and_then(category_handler::get_category_by_id_handler),
-        )
-        .or(
-            // Update category from database
-            categories_path
-                .and(warp::patch())
-                .and(with_db_manager(pool.clone()))
-                .and(warp::path::param::<Uuid>())
-                .and(warp::body::json())
-                .and_then(category_handler::update_category_handler),
-        )
-        .or(
-            // Delete category from database
-            categories_path
-                .and(warp::delete())
-                .and(with_db_manager(pool.clone()))
-                .and(warp::path::param::<Uuid>())
-                .and_then(category_handler::delete_category_handler),
-        )
+        .and_then(category_handler::create_category_handler);
+
+    let get_categories = warp::path("categories")
+        .and(warp::get())
+        .and(with_db_manager(pool.clone()))
+        .and_then(category_handler::get_categories_handler);
+
+    let get_category_by_id = warp::path("categories")
+        .and(warp::get())
+        .and(with_db_manager(pool.clone()))
+        .and(warp::path::param::<Uuid>())
+        .and_then(category_handler::get_category_by_id_handler);
+
+    let update_category = warp::path("categories")
+        .and(warp::patch())
+        .and(with_db_manager(pool.clone()))
+        .and(warp::path::param::<Uuid>())
+        .and(warp::body::json())
+        .and_then(category_handler::update_category_handler);
+
+    let delete_category = warp::path("categories")
+        .and(warp::delete())
+        .and(with_db_manager(pool.clone()))
+        .and(warp::path::param::<Uuid>())
+        .and_then(category_handler::delete_category_handler);
+
+    create_category
+        .or(get_categories)
+        .or(get_category_by_id)
+        .or(update_category)
+        .or(delete_category)
         .boxed()
 }

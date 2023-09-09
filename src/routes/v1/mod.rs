@@ -10,6 +10,7 @@ use warp::Reply;
 
 pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
     let v1 = warp::path("v1");
+
     v1.and(habits_route::get_routes(pool.clone()))
         .or(v1.and(recurrency_route::get_routes(pool.clone())))
         .or(v1.and(habit_data_route::get_routes(pool.clone())))

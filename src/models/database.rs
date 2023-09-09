@@ -7,12 +7,12 @@ use uuid::Uuid;
 #[derive(diesel_derive_enum::DbEnum, Debug, Deserialize, Serialize)]
 #[ExistingTypePath = "crate::schema::sql_types::RecDataType"]
 pub enum RecDataEnum {
-    Daily,
-    Weekly,
-    Weekly2,
-    Monthly,
-    Monthly2,
-    Yearly,
+    DA,
+    WE,
+    W2,
+    MO,
+    M2,
+    YE,
 }
 
 #[derive(
