@@ -33,7 +33,7 @@ impl DBManager {
     }
 
     // Add a recurrence
-    pub fn add_recurrence(&self, data: RecurrencyCreateSchema) -> Result<usize, Error> {
+    pub fn add_recurrence(&self, data: RecurrencyCreateSchema) -> Result<Uuid, Error> {
         let recurrency = HabitRecurrency {
             hab_rec_id: Uuid::new_v4(),
             hab_rec_freq_data: data.frequency_data,
@@ -49,7 +49,8 @@ impl DBManager {
 
         let search = diesel::insert_into(habit_recurrency::table)
             .values(&recurrency)
-            .execute(&mut conn.unwrap());
+            .execute(&mut conn.unwrap())
+            .map(|_| recurrency.hab_rec_id);
 
         if search.is_err() {
             return Err(Error::QueryError(search.err().unwrap()));
@@ -59,7 +60,7 @@ impl DBManager {
     }
 
     // Delete recurrence
-    pub fn delete_recurrence(&self, id: Uuid) -> Result<usize, Error> {
+    pub fn delete_recurrence(&self, id: Uuid) -> Result<Uuid, Error> {
         let conn = self.connection.get();
 
         if conn.is_err() {
@@ -68,7 +69,8 @@ impl DBManager {
 
         let search =
             diesel::delete(habit_recurrency::table.filter(habit_recurrency::hab_rec_id.eq(id)))
-                .execute(&mut conn.unwrap());
+                .execute(&mut conn.unwrap())
+                .map(|_| id);
 
         if search.is_err() {
             return Err(Error::QueryError(search.err().unwrap()));
@@ -78,11 +80,7 @@ impl DBManager {
     }
 
     // Update an habit
-    pub fn update_recurrence(
-        &self,
-        id: Uuid,
-        data: RecurrencyCreateSchema,
-    ) -> Result<usize, Error> {
+    pub fn update_recurrence(&self, id: Uuid, data: RecurrencyCreateSchema) -> Result<Uuid, Error> {
         let conn = self.connection.get();
 
         if conn.is_err() {
@@ -97,7 +95,8 @@ impl DBManager {
                     habit_recurrency::hab_rec_freq_type.eq(data.frequency_type),
                     habit_recurrency::hab_id.eq(data.habit_id),
                 ))
-                .execute(&mut conn.unwrap());
+                .execute(&mut conn.unwrap())
+                .map(|_| id);
 
         if search.is_err() {
             return Err(Error::QueryError(search.err().unwrap()));

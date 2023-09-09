@@ -24,8 +24,9 @@ pub async fn create_habit_data_handler(
     }
 
     // Return response
-    let response = GeneralResponse {
+    let response = HabitDataCreateResponse {
         message: "Habit data created successfully".to_string(),
+        id: result.unwrap(),
     };
     Ok(json(&response))
 }

@@ -76,8 +76,9 @@ pub async fn create_category_handler(
         return Ok(json(&response));
     }
 
-    let response = GeneralResponse {
+    let response = CategoryCreateResponse {
         message: "Successfully added category".to_string(),
+        id: result.unwrap(),
     };
 
     Ok(json(&response))

@@ -6,6 +6,7 @@ use uuid::Uuid;
 
 use validator::Validate;
 
+// Input schemas
 #[derive(Debug, Deserialize, Validate)]
 pub struct HabitDataSchema {
     #[validate(custom = "crate::validators::validate_bigdecimal")]
@@ -13,6 +14,14 @@ pub struct HabitDataSchema {
 
     // Optional for update only
     pub recurrency_id: Uuid,
+}
+
+// Response schemas
+#[derive(Debug, Serialize)]
+pub struct HabitDataCreateResponse {
+    pub message: String,
+
+    pub id: Uuid,
 }
 
 #[derive(Debug, Serialize)]

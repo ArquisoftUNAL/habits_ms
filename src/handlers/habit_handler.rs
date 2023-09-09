@@ -35,8 +35,9 @@ pub async fn create_habit_handler(
     }
 
     // Return response
-    let response = GeneralResponse {
+    let response = HabitCreateResponse {
         message: format!("Habit created successfully"),
+        id: result.unwrap(),
     };
 
     Ok(json(&response))

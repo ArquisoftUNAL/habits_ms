@@ -25,8 +25,9 @@ pub async fn create_recurrency_handler(
     }
 
     // Return response
-    let response = GeneralResponse {
+    let response = RecurrenceCreateResponse {
         message: "Recurrence created successfully".to_string(),
+        id: result.unwrap(),
     };
     Ok(json(&response))
 }

@@ -27,7 +27,7 @@ impl DBManager {
         Ok(search.unwrap())
     }
     // Add a category
-    pub fn add_category(&self, data: CategoryCreateSchema) -> Result<usize, Error> {
+    pub fn add_category(&self, data: CategoryCreateSchema) -> Result<Uuid, Error> {
         let category = Category {
             cat_id: Uuid::new_v4(),
             cat_name: data.name,
@@ -41,7 +41,8 @@ impl DBManager {
 
         let result = diesel::insert_into(category::table)
             .values(&category)
-            .execute(&mut conn.unwrap());
+            .execute(&mut conn.unwrap())
+            .map(|_| category.cat_id);
 
         if result.is_err() {
             return Err(Error::QueryError(result.err().unwrap()));
@@ -51,7 +52,7 @@ impl DBManager {
     }
 
     // Delete category
-    pub fn delete_category(&self, id: Uuid) -> Result<usize, Error> {
+    pub fn delete_category(&self, id: Uuid) -> Result<Uuid, Error> {
         let conn = self.connection.get();
 
         if conn.is_err() {
@@ -59,7 +60,8 @@ impl DBManager {
         }
 
         let result = diesel::delete(category::table.filter(category::cat_id.eq(id)))
-            .execute(&mut conn.unwrap());
+            .execute(&mut conn.unwrap())
+            .map(|_| id);
 
         if result.is_err() {
             return Err(Error::QueryError(result.err().unwrap()));
@@ -69,7 +71,7 @@ impl DBManager {
     }
 
     // Update a category
-    pub fn update_category(&self, id: Uuid, data: CategoryCreateSchema) -> Result<usize, Error> {
+    pub fn update_category(&self, id: Uuid, data: CategoryCreateSchema) -> Result<Uuid, Error> {
         let conn = self.connection.get();
 
         if conn.is_err() {
@@ -78,7 +80,8 @@ impl DBManager {
 
         let result = diesel::update(category::table.filter(category::cat_id.eq(id)))
             .set((category::cat_name.eq(data.name),))
-            .execute(&mut conn.unwrap());
+            .execute(&mut conn.unwrap())
+            .map(|_| id);
 
         if result.is_err() {
             return Err(Error::QueryError(result.err().unwrap()));

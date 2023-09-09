@@ -39,6 +39,13 @@ pub struct RecurrencesMultipleQueryResponse {
 }
 
 #[derive(Debug, Serialize)]
+pub struct RecurrenceCreateResponse {
+    pub message: String,
+
+    pub id: Uuid,
+}
+
+#[derive(Debug, Serialize)]
 pub struct RecurrencesWithDataMultipleQueryResponse {
     pub message: String,
 

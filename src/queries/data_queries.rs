@@ -36,7 +36,7 @@ impl DBManager {
     }
 
     // Add a habit data record
-    pub fn add_habit_data(&self, data: HabitDataSchema) -> Result<usize, Error> {
+    pub fn add_habit_data(&self, data: HabitDataSchema) -> Result<Uuid, Error> {
         let habit_data = HabitDataCollected {
             hab_dat_id: Uuid::new_v4(),
             hab_dat_amount: data.amount,
@@ -52,7 +52,8 @@ impl DBManager {
 
         let search = diesel::insert_into(habit_data_collected::table)
             .values(&habit_data)
-            .execute(&mut conn.unwrap());
+            .execute(&mut conn.unwrap())
+            .map(|_| habit_data.hab_dat_id);
 
         if search.is_err() {
             return Err(Error::QueryError(search.err().unwrap()));
@@ -62,7 +63,7 @@ impl DBManager {
     }
 
     // Delete recurrence
-    pub fn delete_habit_data(&self, id: Uuid) -> Result<usize, Error> {
+    pub fn delete_habit_data(&self, id: Uuid) -> Result<Uuid, Error> {
         let conn = self.connection.get();
 
         if conn.is_err() {
@@ -72,7 +73,8 @@ impl DBManager {
         let search = diesel::delete(
             habit_data_collected::table.filter(habit_data_collected::hab_dat_id.eq(id)),
         )
-        .execute(&mut conn.unwrap());
+        .execute(&mut conn.unwrap())
+        .map(|_| id);
 
         if search.is_err() {
             return Err(Error::QueryError(search.err().unwrap()));
@@ -82,7 +84,7 @@ impl DBManager {
     }
 
     // Update an habit
-    pub fn update_habit_data(&self, id: Uuid, data: HabitDataSchema) -> Result<usize, Error> {
+    pub fn update_habit_data(&self, id: Uuid, data: HabitDataSchema) -> Result<Uuid, Error> {
         let conn = self.connection.get();
 
         if conn.is_err() {
@@ -97,7 +99,8 @@ impl DBManager {
             habit_data_collected::hab_dat_collected_at.eq(chrono::Local::now().naive_local()),
             habit_data_collected::hab_rec_id.eq(data.recurrency_id),
         ))
-        .execute(&mut conn.unwrap());
+        .execute(&mut conn.unwrap())
+        .map(|_| id);
 
         if search.is_err() {
             return Err(Error::QueryError(search.err().unwrap()));
