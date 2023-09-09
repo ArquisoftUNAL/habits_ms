@@ -20,7 +20,7 @@ pub struct HabitWithRecurrences {
 
     pub hab_is_favorite: bool,
 
-    pub hab_type: String,
+    pub hab_is_yn: bool,
 
     pub hab_color: String,
 
@@ -43,7 +43,7 @@ pub struct HabitRecurrencesAndData {
 
     pub hab_is_favorite: bool,
 
-    pub hab_type: String,
+    pub hab_is_yn: bool,
 
     pub hab_color: String,
 
@@ -67,7 +67,7 @@ pub struct HabitCreateSchema {
 
     pub is_favourite: bool,
 
-    pub kind: String,
+    pub is_yn: bool,
 
     #[validate(length(min = 6, max = 6))]
     pub color: String,

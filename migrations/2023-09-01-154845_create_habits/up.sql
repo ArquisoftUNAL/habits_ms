@@ -4,7 +4,7 @@ CREATE TABLE habit (
     hab_description VARCHAR(255) NOT NULL,
     hab_created_at TIMESTAMP NOT NULL,
     hab_updated_at TIMESTAMP NOT NULL,
-    hab_type VARCHAR(10) NOT NULL,
+    hab_is_yn BOOLEAN NOT NULL,
     hab_is_favorite BOOLEAN NOT NULL,
     hab_color VARCHAR(6) NOT NULL,
     hab_units VARCHAR(10) NOT NULL,

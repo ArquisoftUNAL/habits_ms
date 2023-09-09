@@ -23,8 +23,7 @@ diesel::table! {
         hab_description -> Varchar,
         hab_created_at -> Timestamp,
         hab_updated_at -> Timestamp,
-        #[max_length = 10]
-        hab_type -> Varchar,
+        hab_is_yn -> Bool,
         hab_is_favorite -> Bool,
         #[max_length = 6]
         hab_color -> Varchar,

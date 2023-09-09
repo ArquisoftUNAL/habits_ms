@@ -54,7 +54,7 @@ pub struct Habit {
 
     pub hab_is_favorite: bool,
 
-    pub hab_type: String,
+    pub hab_is_yn: bool,
 
     pub hab_color: String,
 
