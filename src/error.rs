@@ -1,14 +1,11 @@
 use serde_derive::Serialize;
 use std::convert::Infallible;
 use thiserror::Error;
-use validator::{ValidationError, ValidationErrors, ValidationErrorsKind};
+use validator::{ValidationErrors, ValidationErrorsKind};
 use warp::{http::StatusCode, Rejection, Reply};
 
 #[derive(Error, Debug)]
 pub enum Error {
-    #[error("JSON path error: {0}")]
-    JSONPathError(String),
-
     #[error("Data validation error: {0}")]
     ValidationError(ValidationErrors),
 
@@ -34,12 +31,10 @@ struct ErrorResponse {
 impl warp::reject::Reject for Error {}
 
 pub async fn handle_rejection(err: Rejection) -> std::result::Result<impl Reply, Infallible> {
-    println!("err: {:?}", err);
     let (code, message, errors) = if err.is_not_found() {
         (StatusCode::NOT_FOUND, "Not Found".to_string(), None)
     } else if let Some(e) = err.find::<Error>() {
         match e {
-            Error::JSONPathError(_) => (StatusCode::BAD_REQUEST, e.to_string(), None),
             Error::ValidationError(val_errs) => {
                 let errors: Vec<FieldError> = val_errs
                     .errors()
@@ -52,7 +47,7 @@ pub async fn handle_rejection(err: Rejection) -> std::result::Result<impl Reply,
                             }
                             ValidationErrorsKind::Field(field_errs) => field_errs
                                 .iter()
-                                .map(|fe| format!("{}: {:?}", fe.code, fe.params))
+                                .map(|fe| format!("Check {}", fe.code))
                                 .collect(),
                             ValidationErrorsKind::List(vec_errs) => vec_errs
                                 .iter()
@@ -70,7 +65,7 @@ pub async fn handle_rejection(err: Rejection) -> std::result::Result<impl Reply,
 
                 (
                     StatusCode::BAD_REQUEST,
-                    "field errors".to_string(),
+                    "Validation error, check fields values".to_string(),
                     Some(errors),
                 )
             }

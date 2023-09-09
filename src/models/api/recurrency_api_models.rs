@@ -1,5 +1,8 @@
 use crate::models::database::{HabitDataCollected, HabitRecurrency, RecDataEnum};
+use crate::schema::habit_recurrency;
+use bigdecimal::BigDecimal;
 use chrono::NaiveDate;
+use diesel::query_builder::AsChangeset;
 use serde_derive::{Deserialize, Serialize};
 use uuid::Uuid;
 
@@ -26,8 +29,29 @@ pub struct RecurrencyCreateSchema {
 
     pub frequency_data: NaiveDate,
 
+    #[validate(custom = "crate::validators::validate_bigdecimal")]
+    pub goal: BigDecimal,
+
     // Optional for update only
     pub habit_id: Uuid,
+}
+
+#[derive(Debug, Deserialize, Validate, AsChangeset)]
+#[diesel(table_name = habit_recurrency)]
+pub struct RecurrenceUpdateSchema {
+    #[diesel(column_name = "hab_rec_freq_type")]
+    pub frequency_type: Option<RecDataEnum>,
+
+    #[diesel(column_name = "hab_rec_freq_data")]
+    pub frequency_data: Option<NaiveDate>,
+
+    #[validate(custom = "crate::validators::validate_bigdecimal")]
+    #[diesel(column_name = "hab_rec_goal")]
+    pub goal: Option<BigDecimal>,
+
+    // Optional for update only
+    #[diesel(column_name = "hab_id")]
+    pub habit_id: Option<Uuid>,
 }
 
 // Responses

@@ -1,5 +1,8 @@
 use crate::models::database::HabitDataCollected;
+use crate::schema::habit_data_collected;
 use serde_derive::{Deserialize, Serialize};
+
+use diesel::query_builder::AsChangeset;
 
 use bigdecimal::BigDecimal;
 use uuid::Uuid;
@@ -13,6 +16,18 @@ pub struct HabitDataSchema {
     pub amount: BigDecimal,
 
     // Optional for update only
+    pub recurrency_id: Uuid,
+}
+
+#[derive(Debug, Deserialize, Validate, AsChangeset)]
+#[diesel(table_name = habit_data_collected)]
+pub struct HabitDataUpdateSchema {
+    #[validate(custom = "crate::validators::validate_bigdecimal")]
+    #[diesel(column_name = "hab_dat_amount")]
+    pub amount: BigDecimal,
+
+    // Optional for update only
+    #[diesel(column_name = "hab_rec_id")]
     pub recurrency_id: Uuid,
 }
 

@@ -71,7 +71,7 @@ impl DBManager {
     }
 
     // Update a category
-    pub fn update_category(&self, id: Uuid, data: CategoryCreateSchema) -> Result<Uuid, Error> {
+    pub fn update_category(&self, id: Uuid, data: CategoryUpdateSchema) -> Result<Uuid, Error> {
         let conn = self.connection.get();
 
         if conn.is_err() {
@@ -79,7 +79,7 @@ impl DBManager {
         }
 
         let result = diesel::update(category::table.filter(category::cat_id.eq(id)))
-            .set((category::cat_name.eq(data.name),))
+            .set(&data)
             .execute(&mut conn.unwrap())
             .map(|_| id);
 

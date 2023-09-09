@@ -1,7 +1,7 @@
 use crate::error::Error;
 use diesel::{
     prelude::*,
-    r2d2::{ConnectionManager, Error as R2D2Error, Pool},
+    r2d2::{ConnectionManager, Pool},
 };
 use dotenvy::dotenv;
 use std::env;

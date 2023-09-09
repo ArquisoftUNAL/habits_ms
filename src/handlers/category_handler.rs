@@ -1,5 +1,6 @@
 use crate::{
     db::DBManager,
+    error::Error,
     models::api::{category_api_models::*, *},
 };
 
@@ -57,13 +58,12 @@ pub async fn create_category_handler(
     data: CategoryCreateSchema,
 ) -> Result<impl Reply, Rejection> {
     // Validate input
-    let validation_result = CategoryCreateSchema::validate(&data);
+    let validation_result = data.validate();
+
     if validation_result.is_err() {
-        let error = validation_result.err().unwrap();
-        let response = GeneralResponse {
-            message: format!("Error validating category: {}", error),
-        };
-        return Ok(json(&response));
+        return Err(warp::reject::custom(Error::ValidationError(
+            validation_result.err().unwrap(),
+        )));
     }
 
     let result = manager.add_category(data);
@@ -111,8 +111,17 @@ pub async fn delete_category_handler(
 pub async fn update_category_handler(
     manager: DBManager,
     id: Uuid,
-    data: CategoryCreateSchema,
+    data: CategoryUpdateSchema,
 ) -> Result<impl Reply, Rejection> {
+    // Validate input
+    let validation_result = data.validate();
+
+    if validation_result.is_err() {
+        return Err(warp::reject::custom(Error::ValidationError(
+            validation_result.err().unwrap(),
+        )));
+    }
+
     let result = manager.update_category(id, data);
 
     if result.is_err() {

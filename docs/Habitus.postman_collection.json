@@ -17,7 +17,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Eat pizza\",\r\n    \"description\": \"For getting beauty!\",\r\n    \"is_favourite\": true,\r\n    \"kind\": \"Count\",\r\n    \"user_id\": \"12f54575-857a-4cdf-a53e-763f6351fe39\"\r\n}",
+							"raw": "{\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -25,7 +25,7 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:3030/api/v1/categories/471bbb20-802a-4f54-bebd-ca1dc0bd7696",
+							"raw": "localhost:3030/api/v1/categories/c1099396-87a1-4c50-abf5-d13fe51da33e",
 							"host": [
 								"localhost"
 							],
@@ -34,7 +34,7 @@
 								"api",
 								"v1",
 								"categories",
-								"471bbb20-802a-4f54-bebd-ca1dc0bd7696"
+								"c1099396-87a1-4c50-abf5-d13fe51da33e"
 							]
 						}
 					},
@@ -89,7 +89,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"And Other one\"\r\n}",
+							"raw": "{\r\n    \"name\" : \"olade\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -118,7 +118,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:3030/api/v1/categories/69a70399-3bfe-4f7c-b80f-c6cce600449a",
+							"raw": "localhost:3030/api/v1/categories/7d614503-dbc4-49e3-b75c-4d0a77416337",
 							"host": [
 								"localhost"
 							],
@@ -127,7 +127,7 @@
 								"api",
 								"v1",
 								"categories",
-								"69a70399-3bfe-4f7c-b80f-c6cce600449a"
+								"7d614503-dbc4-49e3-b75c-4d0a77416337"
 							]
 						}
 					},
@@ -145,7 +145,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Voleibol\",\r\n    \"description\": \"ola\",\r\n    \"is_favourite\": true,\r\n    \"kind\": \"ME\",\r\n    \"color\": \"abcdef\",\r\n    \"units\": \"meters\",\r\n    \"user_id\": \"fasdfadsf\",\r\n    \"category\" : \"917c7f37-ae6f-416d-8070-f67ff26fc13d\"\r\n}",
+							"raw": "{\r\n    \"name\": \"Ping Pong\",\r\n    \"description\": \"ola\",\r\n    \"is_favourite\": true,\r\n    \"kind\": \"ME\",\r\n    \"color\": \"abcdef\",\r\n    \"units\": \"meters\",\r\n    \"user_id\": \"fasdfadsf\",\r\n    \"category\" : \"daab4891-c1c9-4eef-b2b4-fa4dc1c9de61\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -321,7 +321,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"frequency_type\":\"weekly\",\r\n    \"frequency_data\":\"2023-09-08\",\r\n    \"habit_id\":\"cea98048-bd39-4890-92c9-43b7eaa22484\"\r\n}",
+							"raw": "{\r\n    \"frequency_type\":\"daily\",\r\n    \"frequency_data\":\"2024-10-08\",\r\n    \"habit_id\":\"133c9615-dca1-475a-9882-fcc116f74b01\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -441,7 +441,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:3030/api/v1/habitdata/1f5fa607-7b76-406d-8323-ac47575ada03",
+							"raw": "localhost:3030/api/v1/habitdata/e3d2c4be-63b9-4868-87b8-3a52d8bc02a4",
 							"host": [
 								"localhost"
 							],
@@ -450,7 +450,7 @@
 								"api",
 								"v1",
 								"habitdata",
-								"1f5fa607-7b76-406d-8323-ac47575ada03"
+								"e3d2c4be-63b9-4868-87b8-3a52d8bc02a4"
 							]
 						}
 					},
@@ -505,7 +505,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"amount\": 10000,\r\n\r\n    \"recurrency_id\": \"5c14b7db-3985-4ab8-9473-6beb5213a511\"\r\n}",
+							"raw": "{\r\n    \"amount\": 10000,\r\n\r\n    \"recurrency_id\": \"9f2dce01-fd66-4d05-a1ee-92b0b063cc1a\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"

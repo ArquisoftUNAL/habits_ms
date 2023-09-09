@@ -84,7 +84,7 @@ impl DBManager {
     }
 
     // Update an habit
-    pub fn update_habit_data(&self, id: Uuid, data: HabitDataSchema) -> Result<Uuid, Error> {
+    pub fn update_habit_data(&self, id: Uuid, data: HabitDataUpdateSchema) -> Result<Uuid, Error> {
         let conn = self.connection.get();
 
         if conn.is_err() {
@@ -94,11 +94,7 @@ impl DBManager {
         let search = diesel::update(
             habit_data_collected::table.filter(habit_data_collected::hab_dat_id.eq(id)),
         )
-        .set((
-            habit_data_collected::hab_dat_amount.eq(data.amount),
-            habit_data_collected::hab_dat_collected_at.eq(chrono::Local::now().naive_local()),
-            habit_data_collected::hab_rec_id.eq(data.recurrency_id),
-        ))
+        .set(&data)
         .execute(&mut conn.unwrap())
         .map(|_| id);
 
@@ -183,5 +179,43 @@ impl DBManager {
             .collect();
 
         Ok(result)
+    }
+
+    // Get parent recurrency and habit from data
+    pub fn get_parent_recurrency_and_habit(
+        &self,
+        habit_data: &HabitDataCollected,
+    ) -> Result<(HabitRecurrency, Habit), Error> {
+        let conn = self.connection.get();
+
+        if conn.is_err() {
+            return Err(Error::DBConnectionError(conn.err().unwrap()));
+        }
+
+        let mut conn = conn.unwrap();
+
+        let recurrency = habit_recurrency::table
+            .select(HabitRecurrency::as_select())
+            .find(habit_data.hab_rec_id)
+            .first(&mut conn);
+
+        if recurrency.is_err() {
+            return Err(Error::QueryError(recurrency.err().unwrap()));
+        }
+
+        let recurrency = recurrency.unwrap();
+
+        let habit = habit::table
+            .select(Habit::as_select())
+            .find(recurrency.hab_id)
+            .first(&mut conn);
+
+        if habit.is_err() {
+            return Err(Error::QueryError(habit.err().unwrap()));
+        }
+
+        let habit = habit.unwrap();
+
+        Ok((recurrency, habit))
     }
 }

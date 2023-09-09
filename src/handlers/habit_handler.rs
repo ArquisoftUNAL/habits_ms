@@ -1,5 +1,6 @@
 use crate::{
     db::DBManager,
+    error::Error,
     models::api::{habit_api_models::*, *},
 };
 
@@ -14,13 +15,12 @@ pub async fn create_habit_handler(
     data: HabitCreateSchema,
 ) -> Result<impl Reply, Rejection> {
     // Validate input
-    let validation_result = HabitCreateSchema::validate(&data);
+    let validation_result = data.validate();
+
     if validation_result.is_err() {
-        let error = validation_result.err().unwrap();
-        let response = GeneralResponse {
-            message: format!("Error validating habit: {}", error),
-        };
-        return Ok(json(&response));
+        return Err(warp::reject::custom(Error::ValidationError(
+            validation_result.err().unwrap(),
+        )));
     }
 
     // Create model from request body
@@ -224,8 +224,17 @@ pub async fn delete_habits_handler(manager: DBManager, id: Uuid) -> Result<impl 
 pub async fn update_habits_handler(
     manager: DBManager,
     id: Uuid,
-    data: HabitCreateSchema,
+    data: HabitUpdateSchema,
 ) -> Result<impl Reply, Rejection> {
+    // Validate input
+    let validation_result = data.validate();
+
+    if validation_result.is_err() {
+        return Err(warp::reject::custom(Error::ValidationError(
+            validation_result.err().unwrap(),
+        )));
+    }
+
     let result = manager.update_habit(id, data);
 
     if result.is_err() {

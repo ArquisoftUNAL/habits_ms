@@ -2,6 +2,8 @@ use crate::models::{
     api::recurrency_api_models::*,
     database::{Habit, HabitRecurrency},
 };
+use crate::schema::habit;
+use diesel::query_builder::AsChangeset;
 use serde_derive::{Deserialize, Serialize};
 
 // use bigdecimal::BigDecimal;
@@ -72,11 +74,45 @@ pub struct HabitCreateSchema {
     #[validate(length(min = 6, max = 6))]
     pub color: String,
 
+    #[validate(length(min = 10, max = 10))]
     pub units: String,
 
     pub user_id: String,
 
     pub category: Uuid,
+}
+
+// Requests schemas
+#[derive(Debug, Deserialize, Validate, AsChangeset)]
+#[diesel(table_name = habit)]
+pub struct HabitUpdateSchema {
+    #[validate(length(min = 1, max = 255))]
+    #[diesel(column_name = "hab_name")]
+    pub name: Option<String>,
+
+    #[validate(length(min = 1, max = 255))]
+    #[diesel(column_name = "hab_description")]
+    pub description: Option<String>,
+
+    #[diesel(column_name = "hab_is_favorite")]
+    pub is_favourite: Option<bool>,
+
+    #[diesel(column_name = "hab_is_yn")]
+    pub is_yn: Option<bool>,
+
+    #[validate(length(min = 6, max = 6))]
+    #[diesel(column_name = "hab_color")]
+    pub color: Option<String>,
+
+    #[validate(length(min = 10, max = 10))]
+    #[diesel(column_name = "hab_units")]
+    pub units: Option<String>,
+
+    #[diesel(column_name = "usr_id")]
+    pub user_id: Option<String>,
+
+    #[diesel(column_name = "cat_id")]
+    pub category: Option<Uuid>,
 }
 
 // Responses

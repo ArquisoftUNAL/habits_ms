@@ -51,6 +51,7 @@ diesel::table! {
     habit_recurrency (hab_rec_id) {
         hab_rec_id -> Uuid,
         hab_rec_freq_type -> RecDataType,
+        hab_rec_goal -> Numeric,
         hab_rec_freq_data -> Date,
         hab_id -> Uuid,
     }

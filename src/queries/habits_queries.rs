@@ -82,7 +82,7 @@ impl DBManager {
     }
 
     // Update an habit
-    pub fn update_habit(&self, id: Uuid, data: HabitCreateSchema) -> Result<Uuid, Error> {
+    pub fn update_habit(&self, id: Uuid, data: HabitUpdateSchema) -> Result<Uuid, Error> {
         let conn = self.connection.get();
 
         if conn.is_err() {
@@ -90,16 +90,7 @@ impl DBManager {
         }
 
         let search = diesel::update(habit::table.filter(habit::hab_id.eq(id)))
-            .set((
-                habit::hab_name.eq(data.name),
-                habit::hab_description.eq(data.description),
-                habit::hab_is_favorite.eq(data.is_favourite),
-                habit::hab_is_yn.eq(data.is_yn),
-                habit::hab_units.eq(data.units),
-                habit::usr_id.eq(data.user_id),
-                habit::hab_updated_at.eq(chrono::Local::now().naive_local()),
-                habit::cat_id.eq(data.category),
-            ))
+            .set(&data)
             .execute(&mut conn.unwrap())
             .map(|_| id);
 

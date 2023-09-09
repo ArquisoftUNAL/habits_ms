@@ -39,6 +39,7 @@ impl DBManager {
             hab_rec_freq_data: data.frequency_data,
             hab_rec_freq_type: data.frequency_type,
             hab_id: data.habit_id,
+            hab_rec_goal: data.goal,
         };
 
         let conn = self.connection.get();
@@ -80,7 +81,7 @@ impl DBManager {
     }
 
     // Update an habit
-    pub fn update_recurrence(&self, id: Uuid, data: RecurrencyCreateSchema) -> Result<Uuid, Error> {
+    pub fn update_recurrence(&self, id: Uuid, data: RecurrenceUpdateSchema) -> Result<Uuid, Error> {
         let conn = self.connection.get();
 
         if conn.is_err() {
@@ -89,12 +90,7 @@ impl DBManager {
 
         let search =
             diesel::update(habit_recurrency::table.filter(habit_recurrency::hab_rec_id.eq(id)))
-                .set((
-                    habit_recurrency::hab_id.eq(data.habit_id),
-                    habit_recurrency::hab_rec_freq_data.eq(data.frequency_data),
-                    habit_recurrency::hab_rec_freq_type.eq(data.frequency_type),
-                    habit_recurrency::hab_id.eq(data.habit_id),
-                ))
+                .set(&data)
                 .execute(&mut conn.unwrap())
                 .map(|_| id);
 

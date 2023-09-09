@@ -1,17 +1,28 @@
 use crate::{
     db::DBManager,
+    error::Error,
     models::api::{data_api_models::*, *},
 };
 
 use warp::{reply::json, Rejection, Reply};
 
 use uuid::Uuid;
+use validator::Validate;
 
 // POST Route
 pub async fn create_habit_data_handler(
     manager: DBManager,
     data: HabitDataSchema,
 ) -> Result<impl Reply, Rejection> {
+    // Validate input
+    let validation_result = data.validate();
+
+    if validation_result.is_err() {
+        return Err(warp::reject::custom(Error::ValidationError(
+            validation_result.err().unwrap(),
+        )));
+    }
+
     // Create model from request body
     let result = manager.add_habit_data(data);
 
@@ -109,21 +120,51 @@ pub async fn delete_habit_data_handler(
 pub async fn update_habit_data_handler(
     manager: DBManager,
     id: Uuid,
-    data: HabitDataSchema,
+    data: HabitDataUpdateSchema,
 ) -> Result<impl Reply, Rejection> {
-    let result = manager.update_habit_data(id, data);
+    // Validate input
+    let validation_result = data.validate();
+
+    if validation_result.is_err() {
+        return Err(warp::reject::custom(Error::ValidationError(
+            validation_result.err().unwrap(),
+        )));
+    }
+
+    // First check if habit exists
+    let result = manager.get_habit_data_by_id(id);
+
+    let mut updatable_data = data;
+
+    if !result.is_err() {
+        // Load data recurrence and belongs to habit
+        let existent_data = result.unwrap();
+
+        let result = manager.get_parent_recurrency_and_habit(&existent_data);
+
+        if result.is_err() {
+            return Err(warp::reject::custom(result.err().unwrap()));
+        }
+
+        let (_, habit) = result.unwrap();
+
+        updatable_data = HabitDataUpdateSchema { ..updatable_data };
+
+        if !habit.hab_is_yn {
+            // Update amount rather than reassign it
+            updatable_data.amount += existent_data.hab_dat_amount;
+        }
+    }
+
+    let result = manager.update_habit_data(id, updatable_data);
 
     if result.is_err() {
-        let error = result.err().unwrap();
-        let response = GeneralResponse {
-            message: format!("Error updating habit: {}", error),
-        };
-        return Ok(json(&response));
+        return Err(warp::reject::custom(result.err().unwrap()));
     }
 
     // Return response
     let response = GeneralResponse {
-        message: "Habit updated successfully".to_string(),
+        message: "Habit data updated successfully".to_string(),
     };
 
     Ok(json(&response))

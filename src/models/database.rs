@@ -87,6 +87,8 @@ pub struct HabitRecurrency {
 
     pub hab_rec_freq_type: RecDataEnum,
 
+    pub hab_rec_goal: BigDecimal,
+
     pub hab_rec_freq_data: NaiveDate,
 }
 

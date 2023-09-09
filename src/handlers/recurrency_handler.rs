@@ -1,18 +1,27 @@
 use crate::{
     db::DBManager,
+    error::Error,
     models::api::{recurrency_api_models::*, *},
 };
 
 use warp::{reply::json, Rejection, Reply};
 
 use uuid::Uuid;
+use validator::Validate;
 
 // POST Route
 pub async fn create_recurrency_handler(
     manager: DBManager,
     data: RecurrencyCreateSchema,
 ) -> Result<impl Reply, Rejection> {
-    println!("data: {:?}", data);
+    // Validate input
+    let validation_result = data.validate();
+
+    if validation_result.is_err() {
+        return Err(warp::reject::custom(Error::ValidationError(
+            validation_result.err().unwrap(),
+        )));
+    }
     // Create model from request body
     let result = manager.add_recurrence(data);
 
@@ -111,8 +120,17 @@ pub async fn delete_recurrence_handler(
 pub async fn update_recurrence_handler(
     manager: DBManager,
     id: Uuid,
-    data: RecurrencyCreateSchema,
+    data: RecurrenceUpdateSchema,
 ) -> Result<impl Reply, Rejection> {
+    // Validate input
+    let validation_result = data.validate();
+
+    if validation_result.is_err() {
+        return Err(warp::reject::custom(Error::ValidationError(
+            validation_result.err().unwrap(),
+        )));
+    }
+
     let result = manager.update_recurrence(id, data);
 
     if result.is_err() {
