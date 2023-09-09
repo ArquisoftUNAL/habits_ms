@@ -1,5 +1,11 @@
 // @generated automatically by Diesel CLI.
 
+pub mod sql_types {
+    #[derive(diesel::query_builder::QueryId, diesel::sql_types::SqlType)]
+    #[diesel(postgres_type(name = "rec_data_type"))]
+    pub struct RecDataType;
+}
+
 diesel::table! {
     category (cat_id) {
         cat_id -> Uuid,
@@ -40,11 +46,13 @@ diesel::table! {
 }
 
 diesel::table! {
+    use diesel::sql_types::*;
+    use super::sql_types::RecDataType;
+
     habit_recurrency (hab_rec_id) {
         hab_rec_id -> Uuid,
-        #[max_length = 255]
-        hab_rec_freq_type -> Varchar,
-        hab_rec_freq_data -> Timestamp,
+        hab_rec_freq_type -> RecDataType,
+        hab_rec_freq_data -> Date,
         hab_id -> Uuid,
     }
 }

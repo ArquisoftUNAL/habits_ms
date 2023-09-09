@@ -2,134 +2,524 @@
 	"info": {
 		"_postman_id": "f9fa8fd5-cbee-42c7-91fb-c3a6d9d74ffe",
 		"name": "Habitus",
+		"description": "All endpoints enabled for Habits microservice of Habitus",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "25456599"
 	},
 	"item": [
 		{
-			"name": "Update Category",
-			"request": {
-				"method": "PATCH",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"Eat pizza\",\r\n    \"description\": \"For getting beauty!\",\r\n    \"is_favourite\": true,\r\n    \"kind\": \"Count\",\r\n    \"user_id\": \"12f54575-857a-4cdf-a53e-763f6351fe39\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+			"name": "Categories",
+			"item": [
+				{
+					"name": "Update Category",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Eat pizza\",\r\n    \"description\": \"For getting beauty!\",\r\n    \"is_favourite\": true,\r\n    \"kind\": \"Count\",\r\n    \"user_id\": \"12f54575-857a-4cdf-a53e-763f6351fe39\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3030/api/v1/categories/471bbb20-802a-4f54-bebd-ca1dc0bd7696",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"categories",
+								"471bbb20-802a-4f54-bebd-ca1dc0bd7696"
+							]
 						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "localhost:3030/api/v1/categories/471bbb20-802a-4f54-bebd-ca1dc0bd7696",
-					"host": [
-						"localhost"
-					],
-					"port": "3030",
-					"path": [
-						"api",
-						"v1",
-						"categories",
-						"471bbb20-802a-4f54-bebd-ca1dc0bd7696"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get Categories",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "localhost:3030/api/v1/categories/",
-					"host": [
-						"localhost"
-					],
-					"port": "3030",
-					"path": [
-						"api",
-						"v1",
-						"categories",
-						""
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Delete Category",
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "localhost:3030/api/v1/categories/471bbb20-802a-4f54-bebd-ca1dc0bd7696/",
-					"host": [
-						"localhost"
-					],
-					"port": "3030",
-					"path": [
-						"api",
-						"v1",
-						"categories",
-						"471bbb20-802a-4f54-bebd-ca1dc0bd7696",
-						""
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Create Category",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"name2\": \"Carreras\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+				{
+					"name": "Get Categories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3030/api/v1/categories/",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"categories",
+								""
+							]
 						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "localhost:3030/api/v1/categories/",
-					"host": [
-						"localhost"
-					],
-					"port": "3030",
-					"path": [
-						"api",
-						"v1",
-						"categories",
-						""
-					]
+				{
+					"name": "Delete Category",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3030/api/v1/categories/79e5ec22-3c6e-41b7-a36f-8e2d56068cd7",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"categories",
+								"79e5ec22-3c6e-41b7-a36f-8e2d56068cd7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Category",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Other GTA\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3030/api/v1/categories/",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"categories",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Category by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3030/api/v1/categories/69a70399-3bfe-4f7c-b80f-c6cce600449a",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"categories",
+								"69a70399-3bfe-4f7c-b80f-c6cce600449a"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "Get Category by ID",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "localhost:3030/api/v1/categories/471bbb20-802a-4f54-bebd-ca1dc0bd7696/",
-					"host": [
-						"localhost"
-					],
-					"port": "3030",
-					"path": [
-						"api",
-						"v1",
-						"categories",
-						"471bbb20-802a-4f54-bebd-ca1dc0bd7696",
-						""
-					]
+			"name": "Habits",
+			"item": [
+				{
+					"name": "Create Habit",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Voleibol\",\r\n    \"description\": \"ola\",\r\n    \"is_favourite\": true,\r\n    \"kind\": \"ME\",\r\n    \"color\": \"abcdef\",\r\n    \"units\": \"meters\",\r\n    \"user_id\": \"fasdfadsf\",\r\n    \"category\" : \"fa4b7e6b-0a7e-493d-9010-ee0dac513033\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3030/api/v1/habits/",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"habits",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get user habits",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3030/api/v1/habits/user/fasdfadsf",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"habits",
+								"user",
+								"fasdfadsf"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get habits with recurrences",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3030/api/v1/habits/user/fasdfadsf/recurrences",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"habits",
+								"user",
+								"fasdfadsf",
+								"recurrences"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get habits, recurrences and data",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3030/api/v1/habits/recurrences/data",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"habits",
+								"recurrences",
+								"data"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update habits",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Futbol\",\r\n    \"description\": \"ola\",\r\n    \"is_favourite\": true,\r\n    \"kind\": \"ME\",\r\n    \"color\": \"abcdef\",\r\n    \"units\": \"meters\",\r\n    \"user_id\": \"fasdfadsf\",\r\n    \"category\" : \"471bbb20-802a-4f54-bebd-ca1dc0bd7696\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3030/api/v1/habits/recurrences/data",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"habits",
+								"recurrences",
+								"data"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Habits",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3030/api/v1/habits/",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"habits",
+								""
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
+		},
+		{
+			"name": "Recurrences",
+			"item": [
+				{
+					"name": "Create Recurrency",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"frequency_type\":\"Weekly\",\r\n    \"frequency_data\":\"2023-09-08T14:30:00Z\",\r\n    \"habit_id\":\"69a70399-3bfe-4f7c-b80f-c6cce600449a\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3030/api/v1/recurrences/",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"recurrences",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get habits recurrences",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3030/api/v1/recurrences/habit/b0e5acb7-4898-4207-bf1b-dbafe9884afa",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"recurrences",
+								"habit",
+								"b0e5acb7-4898-4207-bf1b-dbafe9884afa"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get recurrences and data",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3030/api/v1/recurrences/habit/b0e5acb7-4898-4207-bf1b-dbafe9884afa",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"recurrences",
+								"habit",
+								"b0e5acb7-4898-4207-bf1b-dbafe9884afa"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update recurrence data",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "localhost:3030/api/v1/recurrences/fadsfdasf",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"recurrences",
+								"fadsfdasf"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete recurrence data",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3030/api/v1/recurrences/sadfsadf",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"recurrences",
+								"sadfsadf"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Habits Data",
+			"item": [
+				{
+					"name": "Get habit data by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3030/api/v1/habitdata/",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"habitdata",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update habit data",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "localhost:3030/api/v1/habitdata/",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"habitdata",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete habit data",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3030/api/v1/habitdata/",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"habitdata",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create habit data",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "localhost:3030/api/v1/habitdata/",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"habitdata",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get recurrence's data",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3030/api/v1/habitdata/recurrence/",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"habitdata",
+								"recurrence",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }

@@ -1,6 +1,6 @@
 use crate::{
+    db::DBManager,
     models::api::{data_api_models::*, *},
-    queries::data_queries,
 };
 
 use warp::{reply::json, Rejection, Reply};
@@ -8,9 +8,12 @@ use warp::{reply::json, Rejection, Reply};
 use uuid::Uuid;
 
 // POST Route
-pub async fn create_habit_data_handler(data: HabitDataSchema) -> Result<impl Reply, Rejection> {
+pub async fn create_habit_data_handler(
+    manager: DBManager,
+    data: HabitDataSchema,
+) -> Result<impl Reply, Rejection> {
     // Create model from request body
-    let result = data_queries::add_habit_data(data).await;
+    let result = manager.add_habit_data(data);
 
     if result.is_err() {
         let error = result.err().unwrap();
@@ -28,9 +31,12 @@ pub async fn create_habit_data_handler(data: HabitDataSchema) -> Result<impl Rep
 }
 
 // GET Route
-pub async fn get_recurrency_data_handler(id: Uuid) -> Result<impl Reply, Rejection> {
+pub async fn get_recurrency_data_handler(
+    manager: DBManager,
+    id: Uuid,
+) -> Result<impl Reply, Rejection> {
     // Get habits from database
-    let result = data_queries::get_all_recurrency_data(id).await;
+    let result = manager.get_all_recurrency_data(id);
 
     if result.is_err() {
         let error = result.err().unwrap();
@@ -53,9 +59,9 @@ pub async fn get_recurrency_data_handler(id: Uuid) -> Result<impl Reply, Rejecti
 }
 
 // GET Route
-pub async fn get_data_by_id_handler(id: Uuid) -> Result<impl Reply, Rejection> {
+pub async fn get_data_by_id_handler(manager: DBManager, id: Uuid) -> Result<impl Reply, Rejection> {
     // Get habits from database
-    let result = data_queries::get_habit_data_by_id(id).await;
+    let result = manager.get_habit_data_by_id(id);
 
     if result.is_err() {
         let error = result.err().unwrap();
@@ -77,8 +83,11 @@ pub async fn get_data_by_id_handler(id: Uuid) -> Result<impl Reply, Rejection> {
 }
 
 // DELETE Route
-pub async fn delete_habit_data_handler(id: Uuid) -> Result<impl Reply, Rejection> {
-    let result = data_queries::delete_habit_data(id).await;
+pub async fn delete_habit_data_handler(
+    manager: DBManager,
+    id: Uuid,
+) -> Result<impl Reply, Rejection> {
+    let result = manager.delete_habit_data(id);
 
     if result.is_err() {
         let error = result.err().unwrap();
@@ -97,10 +106,11 @@ pub async fn delete_habit_data_handler(id: Uuid) -> Result<impl Reply, Rejection
 
 // UPDATE (PATCH) Route
 pub async fn update_habit_data_handler(
+    manager: DBManager,
     id: Uuid,
     data: HabitDataSchema,
 ) -> Result<impl Reply, Rejection> {
-    let result = data_queries::update_habit_data(id, data).await;
+    let result = manager.update_habit_data(id, data);
 
     if result.is_err() {
         let error = result.err().unwrap();

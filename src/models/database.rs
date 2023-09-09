@@ -4,6 +4,17 @@ use diesel::prelude::*;
 use serde_derive::{Deserialize, Serialize};
 use uuid::Uuid;
 
+#[derive(diesel_derive_enum::DbEnum, Debug, Deserialize, Serialize)]
+#[ExistingTypePath = "crate::schema::sql_types::RecDataType"]
+pub enum RecDataEnum {
+    Daily,
+    Weekly,
+    Weekly2,
+    Monthly,
+    Monthly2,
+    Yearly,
+}
+
 #[derive(
     Debug, Deserialize, Queryable, Selectable, Insertable, Serialize, AsChangeset, Identifiable,
 )]
@@ -48,6 +59,8 @@ pub struct Habit {
 
     pub hab_color: String,
 
+    pub hab_units: String,
+
     pub usr_id: String,
 
     pub cat_id: Uuid,
@@ -73,9 +86,9 @@ pub struct HabitRecurrency {
 
     pub hab_id: Uuid,
 
-    pub hab_rec_freq_type: String,
+    pub hab_rec_freq_type: RecDataEnum,
 
-    pub hab_rec_freq_data: NaiveDateTime,
+    pub hab_rec_freq_data: NaiveDate,
 }
 
 #[derive(

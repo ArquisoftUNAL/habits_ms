@@ -1,16 +1,30 @@
 use crate::{
+    db::DBManager,
     models::api::{habit_api_models::*, *},
-    queries::habits_queries,
 };
 
 use warp::{reply::json, Rejection, Reply};
 
 use uuid::Uuid;
+use validator::Validate;
 
 // POST Route
-pub async fn create_habit_handler(data: HabitCreateSchema) -> Result<impl Reply, Rejection> {
+pub async fn create_habit_handler(
+    manager: DBManager,
+    data: HabitCreateSchema,
+) -> Result<impl Reply, Rejection> {
+    // Validate input
+    let validation_result = HabitCreateSchema::validate(&data);
+    if validation_result.is_err() {
+        let error = validation_result.err().unwrap();
+        let response = GeneralResponse {
+            message: format!("Error validating habit: {}", error),
+        };
+        return Ok(json(&response));
+    }
+
     // Create model from request body
-    let result = habits_queries::add_habit(data).await;
+    let result = manager.add_habit(data);
 
     if result.is_err() {
         let error = result.err().unwrap();
@@ -29,11 +43,11 @@ pub async fn create_habit_handler(data: HabitCreateSchema) -> Result<impl Reply,
 }
 
 // GET Route
-pub async fn get_habits_handler(id: String) -> Result<impl Reply, Rejection> {
+pub async fn get_habits_handler(manager: DBManager, id: String) -> Result<impl Reply, Rejection> {
     // Get habits from database
     let user_id = id.clone();
 
-    let result = habits_queries::get_all_user_habits(&user_id).await;
+    let result = manager.get_all_user_habits(&user_id);
 
     if result.is_err() {
         let error = result.err().unwrap();
@@ -67,11 +81,15 @@ pub async fn get_habits_handler(id: String) -> Result<impl Reply, Rejection> {
 
     Ok(json(&response))
 }
+
 // GET Route
-pub async fn get_habit_by_id_handler(id: Uuid) -> Result<impl Reply, Rejection> {
+pub async fn get_habit_by_id_handler(
+    manager: DBManager,
+    id: Uuid,
+) -> Result<impl Reply, Rejection> {
     // Get habits from database
 
-    let result = habits_queries::get_habit_by_id(id).await;
+    let result = manager.get_habit_by_id(id);
 
     if result.is_err() {
         let error = result.err().unwrap();
@@ -93,10 +111,96 @@ pub async fn get_habit_by_id_handler(id: Uuid) -> Result<impl Reply, Rejection> 
     Ok(json(&response))
 }
 
+// GET Route
+pub async fn get_habits_recurrences_by_user_id(
+    manager: DBManager,
+    id: String,
+) -> Result<impl Reply, Rejection> {
+    let user_id = id.clone();
+    let result = manager.get_all_user_habits(&user_id);
+
+    if result.is_err() {
+        let error = result.err().unwrap();
+        let response = GeneralResponse {
+            message: format!(
+                "Error getting habits & recurrences: {} for user with ID: {}",
+                error, &user_id
+            ),
+        };
+        return Ok(json(&response));
+    }
+
+    let result = manager.join_habits_recurrences(result.unwrap());
+
+    if result.is_err() {
+        let error = result.err().unwrap();
+        let response = GeneralResponse {
+            message: format!(
+                "Error getting habits & recurrences: {} for user with ID: {}",
+                error, &user_id
+            ),
+        };
+        return Ok(json(&response));
+    }
+
+    // Return response
+    let response = HabitAndRecurrencesMultipleQueryResponse {
+        message: format!(
+            "Successfully retrieved habits & recurrences for user with ID: {}",
+            &user_id
+        ),
+        habits: result.unwrap(),
+    };
+
+    Ok(json(&response))
+}
+
+// GET Route
+pub async fn get_habits_recurrences_data_by_user_id(
+    manager: DBManager,
+    id: String,
+) -> Result<impl Reply, Rejection> {
+    let user_id = id.clone();
+    let result = manager.get_all_user_habits(&user_id);
+
+    if result.is_err() {
+        let error = result.err().unwrap();
+        let response = GeneralResponse {
+            message: format!(
+                "Error getting habits, recurrences & data: {} for user with ID: {}",
+                error, &user_id
+            ),
+        };
+        return Ok(json(&response));
+    }
+    let result = manager.join_habits_recurrences_data(result.unwrap());
+
+    if result.is_err() {
+        let error = result.err().unwrap();
+        let response = GeneralResponse {
+            message: format!(
+                "Error getting habits, recurrences & data: {} for user with ID: {}",
+                error, &user_id
+            ),
+        };
+        return Ok(json(&response));
+    }
+    // Return response
+    let response = HabitsAndRecurrencesAndDataQueryResponse {
+        message: format!(
+            "Successfully retrieved habits, recurrences & data for user with ID: {}",
+            &user_id
+        ),
+        habits: result.unwrap(),
+    };
+
+    Ok(json(&response))
+}
+
 // DELETE Route
-pub async fn delete_habits_handler(id: Uuid) -> Result<impl Reply, Rejection> {
+pub async fn delete_habits_handler(manager: DBManager, id: Uuid) -> Result<impl Reply, Rejection> {
     // Delete habit from database
-    let result = habits_queries::delete_habit(id).await;
+    let result = manager.delete_habit(id);
 
     if result.is_err() {
         let error = result.err().unwrap();
@@ -115,10 +219,11 @@ pub async fn delete_habits_handler(id: Uuid) -> Result<impl Reply, Rejection> {
 
 // UPDATE (PATCH) Route
 pub async fn update_habits_handler(
+    manager: DBManager,
     id: Uuid,
     data: HabitCreateSchema,
 ) -> Result<impl Reply, Rejection> {
-    let result = habits_queries::update_habit(id, data).await;
+    let result = manager.update_habit(id, data);
 
     if result.is_err() {
         let error = result.err().unwrap();

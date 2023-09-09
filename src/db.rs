@@ -1,37 +1,50 @@
+use crate::error::Error;
 use diesel::{
     prelude::*,
-    r2d2::{ConnectionManager, Pool},
+    r2d2::{ConnectionManager, Error as R2D2Error, Pool},
 };
 use dotenvy::dotenv;
 use std::env;
+use std::time::Duration;
 
 pub type PostgresPool = Pool<ConnectionManager<PgConnection>>;
 
-lazy_static! {
-    pub static ref POSTGRES_POOL: PostgresPool = {
-        println!("Connecting to database");
-        dotenv().ok();
+pub struct DBManager {
+    pub connection: PostgresPool,
+}
 
-        let database_url: String = format!(
-            "postgres://{}:{}@{}:{}/{}",
-            env::var("POSTGRES_USER").unwrap(),
-            env::var("POSTGRES_PASSWORD").unwrap(),
-            env::var("POSTGRES_HOST").unwrap(),
-            env::var("POSTGRES_PORT").unwrap(),
-            env::var("POSTGRES_DB").unwrap()
-        );
+pub fn create_pool() -> Result<PostgresPool, Error> {
+    println!("Connecting to database");
+    dotenv().ok();
 
-        let manager = ConnectionManager::<PgConnection>::new(database_url);
+    let database_url: String = format!("{}", env::var("DATABASE_URL").unwrap());
 
-        let pool = Pool::builder().build(manager);
+    let manager = ConnectionManager::<PgConnection>::new(database_url);
 
-        if pool.is_err() {
-            let error = pool.err().unwrap();
-            panic!("Error connecting to database: {}", error);
+    let pool = Pool::builder()
+        .max_size(15)
+        .connection_timeout(Duration::from_secs(10))
+        // .error_handler(Box::new(|err: R2D2Error, conn| {
+        //     println!("Error on connection: {}", err);
+        //     // For other errors, return an error
+        //     Err(Error::DBConnectionError(err))
+        // }))
+        .build(manager)
+        .or_else(|err| Err(Error::DBConnectionError(err)));
+
+    if pool.is_err() {
+        return Err(pool.err().unwrap());
+    }
+
+    println!("Connected to database");
+
+    Ok(pool.unwrap())
+}
+
+impl DBManager {
+    pub fn new(connection: PostgresPool) -> DBManager {
+        DBManager {
+            connection: connection,
         }
-
-        println!("Connected to database");
-
-        pool.unwrap()
-    };
+    }
 }

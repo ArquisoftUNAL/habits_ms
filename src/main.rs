@@ -10,13 +10,17 @@ mod schema;
 mod utils;
 mod validators;
 
-#[macro_use]
-extern crate lazy_static;
-
 #[tokio::main(flavor = "multi_thread", worker_threads = 4)]
 //#[tokio::main(flavor = "current_thread")]
 async fn main() {
-    let routes = routes::get_routes();
+    let pool = db::create_pool();
+
+    if pool.is_err() {
+        println!("Error creating pool: {:?}", pool.err());
+        return;
+    }
+
+    let routes = routes::get_routes(pool.unwrap());
     print!("Preparing server to listen on port 3030");
 
     warp::serve(routes).run(([0, 0, 0, 0], 3030)).await;

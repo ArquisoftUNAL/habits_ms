@@ -1,6 +1,6 @@
 use crate::{
-    models::api::{habit_api_models::*, recurrency_api_models::*, *},
-    queries::{habits_queries, recurrences_queries},
+    db::DBManager,
+    models::api::{recurrency_api_models::*, *},
 };
 
 use warp::{reply::json, Rejection, Reply};
@@ -9,10 +9,12 @@ use uuid::Uuid;
 
 // POST Route
 pub async fn create_recurrency_handler(
+    manager: DBManager,
     data: RecurrencyCreateSchema,
 ) -> Result<impl Reply, Rejection> {
+    println!("data: {:?}", data);
     // Create model from request body
-    let result = recurrences_queries::add_recurrence(data).await;
+    let result = manager.add_recurrence(data);
 
     if result.is_err() {
         let error = result.err().unwrap();
@@ -30,9 +32,12 @@ pub async fn create_recurrency_handler(
 }
 
 // GET Route
-pub async fn get_habit_recurrences_handler(id: Uuid) -> Result<impl Reply, Rejection> {
+pub async fn get_habit_recurrences_handler(
+    manager: DBManager,
+    id: Uuid,
+) -> Result<impl Reply, Rejection> {
     // Get habits from database
-    let result = recurrences_queries::get_all_habit_recurrences(id).await;
+    let result = manager.get_all_habit_recurrences(id);
 
     if result.is_err() {
         let error = result.err().unwrap();
@@ -48,15 +53,18 @@ pub async fn get_habit_recurrences_handler(id: Uuid) -> Result<impl Reply, Rejec
     // Return response
     let response = RecurrencesMultipleQueryResponse {
         message: format!("Successfully retrieved habit's recurrences"),
-        habits: result,
+        recurrences: result,
     };
 
     Ok(json(&response))
 }
 
 // GET Route
-pub async fn get_recurrence_by_id_handler(id: Uuid) -> Result<impl Reply, Rejection> {
-    let result = recurrences_queries::get_recurrence_by_id(id).await;
+pub async fn get_recurrence_by_id_handler(
+    manager: DBManager,
+    id: Uuid,
+) -> Result<impl Reply, Rejection> {
+    let result = manager.get_recurrence_by_id(id);
 
     if result.is_err() {
         let error = result.err().unwrap();
@@ -69,34 +77,19 @@ pub async fn get_recurrence_by_id_handler(id: Uuid) -> Result<impl Reply, Reject
     // Return response
     let response = RecurrencesSingleQueryResponse {
         message: format!("Successfully retrieved recurrence"),
-        habits: result.unwrap(),
-    };
-
-    Ok(json(&response))
-}
-
-// GET Route
-pub async fn get_habits_recurrences_by_user_id(id: String) -> Result<impl Reply, Rejection> {
-    let user_id = id.clone();
-    let result = habits_queries::get_all_user_habits(&user_id).await;
-    let result = recurrences_queries::join_habits_recurrences(result.unwrap());
-
-    // Return response
-    let response = HabitsAndRecurrencesQueryResponse {
-        message: format!(
-            "Successfully retrieved habits & recurrences for user with ID: {}",
-            &user_id
-        ),
-        habits: result.await,
+        recurrence: result.unwrap(),
     };
 
     Ok(json(&response))
 }
 
 // DELETE Route
-pub async fn delete_recurrence_handler(id: Uuid) -> Result<impl Reply, Rejection> {
+pub async fn delete_recurrence_handler(
+    manager: DBManager,
+    id: Uuid,
+) -> Result<impl Reply, Rejection> {
     // Delete habit from database
-    let result = recurrences_queries::delete_recurrence(id).await;
+    let result = manager.delete_recurrence(id);
 
     if result.is_err() {
         let error = result.err().unwrap();
@@ -115,10 +108,11 @@ pub async fn delete_recurrence_handler(id: Uuid) -> Result<impl Reply, Rejection
 
 // UPDATE (PATCH) Route
 pub async fn update_recurrence_handler(
+    manager: DBManager,
     id: Uuid,
     data: RecurrencyCreateSchema,
 ) -> Result<impl Reply, Rejection> {
-    let result = recurrences_queries::update_recurrence(id, data).await;
+    let result = manager.update_recurrence(id, data);
 
     if result.is_err() {
         let error = result.err().unwrap();

@@ -1,15 +1,16 @@
 use crate::{
+    db::DBManager,
     models::api::{category_api_models::*, *},
-    queries::categories_queries,
 };
 
 use warp::{reply::json, Rejection, Reply};
 
 use uuid::Uuid;
+use validator::Validate;
 
 // GET Route
-pub async fn get_categories_handler() -> Result<impl Reply, Rejection> {
-    let result = categories_queries::get_all_categories().await;
+pub async fn get_categories_handler(manager: DBManager) -> Result<impl Reply, Rejection> {
+    let result = manager.get_all_categories();
 
     if result.is_err() {
         let error = result.err().unwrap();
@@ -28,8 +29,11 @@ pub async fn get_categories_handler() -> Result<impl Reply, Rejection> {
 }
 
 // GET Route
-pub async fn get_category_by_id_handler(id: Uuid) -> Result<impl Reply, Rejection> {
-    let result = categories_queries::get_category_by_id(id).await;
+pub async fn get_category_by_id_handler(
+    manager: DBManager,
+    id: Uuid,
+) -> Result<impl Reply, Rejection> {
+    let result = manager.get_category_by_id(id);
 
     if result.is_err() {
         let error = result.err().unwrap();
@@ -48,8 +52,21 @@ pub async fn get_category_by_id_handler(id: Uuid) -> Result<impl Reply, Rejectio
 }
 
 // POST Route
-pub async fn create_category_handler(data: CategoryCreateSchema) -> Result<impl Reply, Rejection> {
-    let result = categories_queries::add_category(data).await;
+pub async fn create_category_handler(
+    manager: DBManager,
+    data: CategoryCreateSchema,
+) -> Result<impl Reply, Rejection> {
+    // Validate input
+    let validation_result = CategoryCreateSchema::validate(&data);
+    if validation_result.is_err() {
+        let error = validation_result.err().unwrap();
+        let response = GeneralResponse {
+            message: format!("Error validating category: {}", error),
+        };
+        return Ok(json(&response));
+    }
+
+    let result = manager.add_category(data);
 
     if result.is_err() {
         let error = result.err().unwrap();
@@ -67,8 +84,11 @@ pub async fn create_category_handler(data: CategoryCreateSchema) -> Result<impl 
 }
 
 // DELETE Route
-pub async fn delete_category_handler(id: Uuid) -> Result<impl Reply, Rejection> {
-    let result = categories_queries::delete_category(id).await;
+pub async fn delete_category_handler(
+    manager: DBManager,
+    id: Uuid,
+) -> Result<impl Reply, Rejection> {
+    let result = manager.delete_category(id);
 
     if result.is_err() {
         let error = result.err().unwrap();
@@ -88,10 +108,11 @@ pub async fn delete_category_handler(id: Uuid) -> Result<impl Reply, Rejection> 
 
 // UPDATE Route
 pub async fn update_category_handler(
+    manager: DBManager,
     id: Uuid,
     data: CategoryCreateSchema,
 ) -> Result<impl Reply, Rejection> {
-    let result = categories_queries::update_category(id, data).await;
+    let result = manager.update_category(id, data);
 
     if result.is_err() {
         let error = result.err().unwrap();

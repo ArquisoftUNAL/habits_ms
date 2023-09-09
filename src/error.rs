@@ -11,6 +11,12 @@ pub enum Error {
 
     #[error("Data validation error: {0}")]
     ValidationError(ValidationErrors),
+
+    #[error("Database connection error: {0}")]
+    DBConnectionError(#[from] diesel::r2d2::PoolError),
+
+    #[error("Query error: {0}")]
+    QueryError(#[from] diesel::result::Error),
 }
 
 #[derive(Serialize)]
@@ -67,12 +73,34 @@ pub async fn handle_rejection(err: Rejection) -> std::result::Result<impl Reply,
                     Some(errors),
                 )
             }
+            Error::DBConnectionError(error) => (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                format!("Database connection error: {}", error),
+                None,
+            ),
+            Error::QueryError(error) => (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                format!("Query error: {}", error),
+                None,
+            ),
         }
+    } else if let Some(_) = err.find::<warp::reject::MethodNotAllowed>() {
+        (
+            StatusCode::METHOD_NOT_ALLOWED,
+            "Method Not Allowed".to_string(),
+            None,
+        )
+    } else if let Some(_) = err.find::<warp::reject::InvalidQuery>() {
+        (
+            StatusCode::BAD_REQUEST,
+            "Invalid Query String".to_string(),
+            None,
+        )
     } else {
         eprintln!("unhandled error: {:?}", err);
         (
             StatusCode::INTERNAL_SERVER_ERROR,
-            "Internal Server Error".to_string(),
+            format!("Internal Server Error: {:?}", err),
             None,
         )
     };
