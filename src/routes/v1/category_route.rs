@@ -16,6 +16,7 @@ pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
     let get_categories = warp::path("categories")
         .and(warp::get())
         .and(with_db_manager(pool.clone()))
+        .and(warp::path::end())
         .and_then(category_handler::get_categories_handler);
 
     let get_category_by_id = warp::path("categories")

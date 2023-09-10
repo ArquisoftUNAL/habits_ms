@@ -118,7 +118,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:3030/api/v1/categories/7d614503-dbc4-49e3-b75c-4d0a77416337",
+							"raw": "localhost:3030/api/v1/categories/c1099396-87a1-4c50-abf5-d13fe51da33e",
 							"host": [
 								"localhost"
 							],
@@ -127,7 +127,7 @@
 								"api",
 								"v1",
 								"categories",
-								"7d614503-dbc4-49e3-b75c-4d0a77416337"
+								"c1099396-87a1-4c50-abf5-d13fe51da33e"
 							]
 						}
 					},
