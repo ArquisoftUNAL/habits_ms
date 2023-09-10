@@ -16,7 +16,7 @@ However here is an example of endpoints and their usage
 Path: /api/v1/categories/
 Method: POST
 Body: 
-```json
+```
 {
     name: "<Your category name goes here>"
 }
@@ -28,7 +28,7 @@ Expected result: 201 (OK)
 Path: /api/v1/habits/
 Method: POST
 Body: 
-```json
+```
 {
     [String] name: "<Your habit name goes here>",
     [String] description: "<Your habit description goes here>",
