@@ -16,9 +16,11 @@ However here is an example of endpoints and their usage
 Path: /api/v1/categories/
 Method: POST
 Body: 
+```json
 {
     name: "<Your category name goes here>"
 }
+```
 Expected result: 201 (OK)
 
 ### Create an habit
@@ -26,6 +28,7 @@ Expected result: 201 (OK)
 Path: /api/v1/habits/
 Method: POST
 Body: 
+```json
 {
     [String] name: "<Your habit name goes here>",
     [String] description: "<Your habit description goes here>",
@@ -36,11 +39,22 @@ Body:
     [String] units: "<Your measurement units>"
     [String (24)] user_id: "<User id (24 characters identifier)>"
 }
+```
 Expected result: 201 (OK)
 
 ## Installation
 
 You can run the commands describen in the Makefile to run the project locally (Suggestion: Run them in the same order as they appear in the Makefile)
+
+Example (From project's root folder):
+```bash
+cd database
+make docker-build-db
+make docker-run-db
+cd ..
+make docker-build-ms
+make docker-run-ms
+```
 
 ## Requirements
 
