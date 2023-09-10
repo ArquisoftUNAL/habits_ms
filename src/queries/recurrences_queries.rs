@@ -1,8 +1,8 @@
 use crate::{
     db::DBManager,
     error::Error,
-    models::api::{habit_api_models::*, recurrency_api_models::*},
-    models::database::{Habit, HabitRecurrency},
+    models::api::{habit_api_models::*, recurrence_api_models::*},
+    models::database::{Habit, HabitRecurrence},
     schema::*,
     utils::join_habit_with_recurrences,
 };
@@ -13,17 +13,17 @@ use uuid::Uuid;
 
 impl DBManager {
     // Get all of habit recurrences
-    pub fn get_all_habit_recurrences(&self, id: Uuid) -> Result<Vec<HabitRecurrency>, Error> {
+    pub fn get_all_habit_recurrences(&self, id: Uuid) -> Result<Vec<HabitRecurrence>, Error> {
         let conn = self.connection.get();
 
         if conn.is_err() {
             return Err(Error::DBConnectionError(conn.err().unwrap()));
         }
 
-        let search = habit_recurrency::table
-            .select(HabitRecurrency::as_select())
-            .filter(habit_recurrency::hab_id.eq(id))
-            .load::<HabitRecurrency>(&mut conn.unwrap());
+        let search = habit_recurrence::table
+            .select(HabitRecurrence::as_select())
+            .filter(habit_recurrence::hab_id.eq(id))
+            .load::<HabitRecurrence>(&mut conn.unwrap());
 
         if search.is_err() {
             return Err(Error::QueryError(search.err().unwrap()));
@@ -33,8 +33,8 @@ impl DBManager {
     }
 
     // Add a recurrence
-    pub fn add_recurrence(&self, data: RecurrencyCreateSchema) -> Result<Uuid, Error> {
-        let recurrency = HabitRecurrency {
+    pub fn add_recurrence(&self, data: RecurrenceCreateSchema) -> Result<Uuid, Error> {
+        let recurrence = HabitRecurrence {
             hab_rec_id: Uuid::new_v4(),
             hab_rec_freq_data: data.frequency_data,
             hab_rec_freq_type: data.frequency_type,
@@ -48,10 +48,10 @@ impl DBManager {
             return Err(Error::DBConnectionError(conn.err().unwrap()));
         }
 
-        let search = diesel::insert_into(habit_recurrency::table)
-            .values(&recurrency)
+        let search = diesel::insert_into(habit_recurrence::table)
+            .values(&recurrence)
             .execute(&mut conn.unwrap())
-            .map(|_| recurrency.hab_rec_id);
+            .map(|_| recurrence.hab_rec_id);
 
         if search.is_err() {
             return Err(Error::QueryError(search.err().unwrap()));
@@ -69,7 +69,7 @@ impl DBManager {
         }
 
         let search =
-            diesel::delete(habit_recurrency::table.filter(habit_recurrency::hab_rec_id.eq(id)))
+            diesel::delete(habit_recurrence::table.filter(habit_recurrence::hab_rec_id.eq(id)))
                 .execute(&mut conn.unwrap())
                 .map(|_| id);
 
@@ -89,7 +89,7 @@ impl DBManager {
         }
 
         let search =
-            diesel::update(habit_recurrency::table.filter(habit_recurrency::hab_rec_id.eq(id)))
+            diesel::update(habit_recurrence::table.filter(habit_recurrence::hab_rec_id.eq(id)))
                 .set(&data)
                 .execute(&mut conn.unwrap())
                 .map(|_| id);
@@ -102,15 +102,15 @@ impl DBManager {
     }
 
     // Filter a specific habit
-    pub fn get_recurrence_by_id(&self, id: Uuid) -> Result<HabitRecurrency, Error> {
+    pub fn get_recurrence_by_id(&self, id: Uuid) -> Result<HabitRecurrence, Error> {
         let conn = self.connection.get();
 
         if conn.is_err() {
             return Err(Error::DBConnectionError(conn.err().unwrap()));
         }
 
-        let search = habit_recurrency::table
-            .select(HabitRecurrency::as_select())
+        let search = habit_recurrence::table
+            .select(HabitRecurrence::as_select())
             .find(id)
             .first(&mut conn.unwrap());
 
@@ -132,9 +132,9 @@ impl DBManager {
             return Err(Error::DBConnectionError(conn.err().unwrap()));
         }
 
-        let recurrences = HabitRecurrency::belonging_to(&habits)
-            .select(HabitRecurrency::as_select())
-            .load::<HabitRecurrency>(&mut conn.unwrap());
+        let recurrences = HabitRecurrence::belonging_to(&habits)
+            .select(HabitRecurrence::as_select())
+            .load::<HabitRecurrence>(&mut conn.unwrap());
 
         if recurrences.is_err() {
             return Err(Error::QueryError(recurrences.err().unwrap()));

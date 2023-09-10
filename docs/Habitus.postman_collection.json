@@ -219,7 +219,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:3030/api/v1/habits/user/fasdfadsf/recurrences/data",
+							"raw": "localhost:3030/api/v1/habits/user/DWDPe/recurrences/data",
 							"host": [
 								"localhost"
 							],
@@ -229,7 +229,7 @@
 								"v1",
 								"habits",
 								"user",
-								"fasdfadsf",
+								"DWDPe",
 								"recurrences",
 								"data"
 							]

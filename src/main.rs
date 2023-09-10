@@ -10,9 +10,13 @@ mod models;
 mod queries;
 mod routes;
 mod schema;
+mod seeders;
 mod tests;
 mod utils;
 mod validators;
+
+// Read parameters passed from cargo to see if we are just seeding the database
+use std::env;
 
 #[tokio::main(flavor = "multi_thread", worker_threads = 4)]
 //#[tokio::main(flavor = "current_thread")]
@@ -22,6 +26,20 @@ async fn main() {
     if pool.is_err() {
         println!("Error creating pool: {:?}", pool.err());
         return;
+    }
+
+    let args: Vec<String> = env::args().collect();
+
+    if args.len() > 1 {
+        if args[1] == "seed" {
+            println!("Seeding database");
+            let result = seeders::seed_database(pool.unwrap());
+
+            if result.is_err() {
+                println!("Error seeding database: {:?}", result.err());
+            }
+            return;
+        }
     }
 
     let routes = routes::get_routes(pool.unwrap());

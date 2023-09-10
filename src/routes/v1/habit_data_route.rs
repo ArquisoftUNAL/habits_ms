@@ -24,7 +24,7 @@ pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
         .and(warp::path("recurrence"))
         .and(with_db_manager(pool.clone()))
         .and(warp::path::param::<Uuid>())
-        .and_then(habit_data_handler::get_recurrency_data_handler);
+        .and_then(habit_data_handler::get_recurrence_data_handler);
 
     let update_habit_data = warp::path("habitdata")
         .and(warp::patch())

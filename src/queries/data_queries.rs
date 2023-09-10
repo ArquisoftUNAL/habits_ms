@@ -4,10 +4,10 @@ use crate::{
     models::api::data_api_models::*,
     models::{
         api::habit_api_models::HabitRecurrencesAndData,
-        database::{Habit, HabitDataCollected, HabitRecurrency},
+        database::{Habit, HabitDataCollected, HabitRecurrence},
     },
     schema::*,
-    utils::{join_habit_recurrency_and_data, join_recurrency_with_data},
+    utils::{join_habit_recurrence_and_data, join_recurrence_with_data},
 };
 
 use diesel::prelude::*;
@@ -16,7 +16,7 @@ use uuid::Uuid;
 
 impl DBManager {
     // Get all of habit recurrences
-    pub fn get_all_recurrency_data(&self, id: Uuid) -> Result<Vec<HabitDataCollected>, Error> {
+    pub fn get_all_recurrence_data(&self, id: Uuid) -> Result<Vec<HabitDataCollected>, Error> {
         let conn = self.connection.get();
 
         if conn.is_err() {
@@ -41,7 +41,7 @@ impl DBManager {
             hab_dat_id: Uuid::new_v4(),
             hab_dat_amount: data.amount,
             hab_dat_collected_at: chrono::Local::now().naive_local(),
-            hab_rec_id: data.recurrency_id,
+            hab_rec_id: data.recurrence_id,
         };
 
         let conn = self.connection.get();
@@ -138,9 +138,9 @@ impl DBManager {
 
         let mut conn = conn.unwrap();
 
-        let recurrences = HabitRecurrency::belonging_to(&habits)
-            .select(HabitRecurrency::as_select())
-            .load::<HabitRecurrency>(&mut conn);
+        let recurrences = HabitRecurrence::belonging_to(&habits)
+            .select(HabitRecurrence::as_select())
+            .load::<HabitRecurrence>(&mut conn);
 
         if recurrences.is_err() {
             return Err(Error::QueryError(recurrences.err().unwrap()));
@@ -170,22 +170,22 @@ impl DBManager {
                 let recurrence_with_data = recurrence_with_data
                     .into_iter()
                     .map(|(recurrence_item, data_array)| {
-                        join_recurrency_with_data(recurrence_item, data_array)
+                        join_recurrence_with_data(recurrence_item, data_array)
                     })
                     .collect();
 
-                join_habit_recurrency_and_data(habit_item, recurrence_with_data)
+                join_habit_recurrence_and_data(habit_item, recurrence_with_data)
             })
             .collect();
 
         Ok(result)
     }
 
-    // Get parent recurrency and habit from data
-    pub fn get_parent_recurrency_and_habit(
+    // Get parent recurrence and habit from data
+    pub fn get_parent_recurrence_and_habit(
         &self,
         habit_data: &HabitDataCollected,
-    ) -> Result<(HabitRecurrency, Habit), Error> {
+    ) -> Result<(HabitRecurrence, Habit), Error> {
         let conn = self.connection.get();
 
         if conn.is_err() {
@@ -194,20 +194,20 @@ impl DBManager {
 
         let mut conn = conn.unwrap();
 
-        let recurrency = habit_recurrency::table
-            .select(HabitRecurrency::as_select())
+        let recurrence = habit_recurrence::table
+            .select(HabitRecurrence::as_select())
             .find(habit_data.hab_rec_id)
             .first(&mut conn);
 
-        if recurrency.is_err() {
-            return Err(Error::QueryError(recurrency.err().unwrap()));
+        if recurrence.is_err() {
+            return Err(Error::QueryError(recurrence.err().unwrap()));
         }
 
-        let recurrency = recurrency.unwrap();
+        let recurrence = recurrence.unwrap();
 
         let habit = habit::table
             .select(Habit::as_select())
-            .find(recurrency.hab_id)
+            .find(recurrence.hab_id)
             .first(&mut conn);
 
         if habit.is_err() {
@@ -216,6 +216,6 @@ impl DBManager {
 
         let habit = habit.unwrap();
 
-        Ok((recurrency, habit))
+        Ok((recurrence, habit))
     }
 }

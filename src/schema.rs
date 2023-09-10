@@ -48,7 +48,7 @@ diesel::table! {
     use diesel::sql_types::*;
     use super::sql_types::RecDataType;
 
-    habit_recurrency (hab_rec_id) {
+    habit_recurrence (hab_rec_id) {
         hab_rec_id -> Uuid,
         hab_rec_freq_type -> RecDataType,
         hab_rec_goal -> Numeric,
@@ -58,12 +58,12 @@ diesel::table! {
 }
 
 diesel::joinable!(habit -> category (cat_id));
-diesel::joinable!(habit_data_collected -> habit_recurrency (hab_rec_id));
-diesel::joinable!(habit_recurrency -> habit (hab_id));
+diesel::joinable!(habit_data_collected -> habit_recurrence (hab_rec_id));
+diesel::joinable!(habit_recurrence -> habit (hab_id));
 
 diesel::allow_tables_to_appear_in_same_query!(
     category,
     habit,
     habit_data_collected,
-    habit_recurrency,
+    habit_recurrence,
 );

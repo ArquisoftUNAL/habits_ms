@@ -1,8 +1,8 @@
 use crate::{
     db::{DBManager, PostgresPool},
     models::{
-        api::{habit_api_models::*, recurrency_api_models::*},
-        database::{Habit, HabitDataCollected, HabitRecurrency},
+        api::{habit_api_models::*, recurrence_api_models::*},
+        database::{Habit, HabitDataCollected, HabitRecurrence},
     },
 };
 use warp::{Filter, Rejection};
@@ -19,7 +19,7 @@ pub fn with_db_manager(
 
 pub fn join_habit_with_recurrences(
     habit_item: Habit,
-    recurrences_array: Vec<HabitRecurrency>,
+    recurrences_array: Vec<HabitRecurrence>,
 ) -> HabitWithRecurrences {
     HabitWithRecurrences {
         hab_id: habit_item.hab_id,
@@ -35,24 +35,24 @@ pub fn join_habit_with_recurrences(
     }
 }
 
-pub fn join_recurrency_with_data(
-    recurrency_item: HabitRecurrency,
+pub fn join_recurrence_with_data(
+    recurrence_item: HabitRecurrence,
     data_array: Vec<HabitDataCollected>,
 ) -> RecurrenceWithData {
     RecurrenceWithData {
-        hab_rec_id: recurrency_item.hab_rec_id,
+        hab_rec_id: recurrence_item.hab_rec_id,
 
-        hab_id: recurrency_item.hab_id,
+        hab_id: recurrence_item.hab_id,
 
-        hab_rec_freq_type: recurrency_item.hab_rec_freq_type,
+        hab_rec_freq_type: recurrence_item.hab_rec_freq_type,
 
-        hab_rec_freq_data: recurrency_item.hab_rec_freq_data,
+        hab_rec_freq_data: recurrence_item.hab_rec_freq_data,
 
         data: data_array,
     }
 }
 
-pub fn join_habit_recurrency_and_data(
+pub fn join_habit_recurrence_and_data(
     habit_item: Habit,
     recurrences_array: Vec<RecurrenceWithData>,
 ) -> HabitRecurrencesAndData {

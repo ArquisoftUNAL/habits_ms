@@ -1,7 +1,7 @@
 use crate::{
     db::DBManager,
     error::Error,
-    models::api::{recurrency_api_models::*, *},
+    models::api::{recurrence_api_models::*, *},
 };
 
 use warp::{reply::json, Rejection, Reply};
@@ -10,9 +10,9 @@ use uuid::Uuid;
 use validator::Validate;
 
 // POST Route
-pub async fn create_recurrency_handler(
+pub async fn create_recurrence_handler(
     manager: DBManager,
-    data: RecurrencyCreateSchema,
+    data: RecurrenceCreateSchema,
 ) -> Result<impl Reply, Rejection> {
     // Validate input
     let validation_result = data.validate();
@@ -104,14 +104,14 @@ pub async fn delete_recurrence_handler(
     if result.is_err() {
         let error = result.err().unwrap();
         let response = GeneralResponse {
-            message: format!("Error deleting recurrency: {}", error),
+            message: format!("Error deleting recurrence: {}", error),
         };
         return Ok(json(&response));
     }
 
     // Return response
     let response = GeneralResponse {
-        message: "Recurrency deleted successfully".to_string(),
+        message: "Recurrence deleted successfully".to_string(),
     };
     Ok(json(&response))
 }
@@ -136,14 +136,14 @@ pub async fn update_recurrence_handler(
     if result.is_err() {
         let error = result.err().unwrap();
         let response = GeneralResponse {
-            message: format!("Error updating recurrency: {}", error),
+            message: format!("Error updating recurrence: {}", error),
         };
         return Ok(json(&response));
     }
 
     // Return response
     let response = GeneralResponse {
-        message: "Recurrency updated successfully".to_string(),
+        message: "Recurrence updated successfully".to_string(),
     };
 
     Ok(json(&response))

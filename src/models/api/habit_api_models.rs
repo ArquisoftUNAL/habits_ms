@@ -1,6 +1,6 @@
 use crate::models::{
-    api::recurrency_api_models::*,
-    database::{Habit, HabitRecurrency},
+    api::recurrence_api_models::*,
+    database::{Habit, HabitRecurrence},
 };
 use crate::schema::habit;
 use diesel::query_builder::AsChangeset;
@@ -32,7 +32,7 @@ pub struct HabitWithRecurrences {
 
     pub cat_id: Uuid,
 
-    pub recurrences: Vec<HabitRecurrency>,
+    pub recurrences: Vec<HabitRecurrence>,
 }
 
 #[derive(Debug, Serialize)]

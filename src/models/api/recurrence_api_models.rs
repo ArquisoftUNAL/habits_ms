@@ -1,5 +1,5 @@
-use crate::models::database::{HabitDataCollected, HabitRecurrency, RecDataEnum};
-use crate::schema::habit_recurrency;
+use crate::models::database::{HabitDataCollected, HabitRecurrence, RecDataEnum};
+use crate::schema::habit_recurrence;
 use bigdecimal::BigDecimal;
 use chrono::NaiveDate;
 use diesel::query_builder::AsChangeset;
@@ -24,7 +24,7 @@ pub struct RecurrenceWithData {
 
 // Requests schemas
 #[derive(Debug, Deserialize, Validate)]
-pub struct RecurrencyCreateSchema {
+pub struct RecurrenceCreateSchema {
     pub frequency_type: RecDataEnum,
 
     pub frequency_data: NaiveDate,
@@ -37,7 +37,7 @@ pub struct RecurrencyCreateSchema {
 }
 
 #[derive(Debug, Deserialize, Validate, AsChangeset)]
-#[diesel(table_name = habit_recurrency)]
+#[diesel(table_name = habit_recurrence)]
 pub struct RecurrenceUpdateSchema {
     #[diesel(column_name = "hab_rec_freq_type")]
     pub frequency_type: Option<RecDataEnum>,
@@ -59,7 +59,7 @@ pub struct RecurrenceUpdateSchema {
 pub struct RecurrencesMultipleQueryResponse {
     pub message: String,
 
-    pub recurrences: Vec<HabitRecurrency>,
+    pub recurrences: Vec<HabitRecurrence>,
 }
 
 #[derive(Debug, Serialize)]
@@ -80,7 +80,7 @@ pub struct RecurrencesWithDataMultipleQueryResponse {
 pub struct RecurrencesSingleQueryResponse {
     pub message: String,
 
-    pub recurrence: HabitRecurrency,
+    pub recurrence: HabitRecurrence,
 }
 
 #[derive(Debug, Serialize)]

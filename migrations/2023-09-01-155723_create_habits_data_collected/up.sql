@@ -6,5 +6,5 @@ CREATE TABLE habit_data_collected (
 
     CONSTRAINT habit_data_collected_hab_rec_id_fk 
         FOREIGN KEY (hab_rec_id) 
-            REFERENCES habit_recurrency(hab_rec_id)
+            REFERENCES habit_recurrence(hab_rec_id)
 );

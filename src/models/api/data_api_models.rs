@@ -16,7 +16,7 @@ pub struct HabitDataSchema {
     pub amount: BigDecimal,
 
     // Optional for update only
-    pub recurrency_id: Uuid,
+    pub recurrence_id: Uuid,
 }
 
 #[derive(Debug, Deserialize, Validate, AsChangeset)]
@@ -28,7 +28,7 @@ pub struct HabitDataUpdateSchema {
 
     // Optional for update only
     #[diesel(column_name = "hab_rec_id")]
-    pub recurrency_id: Uuid,
+    pub recurrence_id: Uuid,
 }
 
 // Response schemas

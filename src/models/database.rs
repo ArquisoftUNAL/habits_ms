@@ -10,8 +10,8 @@ pub enum RecDataEnum {
     daily,
     weekly,
     weekly2,
-    montly,
-    montly2,
+    monthly,
+    monthly2,
 }
 
 #[derive(
@@ -78,9 +78,9 @@ pub struct Habit {
 )]
 #[diesel(belongs_to(Habit, foreign_key = hab_id))]
 #[diesel(primary_key(hab_rec_id))]
-#[diesel(table_name=crate::schema::habit_recurrency)]
+#[diesel(table_name=crate::schema::habit_recurrence)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
-pub struct HabitRecurrency {
+pub struct HabitRecurrence {
     pub hab_rec_id: Uuid,
 
     pub hab_id: Uuid,
@@ -103,7 +103,7 @@ pub struct HabitRecurrency {
     Identifiable,
     Associations,
 )]
-#[diesel(belongs_to(HabitRecurrency, foreign_key = hab_rec_id))]
+#[diesel(belongs_to(HabitRecurrence, foreign_key = hab_rec_id))]
 #[diesel(primary_key(hab_dat_id))]
 #[diesel(table_name=crate::schema::habit_data_collected)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
