@@ -56,10 +56,15 @@ make docker-build-ms
 make docker-run-ms
 ```
 
-Or just run the docker-compose file with
+Or just run the docker-compose file with 
+(Highly recommended to use the commands sequuence above rather than this one)
 ```bash	
 docker-compose up
 ```
+
+## Seeding database with fake data
+After running above commands you can use `cargo run -- seed` to generate and fill database with random data
+(By default with a base number of 10k habits, 100 categories and 50 users)
 
 ## Requirements
 

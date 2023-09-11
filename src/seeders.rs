@@ -18,7 +18,7 @@ pub fn seed_database(pool: PostgresPool) -> Result<(), String> {
     // Randomize user ids
     let mut user_ids: Vec<String> = Vec::new();
 
-    for _ in 0..BASE_QUANTITY / 20 {
+    for _ in 0..5 {
         let user_id = Faker.fake::<String>().chars().take(24).collect::<String>();
         user_ids.push(user_id);
     }
@@ -27,7 +27,7 @@ pub fn seed_database(pool: PostgresPool) -> Result<(), String> {
     // Create (base / 10 ) categories
     let mut categories_ids: Vec<Uuid> = Vec::new();
 
-    for _ in 0..BASE_QUANTITY / 10 {
+    for _ in 0..10 {
         let category: CategoryCreateSchema = CategoryCreateSchema {
             name: Faker.fake::<String>().chars().take(45).collect::<String>(),
         };
@@ -77,7 +77,7 @@ pub fn seed_database(pool: PostgresPool) -> Result<(), String> {
     // Create (base) recurrences
     let mut recurrences_ids: Vec<Uuid> = Vec::new();
 
-    for i in 0..BASE_QUANTITY {
+    for i in 0..BASE_QUANTITY * 2 {
         let recurrence = RecurrenceCreateSchema {
             frequency_type: match (i % 3) as i32 {
                 0 => RecDataEnum::daily {},
@@ -110,7 +110,7 @@ pub fn seed_database(pool: PostgresPool) -> Result<(), String> {
     println!("Seeding habits data");
 
     // Create (base) data
-    for i in 0..BASE_QUANTITY {
+    for i in 0..BASE_QUANTITY * 10 {
         let data = HabitDataSchema {
             amount: BigDecimal::from_str(
                 faker::number::en::NumberWithFormat("##.##")
