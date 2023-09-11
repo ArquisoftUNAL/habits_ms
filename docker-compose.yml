@@ -1,0 +1,21 @@
+version: '3.9'
+
+services:
+  habitus_habits_ms:
+    container_name: habitus_habits_ms
+    image: habitus_habits_ms
+    build: .
+    ports:
+      - 3030:3030
+    env_file:
+      - .env
+    depends_on:
+      - habitus_habits_db
+  habitus_habits_db:
+    container_name: habitus_habits_db
+    image: habitus_habits_db
+    build: ./database/.
+    ports:
+      - 5432:5432
+    env_file:
+      - .env

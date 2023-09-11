@@ -44,7 +44,7 @@ Expected result: 201 (OK)
 
 ## Installation
 
-You can run the commands describen in the Makefile to run the project locally (Suggestion: Run them in the same order as they appear in the Makefile)
+You can run the commands described in the Makefile to run the project locally (Suggestion: Run them in the same order as they appear in the Makefile)
 
 Example (From project's root folder):
 ```bash
@@ -54,6 +54,11 @@ make docker-run-db
 cd ..
 make docker-build-ms
 make docker-run-ms
+```
+
+Or just run the docker-compose file with
+```bash	
+docker-compose up
 ```
 
 ## Requirements
