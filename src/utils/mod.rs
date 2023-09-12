@@ -48,6 +48,8 @@ pub fn join_recurrence_with_data(
 
         hab_rec_freq_data: recurrence_item.hab_rec_freq_data,
 
+        hab_rec_goal: recurrence_item.hab_rec_goal,
+
         data: data_array,
     }
 }

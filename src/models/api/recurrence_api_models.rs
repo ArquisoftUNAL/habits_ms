@@ -19,6 +19,8 @@ pub struct RecurrenceWithData {
 
     pub hab_rec_freq_data: NaiveDate,
 
+    pub hab_rec_goal: BigDecimal,
+
     pub data: Vec<HabitDataCollected>,
 }
 
