@@ -4,14 +4,21 @@ use crate::{
     models::api::{category_api_models::*, *},
 };
 
-use warp::{reply::json, Rejection, Reply};
+use warp::{
+    http::StatusCode,
+    reply::{json, with_status},
+    Rejection, Reply,
+};
 
 use uuid::Uuid;
 use validator::Validate;
 
 // GET Route
-pub async fn get_categories_handler(manager: DBManager) -> Result<impl Reply, Rejection> {
-    let result = manager.get_all_categories();
+pub async fn get_categories_handler(
+    manager: DBManager,
+    params: RangeParams,
+) -> Result<impl Reply, Rejection> {
+    let result = manager.get_all_categories(params.categories_page, params.categories_per_page);
 
     if result.is_err() {
         let error = result.err().unwrap();
@@ -33,15 +40,14 @@ pub async fn get_categories_handler(manager: DBManager) -> Result<impl Reply, Re
 pub async fn get_category_by_id_handler(
     manager: DBManager,
     id: Uuid,
+    _params: RangeParams,
+    _data_params: DataIncludeParams,
 ) -> Result<impl Reply, Rejection> {
     let result = manager.get_category_by_id(id);
 
     if result.is_err() {
         let error = result.err().unwrap();
-        let response = GeneralResponse {
-            message: format!("Error getting category: {}", error),
-        };
-        return Ok(json(&response));
+        return Err(warp::reject::custom(error));
     }
 
     let response = CategorySingleQueryResponse {
@@ -49,7 +55,7 @@ pub async fn get_category_by_id_handler(
         category: result.unwrap(),
     };
 
-    Ok(json(&response))
+    Ok(with_status(json(&response), StatusCode::OK))
 }
 
 // POST Route
@@ -70,10 +76,7 @@ pub async fn create_category_handler(
 
     if result.is_err() {
         let error = result.err().unwrap();
-        let response = GeneralResponse {
-            message: format!("Error creating category: {}", error),
-        };
-        return Ok(json(&response));
+        return Err(warp::reject::custom(error));
     }
 
     let response = CategoryCreateResponse {
@@ -93,11 +96,7 @@ pub async fn delete_category_handler(
 
     if result.is_err() {
         let error = result.err().unwrap();
-        let response = GeneralResponse {
-            message: format!("Error deleting category {}", error),
-        };
-
-        return Ok(json(&response));
+        return Err(warp::reject::custom(error));
     }
 
     let response = GeneralResponse {
@@ -126,11 +125,7 @@ pub async fn update_category_handler(
 
     if result.is_err() {
         let error = result.err().unwrap();
-        let response = GeneralResponse {
-            message: format!("Error updating category {}", error),
-        };
-
-        return Ok(json(&response));
+        return Err(warp::reject::custom(error));
     }
 
     let response = GeneralResponse {

@@ -43,7 +43,7 @@ async fn main() {
     }
 
     let routes = routes::get_routes(pool.unwrap());
-    print!("Preparing server to listen on port 3030");
+    println!("Preparing server to listen on port 3030");
 
     warp::serve(routes).run(([0, 0, 0, 0], 3030)).await;
 }

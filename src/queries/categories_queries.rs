@@ -1,6 +1,10 @@
 use crate::{
-    db::DBManager, error::Error, models::api::category_api_models::*, models::database::Category,
+    db::DBManager,
+    error::Error,
+    models::api::category_api_models::*,
+    models::database::Category,
     schema::*,
+    utils::{DEFAULT_QUERY_LIMIT, MAX_QUERY_LIMIT},
 };
 
 use diesel::prelude::*;
@@ -9,7 +13,18 @@ use uuid::Uuid;
 
 impl DBManager {
     // Get all categories
-    pub fn get_all_categories(&self) -> Result<Vec<Category>, Error> {
+    pub fn get_all_categories(
+        &self,
+        page: Option<i64>,
+        per_page: Option<i64>,
+    ) -> Result<Vec<Category>, Error> {
+        let page = page.unwrap_or(1);
+        let mut per_page = per_page.unwrap_or(DEFAULT_QUERY_LIMIT);
+
+        if per_page > MAX_QUERY_LIMIT {
+            per_page = MAX_QUERY_LIMIT;
+        }
+
         let conn = self.connection.get();
 
         if conn.is_err() {
@@ -18,6 +33,8 @@ impl DBManager {
 
         let search = category::table
             .select(Category::as_select())
+            .limit(per_page)
+            .offset((page - 1) * per_page)
             .load(&mut conn.unwrap());
 
         if search.is_err() {
@@ -26,6 +43,7 @@ impl DBManager {
 
         Ok(search.unwrap())
     }
+
     // Add a category
     pub fn add_category(&self, data: CategoryCreateSchema) -> Result<Uuid, Error> {
         let category = Category {

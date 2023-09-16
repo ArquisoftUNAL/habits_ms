@@ -1,6 +1,10 @@
 use crate::{
-    db::DBManager, error::Error, models::api::habit_api_models::*, models::database::Habit,
+    db::DBManager,
+    error::Error,
+    models::api::habit_api_models::*,
+    models::database::Habit,
     schema::*,
+    utils::{DEFAULT_QUERY_LIMIT, MAX_QUERY_LIMIT},
 };
 
 use diesel::prelude::*;
@@ -8,26 +12,6 @@ use diesel::prelude::*;
 use uuid::Uuid;
 
 impl DBManager {
-    // Get all of user habits
-    pub fn get_all_user_habits(&self, id: &String) -> Result<Vec<Habit>, Error> {
-        let conn = self.connection.get();
-
-        if conn.is_err() {
-            return Err(Error::DBConnectionError(conn.err().unwrap()));
-        }
-
-        let search = habit::table
-            .select(Habit::as_select())
-            .filter(habit::usr_id.eq(id))
-            .load::<Habit>(&mut conn.unwrap());
-
-        if search.is_err() {
-            return Err(Error::QueryError(search.err().unwrap()));
-        }
-
-        Ok(search.unwrap())
-    }
-
     // Add an habit
     pub fn add_habit(&self, data: HabitCreateSchema) -> Result<Uuid, Error> {
         let habit = Habit {
@@ -93,6 +77,40 @@ impl DBManager {
             .set(&data)
             .execute(&mut conn.unwrap())
             .map(|_| id);
+
+        if search.is_err() {
+            return Err(Error::QueryError(search.err().unwrap()));
+        }
+
+        Ok(search.unwrap())
+    }
+
+    // Get all of user habits
+    pub fn get_all_user_habits(
+        &self,
+        id: &String,
+        page: Option<i64>,
+        per_page: Option<i64>,
+    ) -> Result<Vec<Habit>, Error> {
+        let page = page.unwrap_or(1);
+        let mut per_page = per_page.unwrap_or(DEFAULT_QUERY_LIMIT);
+
+        if per_page > MAX_QUERY_LIMIT {
+            per_page = MAX_QUERY_LIMIT;
+        }
+
+        let conn = self.connection.get();
+
+        if conn.is_err() {
+            return Err(Error::DBConnectionError(conn.err().unwrap()));
+        }
+
+        let search = habit::table
+            .select(Habit::as_select())
+            .filter(habit::usr_id.eq(id))
+            .limit(per_page.into())
+            .offset((page - 1) * per_page)
+            .load::<Habit>(&mut conn.unwrap());
 
         if search.is_err() {
             return Err(Error::QueryError(search.err().unwrap()));

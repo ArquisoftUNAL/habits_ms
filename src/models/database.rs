@@ -112,7 +112,7 @@ pub struct HabitDataCollected {
 
     pub hab_dat_amount: BigDecimal,
 
-    pub hab_dat_collected_at: NaiveDateTime,
+    pub hab_dat_collected_at: NaiveDate,
 
     pub hab_rec_id: Uuid,
 }

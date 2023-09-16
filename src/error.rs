@@ -74,11 +74,17 @@ pub async fn handle_rejection(err: Rejection) -> std::result::Result<impl Reply,
                 format!("Database connection error: {}", error),
                 None,
             ),
-            Error::QueryError(error) => (
-                StatusCode::INTERNAL_SERVER_ERROR,
-                format!("Query error: {}", error),
-                None,
-            ),
+            Error::QueryError(error) => match error {
+                diesel::result::Error::NotFound => {
+                    (StatusCode::NOT_FOUND, "Record not found".to_string(), None)
+                }
+
+                _ => (
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                    format!("Database error: {}", error),
+                    None,
+                ),
+            },
         }
     } else if let Some(e) = err.find::<warp::filters::body::BodyDeserializeError>() {
         (
@@ -94,12 +100,6 @@ pub async fn handle_rejection(err: Rejection) -> std::result::Result<impl Reply,
             "Method Not Allowed".to_string(),
             None,
         )
-    // } else if let Some(_) = err.find::<warp::reject::MethodNotAllowed>() {
-    //     (
-    //         StatusCode::METHOD_NOT_ALLOWED,
-    //         "Method Not Allowed".to_string(),
-    //         None,
-    //     )
     } else if let Some(_) = err.find::<warp::reject::InvalidQuery>() {
         (
             StatusCode::BAD_REQUEST,

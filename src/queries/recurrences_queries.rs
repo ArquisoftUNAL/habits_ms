@@ -4,7 +4,8 @@ use crate::{
     models::api::{habit_api_models::*, recurrence_api_models::*},
     models::database::{Habit, HabitRecurrence},
     schema::*,
-    utils::join_habit_with_recurrences,
+    utils::queries::join_habit_with_recurrences,
+    utils::{DEFAULT_QUERY_LIMIT, MAX_QUERY_LIMIT},
 };
 
 use diesel::prelude::*;
@@ -13,7 +14,19 @@ use uuid::Uuid;
 
 impl DBManager {
     // Get all of habit recurrences
-    pub fn get_all_habit_recurrences(&self, id: Uuid) -> Result<Vec<HabitRecurrence>, Error> {
+    pub fn get_all_habit_recurrences(
+        &self,
+        id: Uuid,
+        page: Option<i64>,
+        per_page: Option<i64>,
+    ) -> Result<Vec<HabitRecurrence>, Error> {
+        let page = page.unwrap_or(1);
+        let mut per_page = per_page.unwrap_or(DEFAULT_QUERY_LIMIT);
+
+        if per_page > MAX_QUERY_LIMIT {
+            per_page = MAX_QUERY_LIMIT;
+        }
+
         let conn = self.connection.get();
 
         if conn.is_err() {
@@ -23,6 +36,8 @@ impl DBManager {
         let search = habit_recurrence::table
             .select(HabitRecurrence::as_select())
             .filter(habit_recurrence::hab_id.eq(id))
+            .limit(per_page.into())
+            .offset((page - 1) * per_page)
             .load::<HabitRecurrence>(&mut conn.unwrap());
 
         if search.is_err() {
@@ -132,6 +147,8 @@ impl DBManager {
             return Err(Error::DBConnectionError(conn.err().unwrap()));
         }
 
+        // This can be complicated from here
+
         let recurrences = HabitRecurrence::belonging_to(&habits)
             .select(HabitRecurrence::as_select())
             .load::<HabitRecurrence>(&mut conn.unwrap());
@@ -153,4 +170,48 @@ impl DBManager {
 
         Ok(result)
     }
+
+    // Join recurrences with a set set of habits
+    // pub fn join_habits_recurrences2(
+    //     &self,
+    //     habits: Vec<Habit>,
+    //     page: Option<i64>,
+    //     per_page: Option<i64>,
+    // ) -> Result<Vec<HabitWithRecurrences>, Error> {
+    //     let page = page.unwrap_or(1);
+    //     let mut per_page = per_page.unwrap_or(DEFAULT_QUERY_LIMIT);
+
+    //     if per_page > MAX_QUERY_LIMIT {
+    //         per_page = MAX_QUERY_LIMIT;
+    //     }
+
+    //     let conn = self.connection.get();
+
+    //     if conn.is_err() {
+    //         return Err(Error::DBConnectionError(conn.err().unwrap()));
+    //     }
+
+    //     // This can be complicated from here
+    //     let recurrences = HabitRecurrence::belonging_to(&habits)
+    //         .select(HabitRecurrence::as_select())
+    //         .grouped_by(&habits)
+    //         .load::<HabitRecurrence>(&mut conn.unwrap());
+
+    //     if recurrences.is_err() {
+    //         return Err(Error::QueryError(recurrences.err().unwrap()));
+    //     }
+
+    //     let recurrences = recurrences.unwrap();
+    //     let result = recurrences.grouped_by(&habits);
+
+    //     let result = habits
+    //         .into_iter()
+    //         .zip(result)
+    //         .map(|(habit_item, recurrences_array)| {
+    //             join_habit_with_recurrences(habit_item, recurrences_array)
+    //         })
+    //         .collect();
+
+    //     Ok(result)
+    // }
 }

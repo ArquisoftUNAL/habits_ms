@@ -74,7 +74,7 @@ pub struct HabitCreateSchema {
     #[validate(length(min = 6, max = 6))]
     pub color: String,
 
-    #[validate(length(min = 10, max = 10))]
+    #[validate(length(min = 1, max = 10))]
     pub units: String,
 
     pub user_id: String,
@@ -104,7 +104,7 @@ pub struct HabitUpdateSchema {
     #[diesel(column_name = "hab_color")]
     pub color: Option<String>,
 
-    #[validate(length(min = 10, max = 10))]
+    #[validate(length(min = 1, max = 10))]
     #[diesel(column_name = "hab_units")]
     pub units: Option<String>,
 
@@ -138,6 +138,13 @@ pub struct HabitAndRecurrencesMultipleQueryResponse {
 }
 
 #[derive(Debug, Serialize)]
+pub struct HabitsAndRecurrencesAndDataMultipleQueryResponse {
+    pub message: String,
+
+    pub habits: Vec<HabitRecurrencesAndData>,
+}
+
+#[derive(Debug, Serialize)]
 pub struct HabitSingleQueryResponse {
     pub message: String,
 
@@ -148,12 +155,12 @@ pub struct HabitSingleQueryResponse {
 pub struct HabitAndRecurrencesSingleQueryResponse {
     pub message: String,
 
-    pub habit: Habit,
+    pub habit: HabitWithRecurrences,
 }
 
 #[derive(Debug, Serialize)]
-pub struct HabitsAndRecurrencesAndDataQueryResponse {
+pub struct HabitAndRecurrencesAndDataSingleQueryResponse {
     pub message: String,
 
-    pub habits: Vec<HabitRecurrencesAndData>,
+    pub habit: HabitRecurrencesAndData,
 }

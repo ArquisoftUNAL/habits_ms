@@ -17,7 +17,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n}",
+							"raw": "{\r\n    \"name\": \"natyyy\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -25,7 +25,7 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:3030/api/v1/categories/c1099396-87a1-4c50-abf5-d13fe51da33e",
+							"raw": "localhost:3030/api/v1/categories/410b5385-ce7c-46f8-bf7f-caaaac819c65",
 							"host": [
 								"localhost"
 							],
@@ -34,7 +34,7 @@
 								"api",
 								"v1",
 								"categories",
-								"c1099396-87a1-4c50-abf5-d13fe51da33e"
+								"410b5385-ce7c-46f8-bf7f-caaaac819c65"
 							]
 						}
 					},
@@ -46,7 +46,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:3030/api/v1/categories/",
+							"raw": "localhost:3030/api/v1/categories/?categories_page=1",
 							"host": [
 								"localhost"
 							],
@@ -56,6 +56,12 @@
 								"v1",
 								"categories",
 								""
+							],
+							"query": [
+								{
+									"key": "categories_page",
+									"value": "1"
+								}
 							]
 						}
 					},
@@ -89,7 +95,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\" : \"olade\"\r\n}",
+							"raw": "{\r\n    \"name\" : \"olade2\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -118,7 +124,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:3030/api/v1/categories/c1099396-87a1-4c50-abf5-d13fe51da33e",
+							"raw": "localhost:3030/api/v1/categories/410b5385-ce7c-46f8-bf7f-caaaac819c65",
 							"host": [
 								"localhost"
 							],
@@ -127,7 +133,7 @@
 								"api",
 								"v1",
 								"categories",
-								"c1099396-87a1-4c50-abf5-d13fe51da33e"
+								"410b5385-ce7c-46f8-bf7f-caaaac819c65"
 							]
 						}
 					},
@@ -145,7 +151,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Ping Pong\",\r\n    \"description\": \"ola\",\r\n    \"is_favourite\": true,\r\n    \"kind\": \"ME\",\r\n    \"color\": \"abcdef\",\r\n    \"units\": \"meters\",\r\n    \"user_id\": \"fasdfadsf\",\r\n    \"category\" : \"daab4891-c1c9-4eef-b2b4-fa4dc1c9de61\"\r\n}",
+							"raw": "{\r\n    \"name\": \"Ping Pong2\",\r\n    \"description\": \"ola\",\r\n    \"is_favourite\": true,\r\n    \"kind\": \"ME\",\r\n    \"is_yn\": true,\r\n    \"color\": \"abcdef\",\r\n    \"units\": \"abcdefghij\",\r\n    \"user_id\": \"fasdfadsf\",\r\n    \"category\" : \"410b5385-ce7c-46f8-bf7f-caaaac819c65\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -219,7 +225,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:3030/api/v1/habits/user/DWDPe/recurrences/data",
+							"raw": "localhost:3030/api/v1/habits/user/fasdfadsf/recurrences/data",
 							"host": [
 								"localhost"
 							],
@@ -229,7 +235,7 @@
 								"v1",
 								"habits",
 								"user",
-								"DWDPe",
+								"fasdfadsf",
 								"recurrences",
 								"data"
 							]
@@ -294,7 +300,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:3030/api/v1/habits/471bbb20-802a-4f54-bebd-ca1dc0bd7696",
+							"raw": "localhost:3030/api/v1/habits/51dec0ba-971e-4701-809e-533c77c81d3a",
 							"host": [
 								"localhost"
 							],
@@ -303,7 +309,52 @@
 								"api",
 								"v1",
 								"habits",
-								"471bbb20-802a-4f54-bebd-ca1dc0bd7696"
+								"51dec0ba-971e-4701-809e-533c77c81d3a"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Habit By ID with recurrences",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3030/api/v1/habits/51dec0ba-971e-4701-809e-533c77c81d3a/recurrences",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"habits",
+								"51dec0ba-971e-4701-809e-533c77c81d3a",
+								"recurrences"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Habit By ID, recurrences and data",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3030/api/v1/habits/51dec0ba-971e-4701-809e-533c77c81d3a/recurrences/data",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"habits",
+								"51dec0ba-971e-4701-809e-533c77c81d3a",
+								"recurrences",
+								"data"
 							]
 						}
 					},
@@ -321,7 +372,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"frequency_type\":\"daily\",\r\n    \"frequency_data\":\"2024-10-08\",\r\n    \"habit_id\":\"133c9615-dca1-475a-9882-fcc116f74b01\"\r\n}",
+							"raw": "{\r\n    \"frequency_type\":\"weekly\",\r\n    \"frequency_data\":\"2023-10-08\",\r\n    \"goal\": 2000,\r\n    \"habit_id\":\"51dec0ba-971e-4701-809e-533c77c81d3a\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -345,12 +396,12 @@
 					"response": []
 				},
 				{
-					"name": "Get habits recurrences",
+					"name": "Get recurrence by ID",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:3030/api/v1/recurrences/habit/cea98048-bd39-4890-92c9-43b7eaa22484",
+							"raw": "localhost:3030/api/v1/recurrences/5f11fbba-384d-4e22-9f69-8a15936c5fa2",
 							"host": [
 								"localhost"
 							],
@@ -359,20 +410,19 @@
 								"api",
 								"v1",
 								"recurrences",
-								"habit",
-								"cea98048-bd39-4890-92c9-43b7eaa22484"
+								"5f11fbba-384d-4e22-9f69-8a15936c5fa2"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Get recurrences and data",
+					"name": "Get recurrence, data by ID",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:3030/api/v1/recurrences/habit/b0e5acb7-4898-4207-bf1b-dbafe9884afa",
+							"raw": "localhost:3030/api/v1/recurrences/5f11fbba-384d-4e22-9f69-8a15936c5fa2/data",
 							"host": [
 								"localhost"
 							],
@@ -381,8 +431,8 @@
 								"api",
 								"v1",
 								"recurrences",
-								"habit",
-								"b0e5acb7-4898-4207-bf1b-dbafe9884afa"
+								"5f11fbba-384d-4e22-9f69-8a15936c5fa2",
+								"data"
 							]
 						}
 					},
@@ -435,6 +485,36 @@
 		{
 			"name": "Habits Data",
 			"item": [
+				{
+					"name": "Create habit data",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"amount\": 10000,\r\n\r\n    \"collected_at\": \"2025-11-30\",\r\n    \"recurrence_id\": \"5f11fbba-384d-4e22-9f69-8a15936c5fa2\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3030/api/v1/habitdata/",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"habitdata",
+								""
+							]
+						}
+					},
+					"response": []
+				},
 				{
 					"name": "Get habit data by ID",
 					"request": {
@@ -493,58 +573,6 @@
 								"v1",
 								"habitdata",
 								"69a70399-3bfe-4f7c-b80f-c6cce600449a"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Create habit data",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"amount\": 10000,\r\n\r\n    \"recurrency_id\": \"9f2dce01-fd66-4d05-a1ee-92b0b063cc1a\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:3030/api/v1/habitdata/",
-							"host": [
-								"localhost"
-							],
-							"port": "3030",
-							"path": [
-								"api",
-								"v1",
-								"habitdata",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get recurrence's data",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "localhost:3030/api/v1/habitdata/recurrence/5c14b7db-3985-4ab8-9473-6beb5213a511",
-							"host": [
-								"localhost"
-							],
-							"port": "3030",
-							"path": [
-								"api",
-								"v1",
-								"habitdata",
-								"recurrence",
-								"5c14b7db-3985-4ab8-9473-6beb5213a511"
 							]
 						}
 					},

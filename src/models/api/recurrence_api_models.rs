@@ -58,17 +58,17 @@ pub struct RecurrenceUpdateSchema {
 
 // Responses
 #[derive(Debug, Serialize)]
-pub struct RecurrencesMultipleQueryResponse {
-    pub message: String,
-
-    pub recurrences: Vec<HabitRecurrence>,
-}
-
-#[derive(Debug, Serialize)]
 pub struct RecurrenceCreateResponse {
     pub message: String,
 
     pub id: Uuid,
+}
+
+#[derive(Debug, Serialize)]
+pub struct RecurrencesMultipleQueryResponse {
+    pub message: String,
+
+    pub recurrences: Vec<HabitRecurrence>,
 }
 
 #[derive(Debug, Serialize)]

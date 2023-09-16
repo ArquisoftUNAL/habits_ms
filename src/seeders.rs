@@ -118,6 +118,7 @@ pub fn seed_database(pool: PostgresPool) -> Result<(), String> {
                     .as_str(),
             )
             .unwrap(),
+            collected_at: Faker.fake(),
             recurrence_id: recurrences_ids[(i % recurrences_ids.len() as i32) as usize].clone(),
         };
 

@@ -2,6 +2,7 @@ use crate::{
     db::DBManager,
     error::Error,
     models::api::{habit_api_models::*, *},
+    utils::queries::{join_habit_recurrence_and_data, join_habit_with_recurrences},
 };
 
 use warp::{reply::json, Rejection, Reply};
@@ -28,10 +29,7 @@ pub async fn create_habit_handler(
 
     if result.is_err() {
         let error = result.err().unwrap();
-        let response = GeneralResponse {
-            message: format!("Error creating habit: {}", error),
-        };
-        return Ok(json(&response));
+        return Err(warp::reject::custom(error));
     }
 
     // Return response
@@ -40,183 +38,6 @@ pub async fn create_habit_handler(
         id: result.unwrap(),
     };
 
-    Ok(json(&response))
-}
-
-// GET Route
-pub async fn get_habits_handler(manager: DBManager, id: String) -> Result<impl Reply, Rejection> {
-    // Get habits from database
-    let user_id = id.clone();
-
-    let result = manager.get_all_user_habits(&user_id);
-
-    if result.is_err() {
-        let error = result.err().unwrap();
-        let response = GeneralResponse {
-            message: format!(
-                "Error getting habits: {} for user with ID: {}",
-                error, &user_id
-            ),
-        };
-        return Ok(json(&response));
-    }
-
-    // Check if user was not found (actually if no habits are related to it)
-    let result = result.unwrap();
-
-    if result.len() == 0 {
-        let response = GeneralResponse {
-            message: "User / Habits not found".to_string(),
-        };
-        return Ok(json(&response));
-    }
-
-    // Return response
-    let response = HabitMultipleQueryResponse {
-        message: format!(
-            "Successfully retrieved habits for user with ID: {}",
-            &user_id
-        ),
-        habits: result,
-    };
-
-    println!("{:?}", response);
-
-    Ok(json(&response))
-}
-
-// GET Route
-pub async fn get_habit_by_id_handler(
-    manager: DBManager,
-    id: Uuid,
-) -> Result<impl Reply, Rejection> {
-    // Get habits from database
-
-    let result = manager.get_habit_by_id(id);
-
-    if result.is_err() {
-        let error = result.err().unwrap();
-        let response = GeneralResponse {
-            message: format!("Error getting habit: {}", error),
-        };
-        return Ok(json(&response));
-    }
-
-    // Check if user was not found (actually if no habits are related to it)
-    let result = result.unwrap();
-
-    // Return response
-    let response = HabitSingleQueryResponse {
-        message: format!("Successfully retrieved habit"),
-        habit: result,
-    };
-
-    Ok(json(&response))
-}
-
-// GET Route
-pub async fn get_habits_recurrences_by_user_id(
-    manager: DBManager,
-    id: String,
-) -> Result<impl Reply, Rejection> {
-    let user_id = id.clone();
-    let result = manager.get_all_user_habits(&user_id);
-
-    if result.is_err() {
-        let error = result.err().unwrap();
-        let response = GeneralResponse {
-            message: format!(
-                "Error getting habits & recurrences: {} for user with ID: {}",
-                error, &user_id
-            ),
-        };
-        return Ok(json(&response));
-    }
-
-    let result = manager.join_habits_recurrences(result.unwrap());
-
-    if result.is_err() {
-        let error = result.err().unwrap();
-        let response = GeneralResponse {
-            message: format!(
-                "Error getting habits & recurrences: {} for user with ID: {}",
-                error, &user_id
-            ),
-        };
-        return Ok(json(&response));
-    }
-
-    // Return response
-    let response = HabitAndRecurrencesMultipleQueryResponse {
-        message: format!(
-            "Successfully retrieved habits & recurrences for user with ID: {}",
-            &user_id
-        ),
-        habits: result.unwrap(),
-    };
-
-    Ok(json(&response))
-}
-
-// GET Route
-pub async fn get_habits_recurrences_data_by_user_id(
-    manager: DBManager,
-    id: String,
-) -> Result<impl Reply, Rejection> {
-    let user_id = id.clone();
-    let result = manager.get_all_user_habits(&user_id);
-
-    if result.is_err() {
-        let error = result.err().unwrap();
-        let response = GeneralResponse {
-            message: format!(
-                "Error getting habits, recurrences & data: {} for user with ID: {}",
-                error, &user_id
-            ),
-        };
-        return Ok(json(&response));
-    }
-    let result = manager.join_habits_recurrences_data(result.unwrap());
-
-    if result.is_err() {
-        let error = result.err().unwrap();
-        let response = GeneralResponse {
-            message: format!(
-                "Error getting habits, recurrences & data: {} for user with ID: {}",
-                error, &user_id
-            ),
-        };
-        return Ok(json(&response));
-    }
-    // Return response
-    let response = HabitsAndRecurrencesAndDataQueryResponse {
-        message: format!(
-            "Successfully retrieved habits, recurrences & data for user with ID: {}",
-            &user_id
-        ),
-        habits: result.unwrap(),
-    };
-
-    Ok(json(&response))
-}
-
-// DELETE Route
-pub async fn delete_habits_handler(manager: DBManager, id: Uuid) -> Result<impl Reply, Rejection> {
-    // Delete habit from database
-    let result = manager.delete_habit(id);
-
-    if result.is_err() {
-        let error = result.err().unwrap();
-        let response = GeneralResponse {
-            message: format!("Error deleting habit: {}", error),
-        };
-        return Ok(json(&response));
-    }
-
-    // Return response
-    let response = GeneralResponse {
-        message: "Habit deleted successfully".to_string(),
-    };
     Ok(json(&response))
 }
 
@@ -239,15 +60,191 @@ pub async fn update_habits_handler(
 
     if result.is_err() {
         let error = result.err().unwrap();
-        let response = GeneralResponse {
-            message: format!("Error updating habit: {}", error),
-        };
-        return Ok(json(&response));
+        return Err(warp::reject::custom(error));
     }
 
     // Return response
     let response = GeneralResponse {
         message: "Habit updated successfully".to_string(),
+    };
+
+    Ok(json(&response))
+}
+
+// DELETE Route
+pub async fn delete_habits_handler(manager: DBManager, id: Uuid) -> Result<impl Reply, Rejection> {
+    // Delete habit from database
+    let result = manager.delete_habit(id);
+
+    if result.is_err() {
+        let error = result.err().unwrap();
+        return Err(warp::reject::custom(error));
+    }
+
+    // Return response
+    let response = GeneralResponse {
+        message: "Habit deleted successfully".to_string(),
+    };
+    Ok(json(&response))
+}
+
+// GET Route
+pub async fn get_habits_handler_by_user_id_handler(
+    id: String,
+    params: RangeParams,
+    manager: DBManager,
+    data_params: DataIncludeParams,
+) -> Result<impl Reply, Rejection> {
+    // Get habits from database
+    let user_id = id.clone();
+
+    let result = manager.get_all_user_habits(&user_id, params.habits_page, params.habits_per_page);
+
+    if result.is_err() {
+        let error = result.err().unwrap();
+        return Err(warp::reject::custom(error));
+    }
+
+    let result = result.unwrap();
+
+    // Join recurrences case
+    if data_params.include_recurrences.unwrap_or(false) {
+        let result = manager.join_habits_recurrences(result);
+
+        if result.is_err() {
+            let error = result.err().unwrap();
+            let response = GeneralResponse {
+                message: format!(
+                    "Error getting habits & recurrences: {} for user with ID: {}",
+                    error, &user_id
+                ),
+            };
+            return Ok(json(&response));
+        }
+
+        // Return response
+        let response = HabitAndRecurrencesMultipleQueryResponse {
+            message: format!(
+                "Successfully retrieved habits & recurrences for user with ID: {}",
+                &user_id
+            ),
+            habits: result.unwrap(),
+        };
+
+        return Ok(json(&response));
+    }
+
+    // Join data case
+    if data_params.include_data.unwrap_or(false) {
+        let result = manager.join_habits_recurrences_data(result);
+
+        if result.is_err() {
+            let error = result.err().unwrap();
+            let response = GeneralResponse {
+                message: format!(
+                    "Error getting habits, recurrences & data: {} for user with ID: {}",
+                    error, &user_id
+                ),
+            };
+            return Ok(json(&response));
+        }
+
+        // Return response
+        let response = HabitsAndRecurrencesAndDataMultipleQueryResponse {
+            message: format!(
+                "Successfully retrieved habits, recurrences & data for user with ID: {}",
+                &user_id
+            ),
+            habits: result.unwrap(),
+        };
+
+        return Ok(json(&response));
+    }
+
+    // Only habits case
+    // Return response
+    let response = HabitMultipleQueryResponse {
+        message: format!(
+            "Successfully retrieved habits for user with ID: {}",
+            &user_id
+        ),
+        habits: result,
+    };
+
+    return Ok(json(&response));
+}
+
+// GET Route
+pub async fn get_habit_by_id_handler(
+    id: Uuid,
+    params: RangeParams,
+    manager: DBManager,
+    data_params: DataIncludeParams,
+) -> Result<impl Reply, Rejection> {
+    // Get habits from database
+
+    let result = manager.get_habit_by_id(id);
+
+    if result.is_err() {
+        let error = result.err().unwrap();
+        return Err(warp::reject::custom(error));
+    }
+
+    // Check if user was not found (actually if no habits are related to it)
+    let result = result.unwrap();
+
+    // Join recurrences case
+    if data_params.include_recurrences.unwrap_or(false) {
+        let recurrences = manager.get_all_habit_recurrences(
+            id,
+            params.recurrences_page,
+            params.recurrences_per_page,
+        );
+
+        if recurrences.is_err() {
+            let error = recurrences.err().unwrap();
+            return Err(warp::reject::custom(error));
+        }
+
+        let recurrences = recurrences.unwrap();
+
+        // Return response
+        let response = HabitAndRecurrencesSingleQueryResponse {
+            message: format!("Successfully retrieved habit & recurrences"),
+            habit: join_habit_with_recurrences(result, recurrences),
+        };
+
+        return Ok(json(&response));
+    }
+
+    // Join data case
+    if data_params.include_data.unwrap_or(false) {
+        let recurrences = manager.get_all_habit_recurrences_data(
+            id,
+            params.recurrences_page,
+            params.recurrences_per_page,
+        );
+
+        if recurrences.is_err() {
+            let error = recurrences.err().unwrap();
+            return Err(warp::reject::custom(error));
+        }
+
+        let recurrences = recurrences.unwrap();
+
+        // Return response
+        let response = HabitAndRecurrencesAndDataSingleQueryResponse {
+            message: format!("Successfully retrieved habit & recurrences & data"),
+            habit: join_habit_recurrence_and_data(result, recurrences),
+        };
+
+        return Ok(json(&response));
+    }
+
+    // Return response
+    let response = HabitSingleQueryResponse {
+        message: format!("Successfully retrieved habit"),
+        habit: result,
     };
 
     Ok(json(&response))

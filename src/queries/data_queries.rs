@@ -3,11 +3,14 @@ use crate::{
     error::Error,
     models::api::data_api_models::*,
     models::{
-        api::habit_api_models::HabitRecurrencesAndData,
+        api::{
+            habit_api_models::HabitRecurrencesAndData, recurrence_api_models::RecurrenceWithData,
+        },
         database::{Habit, HabitDataCollected, HabitRecurrence},
     },
     schema::*,
-    utils::{join_habit_recurrence_and_data, join_recurrence_with_data},
+    utils::queries::{join_habit_recurrence_and_data, join_recurrence_with_data},
+    utils::{DEFAULT_QUERY_LIMIT, MAX_QUERY_LIMIT},
 };
 
 use diesel::prelude::*;
@@ -16,7 +19,19 @@ use uuid::Uuid;
 
 impl DBManager {
     // Get all of habit recurrences
-    pub fn get_all_recurrence_data(&self, id: Uuid) -> Result<Vec<HabitDataCollected>, Error> {
+    pub fn get_all_recurrence_data(
+        &self,
+        id: Uuid,
+        page: Option<i64>,
+        per_page: Option<i64>,
+    ) -> Result<Vec<HabitDataCollected>, Error> {
+        let page = page.unwrap_or(1);
+        let mut per_page = per_page.unwrap_or(DEFAULT_QUERY_LIMIT);
+
+        if per_page > MAX_QUERY_LIMIT {
+            per_page = MAX_QUERY_LIMIT;
+        }
+
         let conn = self.connection.get();
 
         if conn.is_err() {
@@ -26,6 +41,8 @@ impl DBManager {
         let search = habit_data_collected::table
             .select(HabitDataCollected::as_select())
             .filter(habit_data_collected::hab_rec_id.eq(id))
+            .limit(per_page)
+            .offset((page - 1) * per_page)
             .load::<HabitDataCollected>(&mut conn.unwrap());
 
         if search.is_err() {
@@ -35,12 +52,76 @@ impl DBManager {
         Ok(search.unwrap())
     }
 
+    // Get all habit's recurrences with data
+    pub fn get_all_habit_recurrences_data(
+        &self,
+        id: Uuid,
+        page: Option<i64>,
+        per_page: Option<i64>,
+    ) -> Result<Vec<RecurrenceWithData>, Error> {
+        let page = page.unwrap_or(1);
+        let mut per_page = per_page.unwrap_or(DEFAULT_QUERY_LIMIT);
+
+        if per_page > MAX_QUERY_LIMIT {
+            per_page = MAX_QUERY_LIMIT;
+        }
+
+        let conn = self.connection.get();
+
+        if conn.is_err() {
+            return Err(Error::DBConnectionError(conn.err().unwrap()));
+        }
+
+        let mut conn = conn.unwrap();
+
+        // Get recurrences from database
+        let recurrences = habit_recurrence::table
+            .select(HabitRecurrence::as_select())
+            .filter(habit_recurrence::hab_id.eq(id))
+            .limit(per_page)
+            .offset((page - 1) * per_page)
+            .load::<HabitRecurrence>(&mut conn);
+
+        if recurrences.is_err() {
+            return Err(Error::QueryError(recurrences.err().unwrap()));
+        }
+
+        let recurrences = recurrences.unwrap();
+
+        // Get data from database
+        let habits_data = HabitDataCollected::belonging_to(&recurrences)
+            .select(HabitDataCollected::as_select())
+            .load::<HabitDataCollected>(&mut conn);
+
+        if habits_data.is_err() {
+            return Err(Error::QueryError(habits_data.err().unwrap()));
+        }
+
+        let habits_data = habits_data.unwrap();
+
+        // Group data by recurrence
+        let grouped_habits_data = habits_data.grouped_by(&recurrences);
+
+        // Join recurrences with data
+        let result = recurrences
+            .into_iter()
+            .zip(grouped_habits_data)
+            .map(|(recurrence_item, data_array)| {
+                join_recurrence_with_data(recurrence_item, data_array)
+            })
+            .collect();
+
+        Ok(result)
+    }
+
     // Add a habit data record
     pub fn add_habit_data(&self, data: HabitDataSchema) -> Result<Uuid, Error> {
         let habit_data = HabitDataCollected {
             hab_dat_id: Uuid::new_v4(),
             hab_dat_amount: data.amount,
-            hab_dat_collected_at: chrono::Local::now().naive_local(),
+            hab_dat_collected_at: data
+                .collected_at
+                .unwrap_or_else(|| chrono::Utc::now().naive_utc().date()),
             hab_rec_id: data.recurrence_id,
         };
 
@@ -182,40 +263,40 @@ impl DBManager {
     }
 
     // Get parent recurrence and habit from data
-    pub fn get_parent_recurrence_and_habit(
-        &self,
-        habit_data: &HabitDataCollected,
-    ) -> Result<(HabitRecurrence, Habit), Error> {
-        let conn = self.connection.get();
+    // pub fn get_parent_recurrence_and_habit(
+    //     &self,
+    //     habit_data: &HabitDataCollected,
+    // ) -> Result<(HabitRecurrence, Habit), Error> {
+    //     let conn = self.connection.get();
 
-        if conn.is_err() {
-            return Err(Error::DBConnectionError(conn.err().unwrap()));
-        }
+    //     if conn.is_err() {
+    //         return Err(Error::DBConnectionError(conn.err().unwrap()));
+    //     }
 
-        let mut conn = conn.unwrap();
+    //     let mut conn = conn.unwrap();
 
-        let recurrence = habit_recurrence::table
-            .select(HabitRecurrence::as_select())
-            .find(habit_data.hab_rec_id)
-            .first(&mut conn);
+    //     let recurrence = habit_recurrence::table
+    //         .select(HabitRecurrence::as_select())
+    //         .find(habit_data.hab_rec_id)
+    //         .first(&mut conn);
 
-        if recurrence.is_err() {
-            return Err(Error::QueryError(recurrence.err().unwrap()));
-        }
+    //     if recurrence.is_err() {
+    //         return Err(Error::QueryError(recurrence.err().unwrap()));
+    //     }
 
-        let recurrence = recurrence.unwrap();
+    //     let recurrence = recurrence.unwrap();
 
-        let habit = habit::table
-            .select(Habit::as_select())
-            .find(recurrence.hab_id)
-            .first(&mut conn);
+    //     let habit = habit::table
+    //         .select(Habit::as_select())
+    //         .find(recurrence.hab_id)
+    //         .first(&mut conn);
 
-        if habit.is_err() {
-            return Err(Error::QueryError(habit.err().unwrap()));
-        }
+    //     if habit.is_err() {
+    //         return Err(Error::QueryError(habit.err().unwrap()));
+    //     }
 
-        let habit = habit.unwrap();
+    //     let habit = habit.unwrap();
 
-        Ok((recurrence, habit))
-    }
+    //     Ok((recurrence, habit))
+    // }
 }

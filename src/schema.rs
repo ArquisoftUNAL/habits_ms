@@ -39,7 +39,7 @@ diesel::table! {
     habit_data_collected (hab_dat_id) {
         hab_dat_id -> Uuid,
         hab_dat_amount -> Numeric,
-        hab_dat_collected_at -> Timestamp,
+        hab_dat_collected_at -> Date,
         hab_rec_id -> Uuid,
     }
 }

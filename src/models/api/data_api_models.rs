@@ -15,6 +15,8 @@ pub struct HabitDataSchema {
     #[validate(custom = "crate::validators::validate_bigdecimal")]
     pub amount: BigDecimal,
 
+    pub collected_at: Option<chrono::NaiveDate>,
+
     // Optional for update only
     pub recurrence_id: Uuid,
 }
