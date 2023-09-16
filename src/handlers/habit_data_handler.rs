@@ -4,7 +4,11 @@ use crate::{
     models::api::{data_api_models::*, *},
 };
 
-use warp::{reply::json, Rejection, Reply};
+use warp::{
+    http::StatusCode,
+    reply::{json, with_status},
+    Rejection, Reply,
+};
 
 use uuid::Uuid;
 use validator::Validate;
@@ -36,7 +40,7 @@ pub async fn create_habit_data_handler(
         message: "Habit data created successfully".to_string(),
         id: result.unwrap(),
     };
-    Ok(json(&response))
+    Ok(with_status(json(&response), StatusCode::CREATED))
 }
 
 // GET Route
@@ -57,7 +61,7 @@ pub async fn get_data_by_id_handler(manager: DBManager, id: Uuid) -> Result<impl
         habit_data: result,
     };
 
-    Ok(json(&response))
+    Ok(with_status(json(&response), StatusCode::OK))
 }
 
 // DELETE Route
@@ -76,7 +80,7 @@ pub async fn delete_habit_data_handler(
     let response = GeneralResponse {
         message: "Habit data deleted successfully".to_string(),
     };
-    Ok(json(&response))
+    Ok(with_status(json(&response), StatusCode::OK))
 }
 
 // UPDATE (PATCH) Route
@@ -105,5 +109,5 @@ pub async fn update_habit_data_handler(
         message: "Habit data updated successfully".to_string(),
     };
 
-    Ok(json(&response))
+    Ok(with_status(json(&response), StatusCode::OK))
 }

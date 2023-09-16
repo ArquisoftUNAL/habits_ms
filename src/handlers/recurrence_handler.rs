@@ -5,7 +5,11 @@ use crate::{
     utils::queries::join_recurrence_with_data,
 };
 
-use warp::{reply::json, Rejection, Reply};
+use warp::{
+    http::StatusCode,
+    reply::{json, with_status},
+    Rejection, Reply,
+};
 
 use uuid::Uuid;
 use validator::Validate;
@@ -36,7 +40,7 @@ pub async fn create_recurrence_handler(
         message: "Recurrence created successfully".to_string(),
         id: result.unwrap(),
     };
-    Ok(json(&response))
+    return Ok(with_status(json(&response), StatusCode::CREATED));
 }
 
 // UPDATE (PATCH) Route
@@ -66,7 +70,7 @@ pub async fn update_recurrence_handler(
         message: "Recurrence updated successfully".to_string(),
     };
 
-    Ok(json(&response))
+    return Ok(with_status(json(&response), StatusCode::OK));
 }
 
 // DELETE Route
@@ -86,7 +90,7 @@ pub async fn delete_recurrence_handler(
     let response = GeneralResponse {
         message: "Recurrence deleted successfully".to_string(),
     };
-    Ok(json(&response))
+    return Ok(with_status(json(&response), StatusCode::OK));
 }
 
 // GET Route
@@ -122,7 +126,7 @@ pub async fn get_recurrence_by_id_handler(
             recurrence: join_recurrence_with_data(result, data_result),
         };
 
-        return Ok(json(&response));
+        return Ok(with_status(json(&response), StatusCode::OK));
     }
 
     // Return response
@@ -131,5 +135,5 @@ pub async fn get_recurrence_by_id_handler(
         recurrence: result,
     };
 
-    Ok(json(&response))
+    return Ok(with_status(json(&response), StatusCode::OK));
 }

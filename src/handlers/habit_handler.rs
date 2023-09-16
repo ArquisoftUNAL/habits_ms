@@ -5,7 +5,11 @@ use crate::{
     utils::queries::{join_habit_recurrence_and_data, join_habit_with_recurrences},
 };
 
-use warp::{reply::json, Rejection, Reply};
+use warp::{
+    http::StatusCode,
+    reply::{json, with_status},
+    Rejection, Reply,
+};
 
 use uuid::Uuid;
 use validator::Validate;
@@ -38,7 +42,7 @@ pub async fn create_habit_handler(
         id: result.unwrap(),
     };
 
-    Ok(json(&response))
+    Ok(with_status(json(&response), StatusCode::CREATED))
 }
 
 // UPDATE (PATCH) Route
@@ -68,7 +72,7 @@ pub async fn update_habits_handler(
         message: "Habit updated successfully".to_string(),
     };
 
-    Ok(json(&response))
+    Ok(with_status(json(&response), StatusCode::OK))
 }
 
 // DELETE Route
@@ -85,7 +89,7 @@ pub async fn delete_habits_handler(manager: DBManager, id: Uuid) -> Result<impl 
     let response = GeneralResponse {
         message: "Habit deleted successfully".to_string(),
     };
-    Ok(json(&response))
+    Ok(with_status(json(&response), StatusCode::OK))
 }
 
 // GET Route
@@ -113,13 +117,7 @@ pub async fn get_habits_handler_by_user_id_handler(
 
         if result.is_err() {
             let error = result.err().unwrap();
-            let response = GeneralResponse {
-                message: format!(
-                    "Error getting habits & recurrences: {} for user with ID: {}",
-                    error, &user_id
-                ),
-            };
-            return Ok(json(&response));
+            return Err(warp::reject::custom(error));
         }
 
         // Return response
@@ -131,7 +129,7 @@ pub async fn get_habits_handler_by_user_id_handler(
             habits: result.unwrap(),
         };
 
-        return Ok(json(&response));
+        return Ok(with_status(json(&response), StatusCode::OK));
     }
 
     // Join data case
@@ -140,13 +138,7 @@ pub async fn get_habits_handler_by_user_id_handler(
 
         if result.is_err() {
             let error = result.err().unwrap();
-            let response = GeneralResponse {
-                message: format!(
-                    "Error getting habits, recurrences & data: {} for user with ID: {}",
-                    error, &user_id
-                ),
-            };
-            return Ok(json(&response));
+            return Err(warp::reject::custom(error));
         }
 
         // Return response
@@ -158,7 +150,7 @@ pub async fn get_habits_handler_by_user_id_handler(
             habits: result.unwrap(),
         };
 
-        return Ok(json(&response));
+        return Ok(with_status(json(&response), StatusCode::OK));
     }
 
     // Only habits case
@@ -171,7 +163,7 @@ pub async fn get_habits_handler_by_user_id_handler(
         habits: result,
     };
 
-    return Ok(json(&response));
+    return Ok(with_status(json(&response), StatusCode::OK));
 }
 
 // GET Route
@@ -214,7 +206,7 @@ pub async fn get_habit_by_id_handler(
             habit: join_habit_with_recurrences(result, recurrences),
         };
 
-        return Ok(json(&response));
+        return Ok(with_status(json(&response), StatusCode::OK));
     }
 
     // Join data case
@@ -238,7 +230,7 @@ pub async fn get_habit_by_id_handler(
             habit: join_habit_recurrence_and_data(result, recurrences),
         };
 
-        return Ok(json(&response));
+        return Ok(with_status(json(&response), StatusCode::OK));
     }
 
     // Return response
@@ -247,5 +239,5 @@ pub async fn get_habit_by_id_handler(
         habit: result,
     };
 
-    Ok(json(&response))
+    return Ok(with_status(json(&response), StatusCode::OK));
 }

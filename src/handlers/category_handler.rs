@@ -25,7 +25,7 @@ pub async fn get_categories_handler(
         let response = GeneralResponse {
             message: format!("Error getting categories: {}", error),
         };
-        return Ok(json(&response));
+        return Ok(with_status(json(&response), StatusCode::OK));
     }
 
     let response = CategoryMultipleQueryResponse {
@@ -33,7 +33,7 @@ pub async fn get_categories_handler(
         categories: result.unwrap(),
     };
 
-    Ok(json(&response))
+    Ok(with_status(json(&response), StatusCode::OK))
 }
 
 // GET Route
@@ -84,7 +84,7 @@ pub async fn create_category_handler(
         id: result.unwrap(),
     };
 
-    Ok(json(&response))
+    Ok(with_status(json(&response), StatusCode::CREATED))
 }
 
 // DELETE Route
@@ -103,7 +103,7 @@ pub async fn delete_category_handler(
         message: "Successfully deleted category".to_string(),
     };
 
-    Ok(json(&response))
+    Ok(with_status(json(&response), StatusCode::OK))
 }
 
 // UPDATE Route
@@ -132,5 +132,5 @@ pub async fn update_category_handler(
         message: "Successfully updated category".to_string(),
     };
 
-    Ok(json(&response))
+    Ok(with_status(json(&response), StatusCode::OK))
 }
