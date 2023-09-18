@@ -91,6 +91,7 @@ impl DBManager {
         // Get data from database
         let habits_data = HabitDataCollected::belonging_to(&recurrences)
             .select(HabitDataCollected::as_select())
+            .order_by(habit_data_collected::hab_dat_collected_at.desc())
             .load::<HabitDataCollected>(&mut conn);
 
         if habits_data.is_err() {
@@ -261,42 +262,4 @@ impl DBManager {
 
         Ok(result)
     }
-
-    // Get parent recurrence and habit from data
-    // pub fn get_parent_recurrence_and_habit(
-    //     &self,
-    //     habit_data: &HabitDataCollected,
-    // ) -> Result<(HabitRecurrence, Habit), Error> {
-    //     let conn = self.connection.get();
-
-    //     if conn.is_err() {
-    //         return Err(Error::DBConnectionError(conn.err().unwrap()));
-    //     }
-
-    //     let mut conn = conn.unwrap();
-
-    //     let recurrence = habit_recurrence::table
-    //         .select(HabitRecurrence::as_select())
-    //         .find(habit_data.hab_rec_id)
-    //         .first(&mut conn);
-
-    //     if recurrence.is_err() {
-    //         return Err(Error::QueryError(recurrence.err().unwrap()));
-    //     }
-
-    //     let recurrence = recurrence.unwrap();
-
-    //     let habit = habit::table
-    //         .select(Habit::as_select())
-    //         .find(recurrence.hab_id)
-    //         .first(&mut conn);
-
-    //     if habit.is_err() {
-    //         return Err(Error::QueryError(habit.err().unwrap()));
-    //     }
-
-    //     let habit = habit.unwrap();
-
-    //     Ok((recurrence, habit))
-    // }
 }

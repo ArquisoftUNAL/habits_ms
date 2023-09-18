@@ -88,7 +88,7 @@ impl DBManager {
     // Get all of user habits
     pub fn get_all_user_habits(
         &self,
-        id: &String,
+        id: String,
         page: Option<i64>,
         per_page: Option<i64>,
     ) -> Result<Vec<Habit>, Error> {

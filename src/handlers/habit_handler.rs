@@ -102,7 +102,7 @@ pub async fn get_habits_handler_by_user_id_handler(
     // Get habits from database
     let user_id = id.clone();
 
-    let result = manager.get_all_user_habits(&user_id, params.habits_page, params.habits_per_page);
+    let result = manager.get_all_user_habits(user_id, params.habits_page, params.habits_per_page);
 
     if result.is_err() {
         let error = result.err().unwrap();
@@ -122,10 +122,7 @@ pub async fn get_habits_handler_by_user_id_handler(
 
         // Return response
         let response = HabitAndRecurrencesMultipleQueryResponse {
-            message: format!(
-                "Successfully retrieved habits & recurrences for user with ID: {}",
-                &user_id
-            ),
+            message: format!("Successfully retrieved habits & recurrences for user"),
             habits: result.unwrap(),
         };
 
@@ -143,10 +140,7 @@ pub async fn get_habits_handler_by_user_id_handler(
 
         // Return response
         let response = HabitsAndRecurrencesAndDataMultipleQueryResponse {
-            message: format!(
-                "Successfully retrieved habits, recurrences & data for user with ID: {}",
-                &user_id
-            ),
+            message: format!("Successfully retrieved habits, recurrences & data for user"),
             habits: result.unwrap(),
         };
 
@@ -156,10 +150,7 @@ pub async fn get_habits_handler_by_user_id_handler(
     // Only habits case
     // Return response
     let response = HabitMultipleQueryResponse {
-        message: format!(
-            "Successfully retrieved habits for user with ID: {}",
-            &user_id
-        ),
+        message: format!("Successfully retrieved habits for user"),
         habits: result,
     };
 

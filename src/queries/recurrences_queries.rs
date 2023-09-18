@@ -170,48 +170,4 @@ impl DBManager {
 
         Ok(result)
     }
-
-    // Join recurrences with a set set of habits
-    // pub fn join_habits_recurrences2(
-    //     &self,
-    //     habits: Vec<Habit>,
-    //     page: Option<i64>,
-    //     per_page: Option<i64>,
-    // ) -> Result<Vec<HabitWithRecurrences>, Error> {
-    //     let page = page.unwrap_or(1);
-    //     let mut per_page = per_page.unwrap_or(DEFAULT_QUERY_LIMIT);
-
-    //     if per_page > MAX_QUERY_LIMIT {
-    //         per_page = MAX_QUERY_LIMIT;
-    //     }
-
-    //     let conn = self.connection.get();
-
-    //     if conn.is_err() {
-    //         return Err(Error::DBConnectionError(conn.err().unwrap()));
-    //     }
-
-    //     // This can be complicated from here
-    //     let recurrences = HabitRecurrence::belonging_to(&habits)
-    //         .select(HabitRecurrence::as_select())
-    //         .grouped_by(&habits)
-    //         .load::<HabitRecurrence>(&mut conn.unwrap());
-
-    //     if recurrences.is_err() {
-    //         return Err(Error::QueryError(recurrences.err().unwrap()));
-    //     }
-
-    //     let recurrences = recurrences.unwrap();
-    //     let result = recurrences.grouped_by(&habits);
-
-    //     let result = habits
-    //         .into_iter()
-    //         .zip(result)
-    //         .map(|(habit_item, recurrences_array)| {
-    //             join_habit_with_recurrences(habit_item, recurrences_array)
-    //         })
-    //         .collect();
-
-    //     Ok(result)
-    // }
 }

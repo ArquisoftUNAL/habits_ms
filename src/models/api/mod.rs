@@ -1,5 +1,6 @@
 pub mod category_api_models;
 pub mod data_api_models;
+pub mod events_api_models;
 pub mod habit_api_models;
 pub mod recurrence_api_models;
 
@@ -22,6 +23,13 @@ pub struct RangeParams {
     pub recurrences_per_page: Option<i64>,
     pub data_page: Option<i64>,
     pub data_per_page: Option<i64>,
+}
+
+// Date query params
+#[derive(Debug, Deserialize)]
+pub struct DateParams {
+    pub start_date: Option<chrono::NaiveDate>,
+    pub end_date: Option<chrono::NaiveDate>,
 }
 
 // Data include params matcher, we can easily tell a handler to include or not certain data in response
