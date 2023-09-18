@@ -17,21 +17,12 @@ pub async fn get_next_events_by_user_handler(
     manager: DBManager,
     data_params: DataIncludeParams,
 ) -> Result<impl Reply, Rejection> {
-    let habits =
-        manager.get_all_user_habits(id, range_params.habits_page, range_params.habits_per_page);
-
-    if habits.is_err() {
-        let error = habits.err().unwrap();
-        return Err(warp::reject::custom(error));
-    }
-
-    let habits = habits.unwrap();
-
     if data_params.include_habits.unwrap_or(false) {
         let events_data = manager.get_next_events_with_habits(
-            habits,
+            id,
             date_params.start_date,
             date_params.end_date,
+            range_params.events_limit,
         );
 
         if events_data.is_err() {
@@ -49,9 +40,19 @@ pub async fn get_next_events_by_user_handler(
         return Ok(with_status(json(&response), StatusCode::OK));
     }
 
-    // Return response
-    let response = GeneralResponse {
-        message: format!("Successfully retrieved recurrences"),
+    let events_data =
+        manager.get_next_events_counts(id, date_params.start_date, date_params.end_date);
+
+    if events_data.is_err() {
+        let error = events_data.err().unwrap();
+        return Err(warp::reject::custom(error));
+    }
+
+    let events_data = events_data.unwrap();
+
+    let response = EventsCountMultipleQueryResponse {
+        message: format!("Successfully retrieved events"),
+        events: events_data,
     };
 
     return Ok(with_status(json(&response), StatusCode::OK));

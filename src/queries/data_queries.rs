@@ -43,6 +43,7 @@ impl DBManager {
             .filter(habit_data_collected::hab_rec_id.eq(id))
             .limit(per_page)
             .offset((page - 1) * per_page)
+            .order_by(habit_data_collected::hab_dat_collected_at.asc())
             .load::<HabitDataCollected>(&mut conn.unwrap());
 
         if search.is_err() {
@@ -80,6 +81,7 @@ impl DBManager {
             .filter(habit_recurrence::hab_id.eq(id))
             .limit(per_page)
             .offset((page - 1) * per_page)
+            .order_by(habit_recurrence::hab_rec_freq_data.asc())
             .load::<HabitRecurrence>(&mut conn);
 
         if recurrences.is_err() {
@@ -232,6 +234,7 @@ impl DBManager {
 
         let habits_data = HabitDataCollected::belonging_to(&recurrences)
             .select(HabitDataCollected::as_select())
+            .order_by(habit_data_collected::hab_dat_collected_at.desc())
             .load::<HabitDataCollected>(&mut conn);
 
         if habits_data.is_err() {

@@ -23,6 +23,7 @@ pub struct RangeParams {
     pub recurrences_per_page: Option<i64>,
     pub data_page: Option<i64>,
     pub data_per_page: Option<i64>,
+    pub events_limit: Option<i64>,
 }
 
 // Date query params

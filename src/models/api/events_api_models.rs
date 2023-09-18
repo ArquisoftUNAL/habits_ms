@@ -1,4 +1,4 @@
-use crate::models::api::habit_api_models::HabitWithRecurrences;
+use crate::models::database::{Habit, HabitRecurrence};
 use chrono::NaiveDate;
 use serde_derive::Serialize;
 
@@ -12,7 +12,8 @@ pub struct EventWithCount {
 #[derive(Debug, Serialize)]
 pub struct EventWithHabit {
     pub date: NaiveDate,
-    pub habit: Vec<HabitWithRecurrences>,
+    pub habit: Habit,
+    pub recurrence: HabitRecurrence,
 }
 
 // Response models

@@ -16,6 +16,7 @@ services:
     container_name: habitus_habits_db
     image: habitus_habits_db
     build: ./database/.
+    mem_limit: 512m
     ports:
       - 5432:5432
     env_file:

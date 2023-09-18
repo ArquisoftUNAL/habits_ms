@@ -4,7 +4,7 @@ use diesel::prelude::*;
 use serde_derive::{Deserialize, Serialize};
 use uuid::Uuid;
 
-#[derive(diesel_derive_enum::DbEnum, Debug, Deserialize, Serialize)]
+#[derive(diesel_derive_enum::DbEnum, Debug, Deserialize, Serialize, Clone, Copy)]
 #[ExistingTypePath = "crate::schema::sql_types::RecDataType"]
 pub enum RecDataEnum {
     daily,
@@ -36,6 +36,7 @@ pub struct Category {
     AsChangeset,
     Identifiable,
     Associations,
+    Clone,
 )]
 #[diesel(belongs_to(Category, foreign_key = cat_id))]
 #[diesel(primary_key(hab_id))]
@@ -75,6 +76,7 @@ pub struct Habit {
     AsChangeset,
     Associations,
     Identifiable,
+    Clone,
 )]
 #[diesel(belongs_to(Habit, foreign_key = hab_id))]
 #[diesel(primary_key(hab_rec_id))]
@@ -102,6 +104,7 @@ pub struct HabitRecurrence {
     AsChangeset,
     Identifiable,
     Associations,
+    Clone,
 )]
 #[diesel(belongs_to(HabitRecurrence, foreign_key = hab_rec_id))]
 #[diesel(primary_key(hab_dat_id))]

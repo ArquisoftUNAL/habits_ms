@@ -31,7 +31,7 @@ pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
         .and_then(events_handler::get_next_events_by_user_handler);
 
     let get_next_events_count = base_get_next_events_by_user
-        .and(warp::path("habits"))
+        .and(warp::path("count"))
         .and(with_db_manager(pool.clone()))
         .and(warp::any().map(move || DataIncludeParams {
             ..Default::default()

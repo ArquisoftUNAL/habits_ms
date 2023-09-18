@@ -124,7 +124,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:3030/api/v1/categories/410b5385-ce7c-46f8-bf7f-caaaac819c65",
+							"raw": "localhost:3030/api/v1/categories/dadfds",
 							"host": [
 								"localhost"
 							],
@@ -133,7 +133,7 @@
 								"api",
 								"v1",
 								"categories",
-								"410b5385-ce7c-46f8-bf7f-caaaac819c65"
+								"dadfds"
 							]
 						}
 					},
@@ -151,7 +151,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Ping Pong2\",\r\n    \"description\": \"ola\",\r\n    \"is_favourite\": true,\r\n    \"kind\": \"ME\",\r\n    \"is_yn\": true,\r\n    \"color\": \"abcdef\",\r\n    \"units\": \"abcdefghij\",\r\n    \"user_id\": \"fasdfadsf\",\r\n    \"category\" : \"410b5385-ce7c-46f8-bf7f-caaaac819c65\"\r\n}",
+							"raw": "{\r\n    \"name\": \"Ping Pong 10\",\r\n    \"description\": \"ola\",\r\n    \"is_favourite\": true,\r\n    \"kind\": \"ME\",\r\n    \"is_yn\": true,\r\n    \"color\": \"abcdef\",\r\n    \"units\": \"abcdefghij\",\r\n    \"user_id\": \"edgar\",\r\n    \"category\" : \"43c48bac-a4d2-4c48-9d19-306f82b1330b\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -180,7 +180,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:3030/api/v1/habits/user/fasdfadsf",
+							"raw": "localhost:3030/api/v1/habits/user/edgar",
 							"host": [
 								"localhost"
 							],
@@ -190,7 +190,7 @@
 								"v1",
 								"habits",
 								"user",
-								"fasdfadsf"
+								"edgar"
 							]
 						}
 					},
@@ -202,7 +202,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:3030/api/v1/habits/user/fasdfadsf/recurrences",
+							"raw": "localhost:3030/api/v1/habits/user/edgar/recurrences",
 							"host": [
 								"localhost"
 							],
@@ -212,7 +212,7 @@
 								"v1",
 								"habits",
 								"user",
-								"fasdfadsf",
+								"edgar",
 								"recurrences"
 							]
 						}
@@ -300,7 +300,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:3030/api/v1/habits/51dec0ba-971e-4701-809e-533c77c81d3a",
+							"raw": "localhost:3030/api/v1/habits/8db4bc6b-20f9-454f-bd6f-1d30736e2b22",
 							"host": [
 								"localhost"
 							],
@@ -309,7 +309,7 @@
 								"api",
 								"v1",
 								"habits",
-								"51dec0ba-971e-4701-809e-533c77c81d3a"
+								"8db4bc6b-20f9-454f-bd6f-1d30736e2b22"
 							]
 						}
 					},
@@ -321,7 +321,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:3030/api/v1/habits/51dec0ba-971e-4701-809e-533c77c81d3a/recurrences",
+							"raw": "localhost:3030/api/v1/habits/c83dcf66-3823-497d-99be-327c91e8dcba/recurrences",
 							"host": [
 								"localhost"
 							],
@@ -330,7 +330,7 @@
 								"api",
 								"v1",
 								"habits",
-								"51dec0ba-971e-4701-809e-533c77c81d3a",
+								"c83dcf66-3823-497d-99be-327c91e8dcba",
 								"recurrences"
 							]
 						}
@@ -372,7 +372,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"frequency_type\":\"weekly\",\r\n    \"frequency_data\":\"2023-10-08\",\r\n    \"goal\": 2000,\r\n    \"habit_id\":\"51dec0ba-971e-4701-809e-533c77c81d3a\"\r\n}",
+							"raw": "{\r\n    \"frequency_type\":\"weekly\",\r\n    \"frequency_data\":\"2023-10-27\",\r\n    \"goal\": 2000,\r\n    \"habit_id\":\"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -573,6 +573,69 @@
 								"v1",
 								"habitdata",
 								"69a70399-3bfe-4f7c-b80f-c6cce600449a"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Events",
+			"item": [
+				{
+					"name": "Get user habit events",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3030/api/v1/events/user/edgar/habits?end_date=2023-12-31",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"events",
+								"user",
+								"edgar",
+								"habits"
+							],
+							"query": [
+								{
+									"key": "end_date",
+									"value": "2023-12-31"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get user events count",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3030/api/v1/events/user/edgar/count?end_date=2023-12-31",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"events",
+								"user",
+								"edgar",
+								"count"
+							],
+							"query": [
+								{
+									"key": "end_date",
+									"value": "2023-12-31"
+								}
 							]
 						}
 					},

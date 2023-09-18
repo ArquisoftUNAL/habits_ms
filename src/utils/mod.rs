@@ -1,4 +1,5 @@
 pub mod queries;
+pub mod time;
 
 use crate::db::{DBManager, PostgresPool};
 use warp::{Filter, Rejection};
