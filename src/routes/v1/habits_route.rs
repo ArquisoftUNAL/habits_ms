@@ -45,7 +45,7 @@ pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
             ..Default::default()
         }))
         .and(warp::path::end())
-        .and_then(habit_handler::get_habits_handler_by_user_id_handler);
+        .and_then(habit_handler::get_habits_by_user_id_handler);
 
     let get_habits_recurrences = base_get_habit_user_route
         .and(warp::path("recurrences"))
@@ -55,7 +55,7 @@ pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
             ..Default::default()
         }))
         .and(warp::path::end())
-        .and_then(habit_handler::get_habits_handler_by_user_id_handler);
+        .and_then(habit_handler::get_habits_by_user_id_handler);
 
     let get_habits_recurrences_data = base_get_habit_user_route
         .and(warp::path("recurrences"))
@@ -65,7 +65,16 @@ pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
             include_data: Some(true),
             ..Default::default()
         }))
-        .and_then(habit_handler::get_habits_handler_by_user_id_handler);
+        .and_then(habit_handler::get_habits_by_user_id_handler);
+
+    // Getting habits by category id
+    let get_habit_by_category = base_habit_route
+        .and(warp::get())
+        .and(warp::path("category"))
+        .and(warp::path::param::<Uuid>())
+        .and(warp::query::<RangeParams>())
+        .and(with_db_manager(pool.clone()))
+        .and_then(habit_handler::get_habits_by_category_handler);
 
     // Getting habits by id
     let base_get_habit_id_route = base_habit_route
@@ -107,6 +116,7 @@ pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
         .or(get_habits)
         .or(get_habits_recurrences)
         .or(get_habits_recurrences_data)
+        .or(get_habit_by_category)
         .or(get_habit_by_id)
         .or(get_habit_by_id_recurrences)
         .or(get_habit_by_id_recurrences_data)

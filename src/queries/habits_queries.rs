@@ -119,6 +119,40 @@ impl DBManager {
         Ok(search.unwrap())
     }
 
+    // Get all category habits
+    pub fn get_all_category_habits(
+        &self,
+        id: Uuid,
+        page: Option<i64>,
+        per_page: Option<i64>,
+    ) -> Result<Vec<Habit>, Error> {
+        let page = page.unwrap_or(1);
+        let mut per_page = per_page.unwrap_or(DEFAULT_QUERY_LIMIT);
+
+        if per_page > MAX_QUERY_LIMIT {
+            per_page = MAX_QUERY_LIMIT;
+        }
+
+        let conn = self.connection.get();
+
+        if conn.is_err() {
+            return Err(Error::DBConnectionError(conn.err().unwrap()));
+        }
+
+        let search = habit::table
+            .select(Habit::as_select())
+            .filter(habit::cat_id.eq(id))
+            .limit(per_page.into())
+            .offset((page - 1) * per_page)
+            .load::<Habit>(&mut conn.unwrap());
+
+        if search.is_err() {
+            return Err(Error::QueryError(search.err().unwrap()));
+        }
+
+        Ok(search.unwrap())
+    }
+
     // Filter a specific habit
     pub fn get_habit_by_id(&self, id: Uuid) -> Result<Habit, Error> {
         let conn = self.connection.get();

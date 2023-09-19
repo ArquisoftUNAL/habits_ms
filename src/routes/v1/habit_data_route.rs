@@ -1,4 +1,7 @@
-use crate::{db::PostgresPool, handlers::habit_data_handler, utils::with_db_manager};
+use crate::{
+    db::PostgresPool, handlers::habit_data_handler, models::api::RangeParams,
+    utils::with_db_manager,
+};
 
 use warp::filters::BoxedFilter;
 use warp::Filter;
@@ -28,6 +31,15 @@ pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
         .and(warp::path::param::<Uuid>())
         .and_then(habit_data_handler::delete_habit_data_handler);
 
+    let get_habit_data_by_recurrence = base_habit_data_route
+        .and(warp::get())
+        .and(warp::path("recurrence"))
+        .and(warp::path::param::<Uuid>())
+        .and(warp::query::<RangeParams>())
+        .and(warp::path::end())
+        .and(with_db_manager(pool.clone()))
+        .and_then(habit_data_handler::get_data_by_recurrence_handler);
+
     let get_habit_data_by_id = base_habit_data_route
         .and(warp::get())
         .and(with_db_manager(pool.clone()))
@@ -37,6 +49,7 @@ pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
     create_habit_data
         .or(update_habit_data)
         .or(delete_habit_data)
+        .or(get_habit_data_by_recurrence)
         .or(get_habit_data_by_id)
         .boxed()
 }

@@ -32,6 +32,14 @@ pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
         .and_then(recurrence_handler::delete_recurrence_handler);
 
     // Getting recurrences data
+    let get_recurrences_by_habit = base_recurrence_route
+        .and(warp::get())
+        .and(warp::path("habit"))
+        .and(warp::path::param::<uuid::Uuid>())
+        .and(warp::query::<RangeParams>())
+        .and(with_db_manager(pool.clone()))
+        .and_then(recurrence_handler::get_recurrences_by_habit_handler);
+
     let base_get_recurrence_route = base_recurrence_route
         .and(warp::get())
         .and(warp::path::param::<uuid::Uuid>())
@@ -58,6 +66,7 @@ pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
     create_recurrence
         .or(update_recurrence)
         .or(delete_recurrence)
+        .or(get_recurrences_by_habit)
         .or(get_recurrence_by_id)
         .or(get_recurrence_by_id_data)
         .boxed()

@@ -137,3 +137,26 @@ pub async fn get_recurrence_by_id_handler(
 
     return Ok(with_status(json(&response), StatusCode::OK));
 }
+
+// GET Route
+pub async fn get_recurrences_by_habit_handler(
+    id: Uuid,
+    params: RangeParams,
+    manager: DBManager,
+) -> Result<impl Reply, Rejection> {
+    let result =
+        manager.get_all_habit_recurrences(id, params.recurrences_page, params.recurrences_per_page);
+
+    if result.is_err() {
+        let error = result.err().unwrap();
+        return Err(warp::reject::custom(error));
+    }
+
+    // Return response
+    let response = RecurrencesMultipleQueryResponse {
+        message: format!("Successfully retrieved recurrences"),
+        recurrences: result.unwrap(),
+    };
+
+    return Ok(with_status(json(&response), StatusCode::OK));
+}

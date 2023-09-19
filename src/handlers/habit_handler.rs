@@ -93,7 +93,7 @@ pub async fn delete_habits_handler(manager: DBManager, id: Uuid) -> Result<impl 
 }
 
 // GET Route
-pub async fn get_habits_handler_by_user_id_handler(
+pub async fn get_habits_by_user_id_handler(
     id: String,
     params: RangeParams,
     manager: DBManager,
@@ -151,6 +151,33 @@ pub async fn get_habits_handler_by_user_id_handler(
     // Return response
     let response = HabitMultipleQueryResponse {
         message: format!("Successfully retrieved habits for user"),
+        habits: result,
+    };
+
+    return Ok(with_status(json(&response), StatusCode::OK));
+}
+
+pub async fn get_habits_by_category_handler(
+    id: Uuid,
+    params: RangeParams,
+    manager: DBManager,
+) -> Result<impl Reply, Rejection> {
+    // Get habits from database
+    let category_id = id.clone();
+
+    let result =
+        manager.get_all_category_habits(category_id, params.habits_page, params.habits_per_page);
+
+    if result.is_err() {
+        let error = result.err().unwrap();
+        return Err(warp::reject::custom(error));
+    }
+
+    let result = result.unwrap();
+
+    // Return response
+    let response = HabitMultipleQueryResponse {
+        message: format!("Successfully retrieved habits for category"),
         habits: result,
     };
 
