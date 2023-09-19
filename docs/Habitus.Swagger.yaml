@@ -1,614 +1,1575 @@
----
 openapi: 3.0.0
 info:
-  title: home-iot-api
-  description: The API for the EatBacon IOT project
+  title: Habitus
+  description: All endpoints enabled for Habits microservice of Habitus
   version: 1.0.0
 servers:
-- url: https://virtserver.swaggerhub.com/EDGARDANIELGD123/HabitusHabits/1.0.0
-  description: SwaggerHub API Auto Mocking
+  - url: localhost://
+tags:
+  - name: Categories
+  - name: Habits
+  - name: Recurrences
+  - name: Habits Data
+  - name: Events
 paths:
-  /devices:
-    get:
+  /030/api/v1/categories/410b5385-ce7c-46f8-bf7f-caaaac819c65:
+    patch:
       tags:
-      - Device
-      description: returns all registered devices
-      operationId: getDevices
-      parameters:
-      - name: skip
-        in: query
-        description: number of records to skip
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: integer
-          format: int32
-      - name: limit
-        in: query
-        description: max number of records to return
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: integer
-          format: int32
-      responses:
-        "200":
-          description: All the devices
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: string
-                  format: uri
-                  example: http://10.0.0.225:8080
-    post:
-      tags:
-      - Device
-      operationId: register
+        - Categories
+      summary: Update Category
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DeviceRegistrationInfo'
+              type: object
+              example:
+                name: natyyy
       responses:
-        "200":
-          description: successfully registered device
-  /lighting/dimmers/{deviceId}/{value}:
+        '200':
+          description: OK
+          headers:
+            content-type:
+              schema:
+                type: string
+                example: application/json
+            content-length:
+              schema:
+                type: integer
+                example: '43'
+            date:
+              schema:
+                type: string
+                example: Tue, 19 Sep 2023 18:35:06 GMT
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                message: Successfully updated category
+  /030/api/v1/categories/:
+    get:
+      tags:
+        - Categories
+      summary: Get Categories
+      parameters:
+        - name: categories_page
+          in: query
+          schema:
+            type: integer
+          example: '1'
+      responses:
+        '200':
+          description: OK
+          headers:
+            content-type:
+              schema:
+                type: string
+                example: application/json
+            content-length:
+              schema:
+                type: integer
+                example: '216'
+            date:
+              schema:
+                type: string
+                example: Tue, 19 Sep 2023 18:34:47 GMT
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                message: Successfully retrieved categories
+                categories:
+                  - cat_id: 43c48bac-a4d2-4c48-9d19-306f82b1330b
+                    cat_name: Test Category
+                  - cat_id: 83f86806-4020-46fa-8c08-6870265530ba
+                    cat_name: Test Category
     post:
       tags:
-      - Z-Wave
-      operationId: setDimmer
-      parameters:
-      - name: deviceId
-        in: path
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: value
-        in: path
-        required: true
-        style: simple
-        explode: false
-        schema:
-          maximum: 100
-          minimum: 0
-          type: integer
-          format: int32
+        - Categories
+      summary: Create Category
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: olade2
       responses:
-        "200":
-          description: response
+        '201':
+          description: Created
+          headers:
+            content-type:
+              schema:
+                type: string
+                example: application/json
+            content-length:
+              schema:
+                type: integer
+                example: '85'
+            date:
+              schema:
+                type: string
+                example: Tue, 19 Sep 2023 18:35:18 GMT
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiResponse'
-      x-swagger-router-controller: ZWave
-  /lighting/dimmers/{deviceId}/{value}/timer/{timeunit}:
+                type: object
+              example:
+                message: Successfully added category
+                id: 666be54e-6ef7-4432-910c-0f98f3785a76
+  /030/api/v1/categories/79e5ec22-3c6e-41b7-a36f-8e2d56068cd7:
+    delete:
+      tags:
+        - Categories
+      summary: Delete Category
+      responses:
+        '200':
+          description: OK
+          headers:
+            content-type:
+              schema:
+                type: string
+                example: application/json
+            content-length:
+              schema:
+                type: integer
+                example: '43'
+            date:
+              schema:
+                type: string
+                example: Tue, 19 Sep 2023 18:35:13 GMT
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                message: Successfully deleted category
+  /030/api/v1/categories/dadfds:
+    get:
+      tags:
+        - Categories
+      summary: Get Category by ID
+      responses:
+        '405':
+          description: Method Not Allowed
+          headers:
+            content-type:
+              schema:
+                type: string
+                example: application/json
+            content-length:
+              schema:
+                type: integer
+                example: '46'
+            date:
+              schema:
+                type: string
+                example: Tue, 19 Sep 2023 18:35:22 GMT
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                message: Method Not Allowed
+                errors: null
+  /030/api/v1/habits/:
     post:
       tags:
-      - Z-Wave
-      description: sets a dimmer to a specific value on a timer
-      operationId: setDimmerTimer
-      parameters:
-      - name: deviceId
-        in: path
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: value
-        in: path
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
-          format: int32
-      - name: timeunit
-        in: path
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
-          format: int32
-      - name: units
-        in: query
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: string
-          default: milliseconds
-          enum:
-          - seconds
-          - minutes
-          - milliseconds
+        - Habits
+      summary: Create Habit
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: Ping Pong 10
+                description: ola
+                is_favourite: true
+                kind: ME
+                is_yn: true
+                color: abcdef
+                units: abcdefghij
+                user_id: edgar
+                category: 43c48bac-a4d2-4c48-9d19-306f82b1330b
       responses:
-        "200":
-          description: response
+        '201':
+          description: Created
+          headers:
+            content-type:
+              schema:
+                type: string
+                example: application/json
+            content-length:
+              schema:
+                type: integer
+                example: '84'
+            date:
+              schema:
+                type: string
+                example: Tue, 19 Sep 2023 18:35:27 GMT
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiResponse'
-      x-swagger-router-controller: ZWave
-  /lighting/switches/{deviceId}:
+                type: object
+              example:
+                message: Habit created successfully
+                id: b570c712-79f8-4224-944e-312f08350bd8
+  /030/api/v1/habits/user/edgar:
     get:
       tags:
-      - Z-Wave
-      operationId: getSwitchState
-      parameters:
-      - name: deviceId
-        in: path
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
+        - Habits
+      summary: Get user habits
       responses:
-        "200":
-          description: response
+        '200':
+          description: OK
+          headers:
+            content-type:
+              schema:
+                type: string
+                example: application/json
+            content-length:
+              schema:
+                type: integer
+                example: '749'
+            date:
+              schema:
+                type: string
+                example: Tue, 19 Sep 2023 18:35:30 GMT
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DeviceState'
-      x-swagger-router-controller: ZWave
-  /lighting/switches/{deviceId}/{value}:
+                type: object
+              example:
+                message: Successfully retrieved habits for user
+                habits:
+                  - hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                    hab_name: Ping Pong 10
+                    hab_description: ola
+                    hab_created_at: '2023-09-18T14:50:56.202767'
+                    hab_updated_at: '2023-09-18T14:50:56.202785'
+                    hab_is_favorite: true
+                    hab_is_yn: true
+                    hab_color: abcdef
+                    hab_units: abcdefghij
+                    usr_id: edgar
+                    cat_id: 43c48bac-a4d2-4c48-9d19-306f82b1330b
+                  - hab_id: b570c712-79f8-4224-944e-312f08350bd8
+                    hab_name: Ping Pong 10
+                    hab_description: ola
+                    hab_created_at: '2023-09-19T13:35:27.664946'
+                    hab_updated_at: '2023-09-19T13:35:27.667194'
+                    hab_is_favorite: true
+                    hab_is_yn: true
+                    hab_color: abcdef
+                    hab_units: abcdefghij
+                    usr_id: edgar
+                    cat_id: 43c48bac-a4d2-4c48-9d19-306f82b1330b
+  /030/api/v1/habits/user/edgar/recurrences:
+    get:
+      tags:
+        - Habits
+      summary: Get habits with recurrences
+      responses:
+        '200':
+          description: OK
+          headers:
+            content-type:
+              schema:
+                type: string
+                example: application/json
+            content-length:
+              schema:
+                type: integer
+                example: '991'
+            date:
+              schema:
+                type: string
+                example: Tue, 19 Sep 2023 18:35:34 GMT
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                message: Successfully retrieved habits & recurrences for user
+                habits:
+                  - hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                    hab_name: Ping Pong 10
+                    hab_description: ola
+                    hab_is_favorite: true
+                    hab_is_yn: true
+                    hab_color: abcdef
+                    hab_units: abcdefghij
+                    usr_id: edgar
+                    cat_id: 43c48bac-a4d2-4c48-9d19-306f82b1330b
+                    recurrences:
+                      - hab_rec_id: 001054d0-3bf1-477b-a2dc-bccc5fafd22a
+                        hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                        hab_rec_freq_type: weekly2
+                        hab_rec_goal: '2000.00'
+                        hab_rec_freq_data: '2023-10-27'
+                      - hab_rec_id: 40ed8805-a563-47be-a7c5-90faf9d34f49
+                        hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                        hab_rec_freq_type: weekly
+                        hab_rec_goal: '2000.00'
+                        hab_rec_freq_data: '2023-10-27'
+                  - hab_id: b570c712-79f8-4224-944e-312f08350bd8
+                    hab_name: Ping Pong 10
+                    hab_description: ola
+                    hab_is_favorite: true
+                    hab_is_yn: true
+                    hab_color: abcdef
+                    hab_units: abcdefghij
+                    usr_id: edgar
+                    cat_id: 43c48bac-a4d2-4c48-9d19-306f82b1330b
+                    recurrences: []
+  /030/api/v1/habits/user/edgar/recurrences/data:
+    get:
+      tags:
+        - Habits
+      summary: Get habits, recurrences and data
+      responses:
+        '200':
+          description: OK
+          headers:
+            content-type:
+              schema:
+                type: string
+                example: application/json
+            content-length:
+              schema:
+                type: integer
+                example: '1186'
+            date:
+              schema:
+                type: string
+                example: Tue, 19 Sep 2023 18:35:38 GMT
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                message: Successfully retrieved habits, recurrences & data for user
+                habits:
+                  - hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                    hab_name: Ping Pong 10
+                    hab_description: ola
+                    hab_is_favorite: true
+                    hab_is_yn: true
+                    hab_color: abcdef
+                    hab_units: abcdefghij
+                    usr_id: edgar
+                    cat_id: 43c48bac-a4d2-4c48-9d19-306f82b1330b
+                    recurrences:
+                      - hab_rec_id: 001054d0-3bf1-477b-a2dc-bccc5fafd22a
+                        hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                        hab_rec_freq_type: weekly2
+                        hab_rec_freq_data: '2023-10-27'
+                        hab_rec_goal: '2000.00'
+                        data:
+                          - hab_dat_id: dd7b8878-26d2-44e3-99d4-341c6c07a759
+                            hab_dat_amount: '10000.00'
+                            hab_dat_collected_at: '2025-11-30'
+                            hab_rec_id: 001054d0-3bf1-477b-a2dc-bccc5fafd22a
+                      - hab_rec_id: 40ed8805-a563-47be-a7c5-90faf9d34f49
+                        hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                        hab_rec_freq_type: weekly
+                        hab_rec_freq_data: '2023-10-27'
+                        hab_rec_goal: '2000.00'
+                        data: []
+                  - hab_id: b570c712-79f8-4224-944e-312f08350bd8
+                    hab_name: Ping Pong 10
+                    hab_description: ola
+                    hab_is_favorite: true
+                    hab_is_yn: true
+                    hab_color: abcdef
+                    hab_units: abcdefghij
+                    usr_id: edgar
+                    cat_id: 43c48bac-a4d2-4c48-9d19-306f82b1330b
+                    recurrences: []
+  /030/api/v1/habits/category/43c48bac-a4d2-4c48-9d19-306f82b1330b:
+    get:
+      tags:
+        - Habits
+      summary: Get Habits by Category
+      responses:
+        '200':
+          description: OK
+          headers:
+            content-type:
+              schema:
+                type: string
+                example: application/json
+            content-length:
+              schema:
+                type: integer
+                example: '2137'
+            date:
+              schema:
+                type: string
+                example: Tue, 19 Sep 2023 18:35:41 GMT
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                message: Successfully retrieved habits for category
+                habits:
+                  - hab_id: 9e0dfc33-52c7-4a2b-9ae5-dce0806c638c
+                    hab_name: Ping Pong2
+                    hab_description: ola
+                    hab_created_at: '2023-09-18T11:17:55.264231'
+                    hab_updated_at: '2023-09-18T11:17:55.264248'
+                    hab_is_favorite: true
+                    hab_is_yn: true
+                    hab_color: abcdef
+                    hab_units: abcdefghij
+                    usr_id: fasdfadsf
+                    cat_id: 43c48bac-a4d2-4c48-9d19-306f82b1330b
+                  - hab_id: d63f21f7-a8d1-433d-a13d-46da022b92e0
+                    hab_name: Ping Pong 3
+                    hab_description: ola
+                    hab_created_at: '2023-09-18T11:18:01.188009'
+                    hab_updated_at: '2023-09-18T11:18:01.188030'
+                    hab_is_favorite: true
+                    hab_is_yn: true
+                    hab_color: abcdef
+                    hab_units: abcdefghij
+                    usr_id: fasdfadsf
+                    cat_id: 43c48bac-a4d2-4c48-9d19-306f82b1330b
+                  - hab_id: ad66849c-8553-431f-908c-e428887e0013
+                    hab_name: Ping Pong 4
+                    hab_description: ola
+                    hab_created_at: '2023-09-18T11:18:05.967595'
+                    hab_updated_at: '2023-09-18T11:18:05.967611'
+                    hab_is_favorite: true
+                    hab_is_yn: true
+                    hab_color: abcdef
+                    hab_units: abcdefghij
+                    usr_id: fasdfadsf
+                    cat_id: 43c48bac-a4d2-4c48-9d19-306f82b1330b
+                  - hab_id: c83dcf66-3823-497d-99be-327c91e8dcba
+                    hab_name: Ping Pong 10
+                    hab_description: ola
+                    hab_created_at: '2023-09-18T14:50:22.115290'
+                    hab_updated_at: '2023-09-18T14:50:22.115308'
+                    hab_is_favorite: true
+                    hab_is_yn: true
+                    hab_color: abcdef
+                    hab_units: abcdefghij
+                    usr_id: fasdfadsf
+                    cat_id: 43c48bac-a4d2-4c48-9d19-306f82b1330b
+                  - hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                    hab_name: Ping Pong 10
+                    hab_description: ola
+                    hab_created_at: '2023-09-18T14:50:56.202767'
+                    hab_updated_at: '2023-09-18T14:50:56.202785'
+                    hab_is_favorite: true
+                    hab_is_yn: true
+                    hab_color: abcdef
+                    hab_units: abcdefghij
+                    usr_id: edgar
+                    cat_id: 43c48bac-a4d2-4c48-9d19-306f82b1330b
+                  - hab_id: b570c712-79f8-4224-944e-312f08350bd8
+                    hab_name: Ping Pong 10
+                    hab_description: ola
+                    hab_created_at: '2023-09-19T13:35:27.664946'
+                    hab_updated_at: '2023-09-19T13:35:27.667194'
+                    hab_is_favorite: true
+                    hab_is_yn: true
+                    hab_color: abcdef
+                    hab_units: abcdefghij
+                    usr_id: edgar
+                    cat_id: 43c48bac-a4d2-4c48-9d19-306f82b1330b
+  /030/api/v1/habits/471bbb20-802a-4f54-bebd-ca1dc0bd7696:
+    patch:
+      tags:
+        - Habits
+      summary: Update habits
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: Futbol
+                description: ola
+                is_favourite: true
+                kind: ME
+                color: abcdef
+                units: meters
+                user_id: fasdfadsf
+                category: 471bbb20-802a-4f54-bebd-ca1dc0bd7696
+      responses:
+        '200':
+          description: OK
+          headers:
+            content-type:
+              schema:
+                type: string
+                example: application/json
+            content-length:
+              schema:
+                type: integer
+                example: '40'
+            date:
+              schema:
+                type: string
+                example: Tue, 19 Sep 2023 18:35:46 GMT
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                message: Habit updated successfully
+    delete:
+      tags:
+        - Habits
+      summary: Delete Habits
+      responses:
+        '200':
+          description: OK
+          headers:
+            content-type:
+              schema:
+                type: string
+                example: application/json
+            content-length:
+              schema:
+                type: integer
+                example: '40'
+            date:
+              schema:
+                type: string
+                example: Tue, 19 Sep 2023 18:35:49 GMT
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                message: Habit deleted successfully
+  /030/api/v1/habits/8db4bc6b-20f9-454f-bd6f-1d30736e2b22:
+    get:
+      tags:
+        - Habits
+      summary: Get Habit by ID
+      responses:
+        '200':
+          description: OK
+          headers:
+            content-type:
+              schema:
+                type: string
+                example: application/json
+            content-length:
+              schema:
+                type: integer
+                example: '393'
+            date:
+              schema:
+                type: string
+                example: Tue, 19 Sep 2023 18:35:52 GMT
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                message: Successfully retrieved habit
+                habit:
+                  hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                  hab_name: Ping Pong 10
+                  hab_description: ola
+                  hab_created_at: '2023-09-18T14:50:56.202767'
+                  hab_updated_at: '2023-09-18T14:50:56.202785'
+                  hab_is_favorite: true
+                  hab_is_yn: true
+                  hab_color: abcdef
+                  hab_units: abcdefghij
+                  usr_id: edgar
+                  cat_id: 43c48bac-a4d2-4c48-9d19-306f82b1330b
+  /030/api/v1/habits/c83dcf66-3823-497d-99be-327c91e8dcba/recurrences:
+    get:
+      tags:
+        - Habits
+      summary: Get Habit By ID with recurrences
+      responses:
+        '200':
+          description: OK
+          headers:
+            content-type:
+              schema:
+                type: string
+                example: application/json
+            content-length:
+              schema:
+                type: integer
+                example: '336'
+            date:
+              schema:
+                type: string
+                example: Tue, 19 Sep 2023 18:35:56 GMT
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                message: Successfully retrieved habit & recurrences
+                habit:
+                  hab_id: c83dcf66-3823-497d-99be-327c91e8dcba
+                  hab_name: Ping Pong 10
+                  hab_description: ola
+                  hab_is_favorite: true
+                  hab_is_yn: true
+                  hab_color: abcdef
+                  hab_units: abcdefghij
+                  usr_id: fasdfadsf
+                  cat_id: 43c48bac-a4d2-4c48-9d19-306f82b1330b
+                  recurrences: []
+  /030/api/v1/habits/51dec0ba-971e-4701-809e-533c77c81d3a/recurrences/data:
+    get:
+      tags:
+        - Habits
+      summary: Get Habit By ID, recurrences and data
+      responses:
+        '404':
+          description: Not Found
+          headers:
+            content-type:
+              schema:
+                type: string
+                example: application/json
+            content-length:
+              schema:
+                type: integer
+                example: '44'
+            date:
+              schema:
+                type: string
+                example: Tue, 19 Sep 2023 18:36:00 GMT
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                message: Record not found
+                errors: null
+  /030/api/v1/recurrences/:
     post:
       tags:
-      - Z-Wave
-      operationId: setSwitch
-      parameters:
-      - name: deviceId
-        in: path
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: value
-        in: path
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-          enum:
-          - "true"
-          - "false"
+        - Recurrences
+      summary: Create Recurrency
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                frequency_type: weekly
+                frequency_data: '2023-10-27'
+                goal: 2000
+                habit_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
       responses:
-        "200":
-          description: response
+        '201':
+          description: Created
+          headers:
+            content-type:
+              schema:
+                type: string
+                example: application/json
+            content-length:
+              schema:
+                type: integer
+                example: '89'
+            date:
+              schema:
+                type: string
+                example: Tue, 19 Sep 2023 18:36:04 GMT
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiResponse'
-      x-swagger-router-controller: ZWave
-  /lighting/switches/{deviceId}/{value}/timer/{minutes}:
+                type: object
+              example:
+                message: Recurrence created successfully
+                id: 3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857
+  /030/api/v1/recurrences/001054d0-3bf1-477b-a2dc-bccc5fafd22a:
+    get:
+      tags:
+        - Recurrences
+      summary: Get recurrence by ID
+      responses:
+        '200':
+          description: OK
+          headers:
+            content-type:
+              schema:
+                type: string
+                example: application/json
+            content-length:
+              schema:
+                type: integer
+                example: '250'
+            date:
+              schema:
+                type: string
+                example: Tue, 19 Sep 2023 18:36:08 GMT
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                message: Successfully retrieved recurrence
+                recurrence:
+                  hab_rec_id: 001054d0-3bf1-477b-a2dc-bccc5fafd22a
+                  hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                  hab_rec_freq_type: weekly2
+                  hab_rec_goal: '2000.00'
+                  hab_rec_freq_data: '2023-10-27'
+  /030/api/v1/recurrences/5f11fbba-384d-4e22-9f69-8a15936c5fa2/data:
+    get:
+      tags:
+        - Recurrences
+      summary: Get recurrence, data by ID
+      responses:
+        '404':
+          description: Not Found
+          headers:
+            content-type:
+              schema:
+                type: string
+                example: application/json
+            content-length:
+              schema:
+                type: integer
+                example: '44'
+            date:
+              schema:
+                type: string
+                example: Tue, 19 Sep 2023 18:36:12 GMT
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                message: Record not found
+                errors: null
+  /030/api/v1/recurrences/habit/9e0dfc33-52c7-4a2b-9ae5-dce0806c638c:
+    get:
+      tags:
+        - Recurrences
+      summary: Get recurrences by Habit
+      responses:
+        '200':
+          description: OK
+          headers:
+            content-type:
+              schema:
+                type: string
+                example: application/json
+            content-length:
+              schema:
+                type: integer
+                example: '442'
+            date:
+              schema:
+                type: string
+                example: Tue, 19 Sep 2023 18:36:15 GMT
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                message: Successfully retrieved recurrences
+                recurrences:
+                  - hab_rec_id: f0ce5887-3852-415d-861d-5bb1944ba7cf
+                    hab_id: 9e0dfc33-52c7-4a2b-9ae5-dce0806c638c
+                    hab_rec_freq_type: weekly
+                    hab_rec_goal: '2000.00'
+                    hab_rec_freq_data: '2023-10-08'
+                  - hab_rec_id: 0b6c7b1d-3fbd-431c-b894-1a6b2294828e
+                    hab_id: 9e0dfc33-52c7-4a2b-9ae5-dce0806c638c
+                    hab_rec_freq_type: weekly
+                    hab_rec_goal: '2000.00'
+                    hab_rec_freq_data: '2023-10-18'
+  /030/api/v1/recurrences/69a70399-3bfe-4f7c-b80f-c6cce600449a:
+    patch:
+      tags:
+        - Recurrences
+      summary: Update recurrence data
+      requestBody:
+        content: {}
+      responses:
+        '400':
+          description: Bad Request
+          headers:
+            content-type:
+              schema:
+                type: string
+                example: application/json
+            content-length:
+              schema:
+                type: integer
+                example: '118'
+            date:
+              schema:
+                type: string
+                example: Tue, 19 Sep 2023 18:36:19 GMT
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                message: >-
+                  Invalid body: Request body deserialize error: EOF while
+                  parsing a value at line 1 column 0
+                errors: null
+    delete:
+      tags:
+        - Recurrences
+      summary: Delete recurrence data
+      responses:
+        '200':
+          description: OK
+          headers:
+            content-type:
+              schema:
+                type: string
+                example: application/json
+            content-length:
+              schema:
+                type: integer
+                example: '45'
+            date:
+              schema:
+                type: string
+                example: Tue, 19 Sep 2023 18:36:28 GMT
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                message: Recurrence deleted successfully
+  /030/api/v1/habitdata/:
     post:
       tags:
-      - Z-Wave
-      description: sets a switch to a specific value on a timer
-      operationId: setSwitchTimer
+        - Habits Data
+      summary: Create habit data
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                amount: 10000
+                collected_at: '2025-11-30'
+                recurrence_id: 001054d0-3bf1-477b-a2dc-bccc5fafd22a
+      responses:
+        '500':
+          description: Internal Server Error
+          headers:
+            content-type:
+              schema:
+                type: string
+                example: application/json
+            content-length:
+              schema:
+                type: integer
+                example: '151'
+            date:
+              schema:
+                type: string
+                example: Tue, 19 Sep 2023 18:36:33 GMT
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                message: >-
+                  Database error: duplicate key value violates unique constraint
+                  "habit_data_collected_hab_rec_id_hab_dat_collected_at_key"
+                errors: null
+  /030/api/v1/habitdata/dd7b8878-26d2-44e3-99d4-341c6c07a759:
+    get:
+      tags:
+        - Habits Data
+      summary: Get habit data by ID
+      responses:
+        '200':
+          description: OK
+          headers:
+            content-type:
+              schema:
+                type: string
+                example: application/json
+            content-length:
+              schema:
+                type: integer
+                example: '230'
+            date:
+              schema:
+                type: string
+                example: Tue, 19 Sep 2023 18:36:40 GMT
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                message: Successfully retrieved habit data
+                habit_data:
+                  hab_dat_id: dd7b8878-26d2-44e3-99d4-341c6c07a759
+                  hab_dat_amount: '10000.00'
+                  hab_dat_collected_at: '2025-11-30'
+                  hab_rec_id: 001054d0-3bf1-477b-a2dc-bccc5fafd22a
+  /030/api/v1/habitdata/recurrence/001054d0-3bf1-477b-a2dc-bccc5fafd22a:
+    get:
+      tags:
+        - Habits Data
+      summary: Get Habits data by recurrence
+      responses:
+        '200':
+          description: OK
+          headers:
+            content-type:
+              schema:
+                type: string
+                example: application/json
+            content-length:
+              schema:
+                type: integer
+                example: '232'
+            date:
+              schema:
+                type: string
+                example: Tue, 19 Sep 2023 18:30:37 GMT
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                message: Successfully retrieved habit data
+                habit_data:
+                  - hab_dat_id: dd7b8878-26d2-44e3-99d4-341c6c07a759
+                    hab_dat_amount: '10000.00'
+                    hab_dat_collected_at: '2025-11-30'
+                    hab_rec_id: 001054d0-3bf1-477b-a2dc-bccc5fafd22a
+  /030/api/v1/habitdata/69a70399-3bfe-4f7c-b80f-c6cce600449a:
+    patch:
+      tags:
+        - Habits Data
+      summary: Update habit data
+      requestBody:
+        content: {}
+      responses:
+        '400':
+          description: Bad Request
+          headers:
+            content-type:
+              schema:
+                type: string
+                example: application/json
+            content-length:
+              schema:
+                type: integer
+                example: '118'
+            date:
+              schema:
+                type: string
+                example: Tue, 19 Sep 2023 18:36:45 GMT
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                message: >-
+                  Invalid body: Request body deserialize error: EOF while
+                  parsing a value at line 1 column 0
+                errors: null
+    delete:
+      tags:
+        - Habits Data
+      summary: Delete habit data
+      responses:
+        '200':
+          description: OK
+          headers:
+            content-type:
+              schema:
+                type: string
+                example: application/json
+            content-length:
+              schema:
+                type: integer
+                example: '45'
+            date:
+              schema:
+                type: string
+                example: Tue, 19 Sep 2023 18:36:51 GMT
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                message: Habit data deleted successfully
+  /030/api/v1/events/user/edgar/habits:
+    get:
+      tags:
+        - Events
+      summary: Get user habit events
       parameters:
-      - name: deviceId
-        in: path
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: value
-        in: path
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-          enum:
-          - "true"
-          - "false"
-      - name: minutes
-        in: path
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
-          format: int32
+        - name: end_date
+          in: query
+          schema:
+            type: string
+          example: '2023-12-31'
       responses:
-        "200":
-          description: response
+        '200':
+          description: OK
+          headers:
+            content-type:
+              schema:
+                type: string
+                example: application/json
+            content-length:
+              schema:
+                type: integer
+                example: '14434'
+            date:
+              schema:
+                type: string
+                example: Tue, 19 Sep 2023 18:36:57 GMT
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiResponse'
-      x-swagger-router-controller: ZWave
-  /lightingSummary:
+                type: object
+              example:
+                message: Successfully retrieved events
+                events:
+                  - date: '2023-10-27'
+                    habit:
+                      hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                      hab_name: Ping Pong 10
+                      hab_description: ola
+                      hab_created_at: '2023-09-18T14:50:56.202767'
+                      hab_updated_at: '2023-09-18T14:50:56.202785'
+                      hab_is_favorite: true
+                      hab_is_yn: true
+                      hab_color: abcdef
+                      hab_units: abcdefghij
+                      usr_id: edgar
+                      cat_id: 43c48bac-a4d2-4c48-9d19-306f82b1330b
+                    recurrence:
+                      hab_rec_id: 001054d0-3bf1-477b-a2dc-bccc5fafd22a
+                      hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                      hab_rec_freq_type: weekly2
+                      hab_rec_goal: '2000.00'
+                      hab_rec_freq_data: '2023-10-27'
+                  - date: '2023-11-10'
+                    habit:
+                      hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                      hab_name: Ping Pong 10
+                      hab_description: ola
+                      hab_created_at: '2023-09-18T14:50:56.202767'
+                      hab_updated_at: '2023-09-18T14:50:56.202785'
+                      hab_is_favorite: true
+                      hab_is_yn: true
+                      hab_color: abcdef
+                      hab_units: abcdefghij
+                      usr_id: edgar
+                      cat_id: 43c48bac-a4d2-4c48-9d19-306f82b1330b
+                    recurrence:
+                      hab_rec_id: 001054d0-3bf1-477b-a2dc-bccc5fafd22a
+                      hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                      hab_rec_freq_type: weekly2
+                      hab_rec_goal: '2000.00'
+                      hab_rec_freq_data: '2023-10-27'
+                  - date: '2023-11-24'
+                    habit:
+                      hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                      hab_name: Ping Pong 10
+                      hab_description: ola
+                      hab_created_at: '2023-09-18T14:50:56.202767'
+                      hab_updated_at: '2023-09-18T14:50:56.202785'
+                      hab_is_favorite: true
+                      hab_is_yn: true
+                      hab_color: abcdef
+                      hab_units: abcdefghij
+                      usr_id: edgar
+                      cat_id: 43c48bac-a4d2-4c48-9d19-306f82b1330b
+                    recurrence:
+                      hab_rec_id: 001054d0-3bf1-477b-a2dc-bccc5fafd22a
+                      hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                      hab_rec_freq_type: weekly2
+                      hab_rec_goal: '2000.00'
+                      hab_rec_freq_data: '2023-10-27'
+                  - date: '2023-12-08'
+                    habit:
+                      hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                      hab_name: Ping Pong 10
+                      hab_description: ola
+                      hab_created_at: '2023-09-18T14:50:56.202767'
+                      hab_updated_at: '2023-09-18T14:50:56.202785'
+                      hab_is_favorite: true
+                      hab_is_yn: true
+                      hab_color: abcdef
+                      hab_units: abcdefghij
+                      usr_id: edgar
+                      cat_id: 43c48bac-a4d2-4c48-9d19-306f82b1330b
+                    recurrence:
+                      hab_rec_id: 001054d0-3bf1-477b-a2dc-bccc5fafd22a
+                      hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                      hab_rec_freq_type: weekly2
+                      hab_rec_goal: '2000.00'
+                      hab_rec_freq_data: '2023-10-27'
+                  - date: '2023-12-22'
+                    habit:
+                      hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                      hab_name: Ping Pong 10
+                      hab_description: ola
+                      hab_created_at: '2023-09-18T14:50:56.202767'
+                      hab_updated_at: '2023-09-18T14:50:56.202785'
+                      hab_is_favorite: true
+                      hab_is_yn: true
+                      hab_color: abcdef
+                      hab_units: abcdefghij
+                      usr_id: edgar
+                      cat_id: 43c48bac-a4d2-4c48-9d19-306f82b1330b
+                    recurrence:
+                      hab_rec_id: 001054d0-3bf1-477b-a2dc-bccc5fafd22a
+                      hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                      hab_rec_freq_type: weekly2
+                      hab_rec_goal: '2000.00'
+                      hab_rec_freq_data: '2023-10-27'
+                  - date: '2023-10-27'
+                    habit:
+                      hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                      hab_name: Ping Pong 10
+                      hab_description: ola
+                      hab_created_at: '2023-09-18T14:50:56.202767'
+                      hab_updated_at: '2023-09-18T14:50:56.202785'
+                      hab_is_favorite: true
+                      hab_is_yn: true
+                      hab_color: abcdef
+                      hab_units: abcdefghij
+                      usr_id: edgar
+                      cat_id: 43c48bac-a4d2-4c48-9d19-306f82b1330b
+                    recurrence:
+                      hab_rec_id: 40ed8805-a563-47be-a7c5-90faf9d34f49
+                      hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                      hab_rec_freq_type: weekly
+                      hab_rec_goal: '2000.00'
+                      hab_rec_freq_data: '2023-10-27'
+                  - date: '2023-11-03'
+                    habit:
+                      hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                      hab_name: Ping Pong 10
+                      hab_description: ola
+                      hab_created_at: '2023-09-18T14:50:56.202767'
+                      hab_updated_at: '2023-09-18T14:50:56.202785'
+                      hab_is_favorite: true
+                      hab_is_yn: true
+                      hab_color: abcdef
+                      hab_units: abcdefghij
+                      usr_id: edgar
+                      cat_id: 43c48bac-a4d2-4c48-9d19-306f82b1330b
+                    recurrence:
+                      hab_rec_id: 40ed8805-a563-47be-a7c5-90faf9d34f49
+                      hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                      hab_rec_freq_type: weekly
+                      hab_rec_goal: '2000.00'
+                      hab_rec_freq_data: '2023-10-27'
+                  - date: '2023-11-10'
+                    habit:
+                      hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                      hab_name: Ping Pong 10
+                      hab_description: ola
+                      hab_created_at: '2023-09-18T14:50:56.202767'
+                      hab_updated_at: '2023-09-18T14:50:56.202785'
+                      hab_is_favorite: true
+                      hab_is_yn: true
+                      hab_color: abcdef
+                      hab_units: abcdefghij
+                      usr_id: edgar
+                      cat_id: 43c48bac-a4d2-4c48-9d19-306f82b1330b
+                    recurrence:
+                      hab_rec_id: 40ed8805-a563-47be-a7c5-90faf9d34f49
+                      hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                      hab_rec_freq_type: weekly
+                      hab_rec_goal: '2000.00'
+                      hab_rec_freq_data: '2023-10-27'
+                  - date: '2023-11-17'
+                    habit:
+                      hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                      hab_name: Ping Pong 10
+                      hab_description: ola
+                      hab_created_at: '2023-09-18T14:50:56.202767'
+                      hab_updated_at: '2023-09-18T14:50:56.202785'
+                      hab_is_favorite: true
+                      hab_is_yn: true
+                      hab_color: abcdef
+                      hab_units: abcdefghij
+                      usr_id: edgar
+                      cat_id: 43c48bac-a4d2-4c48-9d19-306f82b1330b
+                    recurrence:
+                      hab_rec_id: 40ed8805-a563-47be-a7c5-90faf9d34f49
+                      hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                      hab_rec_freq_type: weekly
+                      hab_rec_goal: '2000.00'
+                      hab_rec_freq_data: '2023-10-27'
+                  - date: '2023-11-24'
+                    habit:
+                      hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                      hab_name: Ping Pong 10
+                      hab_description: ola
+                      hab_created_at: '2023-09-18T14:50:56.202767'
+                      hab_updated_at: '2023-09-18T14:50:56.202785'
+                      hab_is_favorite: true
+                      hab_is_yn: true
+                      hab_color: abcdef
+                      hab_units: abcdefghij
+                      usr_id: edgar
+                      cat_id: 43c48bac-a4d2-4c48-9d19-306f82b1330b
+                    recurrence:
+                      hab_rec_id: 40ed8805-a563-47be-a7c5-90faf9d34f49
+                      hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                      hab_rec_freq_type: weekly
+                      hab_rec_goal: '2000.00'
+                      hab_rec_freq_data: '2023-10-27'
+                  - date: '2023-12-01'
+                    habit:
+                      hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                      hab_name: Ping Pong 10
+                      hab_description: ola
+                      hab_created_at: '2023-09-18T14:50:56.202767'
+                      hab_updated_at: '2023-09-18T14:50:56.202785'
+                      hab_is_favorite: true
+                      hab_is_yn: true
+                      hab_color: abcdef
+                      hab_units: abcdefghij
+                      usr_id: edgar
+                      cat_id: 43c48bac-a4d2-4c48-9d19-306f82b1330b
+                    recurrence:
+                      hab_rec_id: 40ed8805-a563-47be-a7c5-90faf9d34f49
+                      hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                      hab_rec_freq_type: weekly
+                      hab_rec_goal: '2000.00'
+                      hab_rec_freq_data: '2023-10-27'
+                  - date: '2023-12-08'
+                    habit:
+                      hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                      hab_name: Ping Pong 10
+                      hab_description: ola
+                      hab_created_at: '2023-09-18T14:50:56.202767'
+                      hab_updated_at: '2023-09-18T14:50:56.202785'
+                      hab_is_favorite: true
+                      hab_is_yn: true
+                      hab_color: abcdef
+                      hab_units: abcdefghij
+                      usr_id: edgar
+                      cat_id: 43c48bac-a4d2-4c48-9d19-306f82b1330b
+                    recurrence:
+                      hab_rec_id: 40ed8805-a563-47be-a7c5-90faf9d34f49
+                      hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                      hab_rec_freq_type: weekly
+                      hab_rec_goal: '2000.00'
+                      hab_rec_freq_data: '2023-10-27'
+                  - date: '2023-12-15'
+                    habit:
+                      hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                      hab_name: Ping Pong 10
+                      hab_description: ola
+                      hab_created_at: '2023-09-18T14:50:56.202767'
+                      hab_updated_at: '2023-09-18T14:50:56.202785'
+                      hab_is_favorite: true
+                      hab_is_yn: true
+                      hab_color: abcdef
+                      hab_units: abcdefghij
+                      usr_id: edgar
+                      cat_id: 43c48bac-a4d2-4c48-9d19-306f82b1330b
+                    recurrence:
+                      hab_rec_id: 40ed8805-a563-47be-a7c5-90faf9d34f49
+                      hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                      hab_rec_freq_type: weekly
+                      hab_rec_goal: '2000.00'
+                      hab_rec_freq_data: '2023-10-27'
+                  - date: '2023-12-22'
+                    habit:
+                      hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                      hab_name: Ping Pong 10
+                      hab_description: ola
+                      hab_created_at: '2023-09-18T14:50:56.202767'
+                      hab_updated_at: '2023-09-18T14:50:56.202785'
+                      hab_is_favorite: true
+                      hab_is_yn: true
+                      hab_color: abcdef
+                      hab_units: abcdefghij
+                      usr_id: edgar
+                      cat_id: 43c48bac-a4d2-4c48-9d19-306f82b1330b
+                    recurrence:
+                      hab_rec_id: 40ed8805-a563-47be-a7c5-90faf9d34f49
+                      hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                      hab_rec_freq_type: weekly
+                      hab_rec_goal: '2000.00'
+                      hab_rec_freq_data: '2023-10-27'
+                  - date: '2023-12-29'
+                    habit:
+                      hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                      hab_name: Ping Pong 10
+                      hab_description: ola
+                      hab_created_at: '2023-09-18T14:50:56.202767'
+                      hab_updated_at: '2023-09-18T14:50:56.202785'
+                      hab_is_favorite: true
+                      hab_is_yn: true
+                      hab_color: abcdef
+                      hab_units: abcdefghij
+                      usr_id: edgar
+                      cat_id: 43c48bac-a4d2-4c48-9d19-306f82b1330b
+                    recurrence:
+                      hab_rec_id: 40ed8805-a563-47be-a7c5-90faf9d34f49
+                      hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                      hab_rec_freq_type: weekly
+                      hab_rec_goal: '2000.00'
+                      hab_rec_freq_data: '2023-10-27'
+                  - date: '2023-10-27'
+                    habit:
+                      hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                      hab_name: Ping Pong 10
+                      hab_description: ola
+                      hab_created_at: '2023-09-18T14:50:56.202767'
+                      hab_updated_at: '2023-09-18T14:50:56.202785'
+                      hab_is_favorite: true
+                      hab_is_yn: true
+                      hab_color: abcdef
+                      hab_units: abcdefghij
+                      usr_id: edgar
+                      cat_id: 43c48bac-a4d2-4c48-9d19-306f82b1330b
+                    recurrence:
+                      hab_rec_id: 3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857
+                      hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                      hab_rec_freq_type: weekly
+                      hab_rec_goal: '2000.00'
+                      hab_rec_freq_data: '2023-10-27'
+                  - date: '2023-11-03'
+                    habit:
+                      hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                      hab_name: Ping Pong 10
+                      hab_description: ola
+                      hab_created_at: '2023-09-18T14:50:56.202767'
+                      hab_updated_at: '2023-09-18T14:50:56.202785'
+                      hab_is_favorite: true
+                      hab_is_yn: true
+                      hab_color: abcdef
+                      hab_units: abcdefghij
+                      usr_id: edgar
+                      cat_id: 43c48bac-a4d2-4c48-9d19-306f82b1330b
+                    recurrence:
+                      hab_rec_id: 3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857
+                      hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                      hab_rec_freq_type: weekly
+                      hab_rec_goal: '2000.00'
+                      hab_rec_freq_data: '2023-10-27'
+                  - date: '2023-11-10'
+                    habit:
+                      hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                      hab_name: Ping Pong 10
+                      hab_description: ola
+                      hab_created_at: '2023-09-18T14:50:56.202767'
+                      hab_updated_at: '2023-09-18T14:50:56.202785'
+                      hab_is_favorite: true
+                      hab_is_yn: true
+                      hab_color: abcdef
+                      hab_units: abcdefghij
+                      usr_id: edgar
+                      cat_id: 43c48bac-a4d2-4c48-9d19-306f82b1330b
+                    recurrence:
+                      hab_rec_id: 3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857
+                      hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                      hab_rec_freq_type: weekly
+                      hab_rec_goal: '2000.00'
+                      hab_rec_freq_data: '2023-10-27'
+                  - date: '2023-11-17'
+                    habit:
+                      hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                      hab_name: Ping Pong 10
+                      hab_description: ola
+                      hab_created_at: '2023-09-18T14:50:56.202767'
+                      hab_updated_at: '2023-09-18T14:50:56.202785'
+                      hab_is_favorite: true
+                      hab_is_yn: true
+                      hab_color: abcdef
+                      hab_units: abcdefghij
+                      usr_id: edgar
+                      cat_id: 43c48bac-a4d2-4c48-9d19-306f82b1330b
+                    recurrence:
+                      hab_rec_id: 3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857
+                      hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                      hab_rec_freq_type: weekly
+                      hab_rec_goal: '2000.00'
+                      hab_rec_freq_data: '2023-10-27'
+                  - date: '2023-11-24'
+                    habit:
+                      hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                      hab_name: Ping Pong 10
+                      hab_description: ola
+                      hab_created_at: '2023-09-18T14:50:56.202767'
+                      hab_updated_at: '2023-09-18T14:50:56.202785'
+                      hab_is_favorite: true
+                      hab_is_yn: true
+                      hab_color: abcdef
+                      hab_units: abcdefghij
+                      usr_id: edgar
+                      cat_id: 43c48bac-a4d2-4c48-9d19-306f82b1330b
+                    recurrence:
+                      hab_rec_id: 3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857
+                      hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                      hab_rec_freq_type: weekly
+                      hab_rec_goal: '2000.00'
+                      hab_rec_freq_data: '2023-10-27'
+                  - date: '2023-12-01'
+                    habit:
+                      hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                      hab_name: Ping Pong 10
+                      hab_description: ola
+                      hab_created_at: '2023-09-18T14:50:56.202767'
+                      hab_updated_at: '2023-09-18T14:50:56.202785'
+                      hab_is_favorite: true
+                      hab_is_yn: true
+                      hab_color: abcdef
+                      hab_units: abcdefghij
+                      usr_id: edgar
+                      cat_id: 43c48bac-a4d2-4c48-9d19-306f82b1330b
+                    recurrence:
+                      hab_rec_id: 3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857
+                      hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                      hab_rec_freq_type: weekly
+                      hab_rec_goal: '2000.00'
+                      hab_rec_freq_data: '2023-10-27'
+                  - date: '2023-12-08'
+                    habit:
+                      hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                      hab_name: Ping Pong 10
+                      hab_description: ola
+                      hab_created_at: '2023-09-18T14:50:56.202767'
+                      hab_updated_at: '2023-09-18T14:50:56.202785'
+                      hab_is_favorite: true
+                      hab_is_yn: true
+                      hab_color: abcdef
+                      hab_units: abcdefghij
+                      usr_id: edgar
+                      cat_id: 43c48bac-a4d2-4c48-9d19-306f82b1330b
+                    recurrence:
+                      hab_rec_id: 3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857
+                      hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                      hab_rec_freq_type: weekly
+                      hab_rec_goal: '2000.00'
+                      hab_rec_freq_data: '2023-10-27'
+                  - date: '2023-12-15'
+                    habit:
+                      hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                      hab_name: Ping Pong 10
+                      hab_description: ola
+                      hab_created_at: '2023-09-18T14:50:56.202767'
+                      hab_updated_at: '2023-09-18T14:50:56.202785'
+                      hab_is_favorite: true
+                      hab_is_yn: true
+                      hab_color: abcdef
+                      hab_units: abcdefghij
+                      usr_id: edgar
+                      cat_id: 43c48bac-a4d2-4c48-9d19-306f82b1330b
+                    recurrence:
+                      hab_rec_id: 3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857
+                      hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                      hab_rec_freq_type: weekly
+                      hab_rec_goal: '2000.00'
+                      hab_rec_freq_data: '2023-10-27'
+                  - date: '2023-12-22'
+                    habit:
+                      hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                      hab_name: Ping Pong 10
+                      hab_description: ola
+                      hab_created_at: '2023-09-18T14:50:56.202767'
+                      hab_updated_at: '2023-09-18T14:50:56.202785'
+                      hab_is_favorite: true
+                      hab_is_yn: true
+                      hab_color: abcdef
+                      hab_units: abcdefghij
+                      usr_id: edgar
+                      cat_id: 43c48bac-a4d2-4c48-9d19-306f82b1330b
+                    recurrence:
+                      hab_rec_id: 3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857
+                      hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                      hab_rec_freq_type: weekly
+                      hab_rec_goal: '2000.00'
+                      hab_rec_freq_data: '2023-10-27'
+                  - date: '2023-12-29'
+                    habit:
+                      hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                      hab_name: Ping Pong 10
+                      hab_description: ola
+                      hab_created_at: '2023-09-18T14:50:56.202767'
+                      hab_updated_at: '2023-09-18T14:50:56.202785'
+                      hab_is_favorite: true
+                      hab_is_yn: true
+                      hab_color: abcdef
+                      hab_units: abcdefghij
+                      usr_id: edgar
+                      cat_id: 43c48bac-a4d2-4c48-9d19-306f82b1330b
+                    recurrence:
+                      hab_rec_id: 3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857
+                      hab_id: 8db4bc6b-20f9-454f-bd6f-1d30736e2b22
+                      hab_rec_freq_type: weekly
+                      hab_rec_goal: '2000.00'
+                      hab_rec_freq_data: '2023-10-27'
+  /030/api/v1/events/user/edgar/count:
     get:
       tags:
-      - Z-Wave
-      operationId: getLightingSummary
-      responses:
-        "200":
-          description: ok
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/LightingSummary'
-      x-swagger-router-controller: ZWave
-  /temperature:
-    get:
-      tags:
-      - Environment
-      operationId: temperatureSummary
-      responses:
-        "200":
-          description: ok
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TemperatureSummary'
-      x-swagger-router-controller: Environment
-  /temperature/forecast/{days}:
-    get:
-      tags:
-      - Environment
-      operationId: getForecast
+        - Events
+      summary: Get user events count
       parameters:
-      - name: days
-        in: path
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: integer
-          format: int32
+        - name: end_date
+          in: query
+          schema:
+            type: string
+          example: '2023-12-31'
       responses:
-        "200":
-          description: the forecast
+        '200':
+          description: OK
+          headers:
+            content-type:
+              schema:
+                type: string
+                example: application/json
+            content-length:
+              schema:
+                type: integer
+                example: '374'
+            date:
+              schema:
+                type: string
+                example: Tue, 19 Sep 2023 18:37:02 GMT
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ForecastResponse'
-      x-swagger-router-controller: Environment
-  /temperature/{zoneId}:
-    get:
-      tags:
-      - Environment
-      operationId: getZoneTemperature
-      parameters:
-      - name: zoneId
-        in: path
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      responses:
-        "200":
-          description: Zone temperature
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TemperatueZoneStatus'
-      x-swagger-router-controller: Environment
-  /temperature/{zoneId}/heater:
-    get:
-      tags:
-      - Environment
-      description: gets the state of the heater
-      operationId: getHeaterState
-      parameters:
-      - name: zoneId
-        in: path
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      responses:
-        "200":
-          description: heater state
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HeaterState'
-      x-swagger-router-controller: Environment
-  /temperature/{zoneId}/heater/{state}:
-    post:
-      tags:
-      - Environment
-      description: turns the heater on or off
-      operationId: setHeaterState
-      parameters:
-      - name: zoneId
-        in: path
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: state
-        in: path
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-          enum:
-          - "false"
-          - "true"
-      responses:
-        "200":
-          description: Status of the operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiResponse'
-      x-swagger-router-controller: Environment
-  /zones:
-    get:
-      tags:
-      - Zones
-      operationId: getZones
-      responses:
-        "200":
-          description: ok
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: string
-      x-swagger-router-controller: Zones
-  /zones/{zoneId}/quiet:
-    get:
-      tags:
-      - Zones
-      operationId: quietZone
-      parameters:
-      - name: zoneId
-        in: path
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-          enum:
-          - basement
-          - first-floor
-          - second-floor
-      responses:
-        "200":
-          description: ok
-      x-swagger-router-controller: Zones
-components:
-  schemas:
-    LightingSummary:
-      type: object
-      properties:
-        zones:
-          type: array
-          items:
-            $ref: '#/components/schemas/LightingZone'
-        zoneStatus:
-          type: array
-          items:
-            $ref: '#/components/schemas/LightingZoneStatus'
-      description: ok
-    LightingZone:
-      type: object
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        deviceId:
-          type: integer
-          format: int32
-        deviceType:
-          type: string
-          enum:
-          - dimmer
-          - switch
-        zone:
-          type: string
-    LightingZoneStatus:
-      type: object
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        lastUpdate:
-          type: string
-          format: date-time
-        level:
-          type: integer
-          format: int32
-      description: the status of the lighting zone.
-    TemperatureSummary:
-      type: object
-      properties:
-        zones:
-          type: array
-          items:
-            $ref: '#/components/schemas/TemperatureZone'
-        zoneStatus:
-          type: array
-          items:
-            $ref: '#/components/schemas/TemperatueZoneStatus'
-      description: ok
-    TemperatureZone:
-      required:
-      - id
-      - name
-      type: object
-      properties:
-        id:
-          type: integer
-          description: the unique identifier for the zone
-          format: int32
-        name:
-          type: string
-        inputPosition:
-          type: integer
-          format: int32
-        outputPosition:
-          type: integer
-          format: int32
-        zone:
-          type: string
-      description: a single temperature zone
-    TemperatueZoneStatus:
-      required:
-      - id
-      - timestamp
-      - value
-      type: object
-      properties:
-        id:
-          type: string
-          description: the unique identifier for the zone
-        name:
-          type: string
-          description: the name of the zone
-        value:
-          type: number
-          description: the temperature in the zone
-          format: double
-        units:
-          type: string
-          description: the temperature units
-          default: fahrenheit
-          enum:
-          - celsius
-          - fahrenheit
-        timestamp:
-          type: string
-          description: the timestamp when the temperature was measured
-          format: date-time
-      description: status of a single zone
-    ApiResponse:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          type: string
-          example: everything is ok
-    HeaterState:
-      type: object
-      properties:
-        id:
-          type: string
-        state:
-          type: string
-    DeviceState:
-      type: object
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        lastUpdate:
-          type: string
-          format: date-time
-        level:
-          type: integer
-          format: int32
-    ForecastResponse:
-      type: object
-      properties:
-        city:
-          $ref: '#/components/schemas/City'
-        values:
-          type: array
-          items:
-            $ref: '#/components/schemas/Forecast'
-    Forecast:
-      type: object
-      properties:
-        date:
-          type: string
-          format: date-time
-        pressure:
-          type: number
-          format: double
-        humidity:
-          type: integer
-          format: int32
-        windSpeed:
-          type: number
-          format: double
-        clouds:
-          type: integer
-          format: int32
-        temperature:
-          $ref: '#/components/schemas/ForecastTemperature'
-        weather:
-          $ref: '#/components/schemas/WeatherForecast'
-    City:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        name:
-          type: string
-        lat:
-          type: number
-          format: double
-        lon:
-          type: number
-          format: double
-        country:
-          type: string
-    ForecastTemperature:
-      type: object
-      properties:
-        low:
-          type: number
-          format: double
-        high:
-          type: number
-          format: double
-        morning:
-          type: number
-          format: double
-        day:
-          type: number
-          format: double
-        evening:
-          type: number
-          format: double
-        night:
-          type: number
-          format: double
-    WeatherForecast:
-      type: object
-      properties:
-        summary:
-          type: string
-        description:
-          type: string
-        icon:
-          type: string
-    DeviceRegistrationInfo:
-      type: object
-      properties:
-        uri:
-          type: string
-          format: uri
-          example: http://10.0.0.220:8080
-        id:
-          type: string
-          format: uuid
-          example: 0729a580-2240-11e6-9eb5-0002a5d5c51b
+                type: object
+              example:
+                message: Successfully retrieved events
+                events:
+                  - date: '2023-12-22'
+                    count: 3
+                  - date: '2023-12-29'
+                    count: 2
+                  - date: '2023-11-24'
+                    count: 3
+                  - date: '2023-11-17'
+                    count: 2
+                  - date: '2023-11-10'
+                    count: 3
+                  - date: '2023-11-03'
+                    count: 2
+                  - date: '2023-12-15'
+                    count: 2
+                  - date: '2023-10-27'
+                    count: 3
+                  - date: '2023-12-08'
+                    count: 3
+                  - date: '2023-12-01'
+                    count: 2
