@@ -70,6 +70,75 @@ impl DBManager {
                 break;
             }
         }
+
+        // Order by date (most recent first)
+        vec.sort_by(|a, b| b.date.cmp(&a.date));
+
+        Ok(vec)
+    }
+
+    // Get next events for a single habit
+    pub fn get_next_events_by_habit(
+        &self,
+        id: uuid::Uuid,
+        start_date: Option<chrono::NaiveDate>,
+        end_date: Option<chrono::NaiveDate>,
+        events_limit: Option<i64>,
+    ) -> Result<Vec<EventWithRecurrence>, Error> {
+        let conn = self.connection.get();
+
+        if conn.is_err() {
+            return Err(Error::DBConnectionError(conn.err().unwrap()));
+        }
+
+        let events_limit = events_limit.unwrap_or(DEFAULT_QUERY_LIMIT);
+
+        let query = habit::table
+            .inner_join(habit_recurrence::table)
+            .filter(habit::hab_id.eq(id))
+            .select(HabitRecurrence::as_select())
+            .order_by(habit_recurrence::hab_rec_freq_data.asc())
+            .load::<HabitRecurrence>(&mut conn.unwrap());
+
+        if query.is_err() {
+            return Err(Error::QueryError(query.err().unwrap()));
+        }
+
+        let query = query.unwrap();
+
+        let start_date = start_date.unwrap_or(chrono::Local::now().naive_local().date());
+
+        // By default, end date is 7 days from start date (so a week)
+        let end_date = end_date.unwrap_or(start_date + chrono::Duration::days(7));
+
+        let mut vec = Vec::new();
+
+        for recurrence in query {
+            let data_range = DateRange::new(
+                start_date,
+                end_date,
+                recurrence.hab_rec_freq_type,
+                recurrence.hab_rec_freq_data,
+            );
+
+            for date_ocurrence in data_range {
+                let event = EventWithRecurrence {
+                    date: date_ocurrence,
+                    recurrence: recurrence.clone(),
+                };
+
+                vec.push(event);
+            }
+
+            // Limit array length to 100
+            if vec.len() >= events_limit as usize {
+                break;
+            }
+        }
+
+        // Order by date (most recent first)
+        vec.sort_by(|a, b| b.date.cmp(&a.date));
+
         Ok(vec)
     }
 

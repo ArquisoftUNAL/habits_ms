@@ -16,6 +16,12 @@ pub struct EventWithHabit {
     pub recurrence: HabitRecurrence,
 }
 
+#[derive(Debug, Serialize)]
+pub struct EventWithRecurrence {
+    pub date: NaiveDate,
+    pub recurrence: HabitRecurrence,
+}
+
 // Response models
 #[derive(Debug, Serialize)]
 pub struct EventsHabitsMultipleQueryResponse {
@@ -27,4 +33,10 @@ pub struct EventsHabitsMultipleQueryResponse {
 pub struct EventsCountMultipleQueryResponse {
     pub message: String,
     pub events: Vec<EventWithCount>,
+}
+
+#[derive(Debug, Serialize)]
+pub struct EventsRecurrencesMultipleQueryResponse {
+    pub message: String,
+    pub events: Vec<EventWithRecurrence>,
 }

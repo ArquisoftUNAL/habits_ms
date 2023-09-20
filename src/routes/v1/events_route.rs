@@ -10,10 +10,10 @@ use warp::Filter;
 use warp::Reply;
 
 pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
-    let base_recurrence_route = warp::path("events");
+    let base_events_route = warp::path("events");
 
     // Getting next events from recurrences
-    let base_get_next_events_by_user = base_recurrence_route
+    let base_get_next_events_by_user = base_events_route
         .and(warp::get())
         .and(warp::path("user"))
         .and(warp::path::param::<String>())
@@ -39,7 +39,19 @@ pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
         .and(warp::path::end())
         .and_then(events_handler::get_next_events_by_user_handler);
 
+    // Allow to get next ocurrences from habit
+    let get_next_events_by_habit = base_events_route
+        .and(warp::get())
+        .and(warp::path("habit"))
+        .and(warp::path::param::<uuid::Uuid>())
+        .and(warp::query::<DateParams>())
+        .and(warp::query::<RangeParams>())
+        .and(with_db_manager(pool.clone()))
+        .and(warp::path::end())
+        .and_then(events_handler::get_next_events_by_habit_handler);
+
     get_next_events_count
         .or(get_next_events_with_habits)
+        .or(get_next_events_by_habit)
         .boxed()
 }
