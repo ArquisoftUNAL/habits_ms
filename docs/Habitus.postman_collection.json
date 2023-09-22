@@ -1,0 +1,1819 @@
+{
+	"info": {
+		"_postman_id": "04326de5-14f3-40fa-bab5-337c16920dae",
+		"name": "Habitus Habits",
+		"description": "All endpoints enabled for Habits microservice of Habitus",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25456599"
+	},
+	"item": [
+		{
+			"name": "Categories",
+			"item": [
+				{
+					"name": "Update Category",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "credentials",
+								"value": "administrator",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"fasdfsdf213123fsadf\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3030/api/v1/categories/246045d4-39bd-4a31-a705-be4fbcf91ed2",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"categories",
+								"246045d4-39bd-4a31-a705-be4fbcf91ed2"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Update Category",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "credentials",
+										"value": "administrator",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"fasdfsdf213123fsadf\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:3030/api/v1/categories/246045d4-39bd-4a31-a705-be4fbcf91ed2",
+									"host": [
+										"localhost"
+									],
+									"port": "3030",
+									"path": [
+										"api",
+										"v1",
+										"categories",
+										"246045d4-39bd-4a31-a705-be4fbcf91ed2"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "content-length",
+									"value": "43"
+								},
+								{
+									"key": "date",
+									"value": "Fri, 22 Sep 2023 01:14:27 GMT"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Successfully updated category\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Categories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3030/api/v1/categories/?categories_page=1",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"categories",
+								""
+							],
+							"query": [
+								{
+									"key": "categories_page",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get Categories",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:3030/api/v1/categories/?categories_page=1",
+									"host": [
+										"localhost"
+									],
+									"port": "3030",
+									"path": [
+										"api",
+										"v1",
+										"categories",
+										""
+									],
+									"query": [
+										{
+											"key": "categories_page",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "content-length",
+									"value": "291"
+								},
+								{
+									"key": "date",
+									"value": "Fri, 22 Sep 2023 01:13:55 GMT"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Successfully retrieved categories\",\n    \"categories\": [\n        {\n            \"cat_id\": \"7d792dcc-b73a-48dc-bf8d-65b7e846884d\",\n            \"cat_name\": \"olade2\"\n        },\n        {\n            \"cat_id\": \"f4941e89-18a0-4c40-888d-2f038de33647\",\n            \"cat_name\": \"fasdfasdfasdfasdf\"\n        },\n        {\n            \"cat_id\": \"246045d4-39bd-4a31-a705-be4fbcf91ed2\",\n            \"cat_name\": \"12312312dfasdf\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete Category",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "credentials",
+								"value": "administrator",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:3030/api/v1/categories/246045d4-39bd-4a31-a705-be4fbcf91ed2",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"categories",
+								"246045d4-39bd-4a31-a705-be4fbcf91ed2"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Delete Category",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "credentials",
+										"value": "administrator",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "localhost:3030/api/v1/categories/246045d4-39bd-4a31-a705-be4fbcf91ed2",
+									"host": [
+										"localhost"
+									],
+									"port": "3030",
+									"path": [
+										"api",
+										"v1",
+										"categories",
+										"246045d4-39bd-4a31-a705-be4fbcf91ed2"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "content-length",
+									"value": "43"
+								},
+								{
+									"key": "date",
+									"value": "Fri, 22 Sep 2023 01:15:00 GMT"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Successfully deleted category\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Create Category",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "credentials",
+								"value": "administrator",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\" : \"12312312dfasdf\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3030/api/v1/categories/",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"categories",
+								""
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Create Category",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "credentials",
+										"value": "administrator",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\" : \"12312312dfasdf\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:3030/api/v1/categories/",
+									"host": [
+										"localhost"
+									],
+									"port": "3030",
+									"path": [
+										"api",
+										"v1",
+										"categories",
+										""
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "content-length",
+									"value": "85"
+								},
+								{
+									"key": "date",
+									"value": "Fri, 22 Sep 2023 01:13:45 GMT"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Successfully added category\",\n    \"id\": \"246045d4-39bd-4a31-a705-be4fbcf91ed2\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Category by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3030/api/v1/categories/f4941e89-18a0-4c40-888d-2f038de33647",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"categories",
+								"f4941e89-18a0-4c40-888d-2f038de33647"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get Category by ID",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:3030/api/v1/categories/f4941e89-18a0-4c40-888d-2f038de33647",
+									"host": [
+										"localhost"
+									],
+									"port": "3030",
+									"path": [
+										"api",
+										"v1",
+										"categories",
+										"f4941e89-18a0-4c40-888d-2f038de33647"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "content-length",
+									"value": "137"
+								},
+								{
+									"key": "date",
+									"value": "Fri, 22 Sep 2023 01:15:27 GMT"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Successfully retrieved category\",\n    \"category\": {\n        \"cat_id\": \"f4941e89-18a0-4c40-888d-2f038de33647\",\n        \"cat_name\": \"fasdfasdfasdfasdf\"\n    }\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Habits",
+			"item": [
+				{
+					"name": "Create Habit",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "credentials",
+								"value": "edgar",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Ping Pong 10\",\r\n    \"description\": \"ola\",\r\n    \"is_favourite\": true,\r\n    \"kind\": \"ME\",\r\n    \"is_yn\": true,\r\n    \"color\": \"abcdef\",\r\n    \"units\": \"abcdefghij\",\r\n    \"goal\": 21312.23,\r\n    \"frequency_type\": \"weekly\",\r\n    \"category\" : \"f4941e89-18a0-4c40-888d-2f038de33647\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3030/api/v1/habits/",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"habits",
+								""
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Create Habit",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "credentials",
+										"value": "edgar",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Ping Pong 10\",\r\n    \"description\": \"ola\",\r\n    \"is_favourite\": true,\r\n    \"kind\": \"ME\",\r\n    \"is_yn\": true,\r\n    \"color\": \"abcdef\",\r\n    \"units\": \"abcdefghij\",\r\n    \"goal\": 21312.23,\r\n    \"frequency_type\": \"weekly\",\r\n    \"category\" : \"f4941e89-18a0-4c40-888d-2f038de33647\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:3030/api/v1/habits/",
+									"host": [
+										"localhost"
+									],
+									"port": "3030",
+									"path": [
+										"api",
+										"v1",
+										"habits",
+										""
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "content-length",
+									"value": "84"
+								},
+								{
+									"key": "date",
+									"value": "Fri, 22 Sep 2023 01:18:44 GMT"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Habit created successfully\",\n    \"id\": \"72656115-6904-48cb-9da1-f5834f2ec223\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get user habits",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "credentials",
+								"value": "edgar",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:3030/api/v1/habits/",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"habits",
+								""
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get user habits",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "credentials",
+										"value": "edgar",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "localhost:3030/api/v1/habits/",
+									"host": [
+										"localhost"
+									],
+									"port": "3030",
+									"path": [
+										"api",
+										"v1",
+										"habits",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "content-length",
+									"value": "453"
+								},
+								{
+									"key": "date",
+									"value": "Fri, 22 Sep 2023 01:19:29 GMT"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Successfully retrieved habits for user\",\n    \"habits\": [\n        {\n            \"hab_id\": \"72656115-6904-48cb-9da1-f5834f2ec223\",\n            \"hab_name\": \"Ping Pong 10\",\n            \"hab_description\": \"ola\",\n            \"hab_created_at\": \"2023-09-21T20:18:44.747844\",\n            \"hab_updated_at\": \"2023-09-21T20:18:44.747924\",\n            \"hab_is_favorite\": true,\n            \"hab_is_yn\": true,\n            \"hab_color\": \"abcdef\",\n            \"hab_units\": \"abcdefghij\",\n            \"hab_goal\": \"21312.23\",\n            \"hab_freq_type\": \"weekly\",\n            \"usr_id\": \"edgar\",\n            \"cat_id\": \"f4941e89-18a0-4c40-888d-2f038de33647\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Habits by Category",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "credentials",
+								"value": "administrator",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:3030/api/v1/habits/category/f4941e89-18a0-4c40-888d-2f038de33647",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"habits",
+								"category",
+								"f4941e89-18a0-4c40-888d-2f038de33647"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get Habits by Category",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "credentials",
+										"value": "administrator",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "localhost:3030/api/v1/habits/category/f4941e89-18a0-4c40-888d-2f038de33647",
+									"host": [
+										"localhost"
+									],
+									"port": "3030",
+									"path": [
+										"api",
+										"v1",
+										"habits",
+										"category",
+										"f4941e89-18a0-4c40-888d-2f038de33647"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "content-length",
+									"value": "457"
+								},
+								{
+									"key": "date",
+									"value": "Fri, 22 Sep 2023 01:20:27 GMT"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Successfully retrieved habits for category\",\n    \"habits\": [\n        {\n            \"hab_id\": \"72656115-6904-48cb-9da1-f5834f2ec223\",\n            \"hab_name\": \"Ping Pong 10\",\n            \"hab_description\": \"ola\",\n            \"hab_created_at\": \"2023-09-21T20:18:44.747844\",\n            \"hab_updated_at\": \"2023-09-21T20:18:44.747924\",\n            \"hab_is_favorite\": true,\n            \"hab_is_yn\": true,\n            \"hab_color\": \"abcdef\",\n            \"hab_units\": \"abcdefghij\",\n            \"hab_goal\": \"21312.23\",\n            \"hab_freq_type\": \"weekly\",\n            \"usr_id\": \"edgar\",\n            \"cat_id\": \"f4941e89-18a0-4c40-888d-2f038de33647\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Get user habits and data",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "credentials",
+								"value": "edgar",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:3030/api/v1/habits/category/f4941e89-18a0-4c40-888d-2f038de33647/data",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"habits",
+								"category",
+								"f4941e89-18a0-4c40-888d-2f038de33647",
+								"data"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get user habits and data",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "credentials",
+										"value": "edgar",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "localhost:3030/api/v1/habits/category/f4941e89-18a0-4c40-888d-2f038de33647/data",
+									"host": [
+										"localhost"
+									],
+									"port": "3030",
+									"path": [
+										"api",
+										"v1",
+										"habits",
+										"category",
+										"f4941e89-18a0-4c40-888d-2f038de33647",
+										"data"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "content-length",
+									"value": "457"
+								},
+								{
+									"key": "date",
+									"value": "Fri, 22 Sep 2023 01:21:06 GMT"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Successfully retrieved habits for category\",\n    \"habits\": [\n        {\n            \"hab_id\": \"72656115-6904-48cb-9da1-f5834f2ec223\",\n            \"hab_name\": \"Ping Pong 10\",\n            \"hab_description\": \"ola\",\n            \"hab_created_at\": \"2023-09-21T20:18:44.747844\",\n            \"hab_updated_at\": \"2023-09-21T20:18:44.747924\",\n            \"hab_is_favorite\": true,\n            \"hab_is_yn\": true,\n            \"hab_color\": \"abcdef\",\n            \"hab_units\": \"abcdefghij\",\n            \"hab_goal\": \"21312.23\",\n            \"hab_freq_type\": \"weekly\",\n            \"usr_id\": \"edgar\",\n            \"cat_id\": \"f4941e89-18a0-4c40-888d-2f038de33647\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Update habits",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "credentials",
+								"value": "edgar",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Futbol\",\r\n    \"description\": \"ola\",\r\n    \"is_favourite\": true,\r\n    \"kind\": \"ME\",\r\n    \"color\": \"abcdef\",\r\n    \"units\": \"meters\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3030/api/v1/habits/72656115-6904-48cb-9da1-f5834f2ec223",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"habits",
+								"72656115-6904-48cb-9da1-f5834f2ec223"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Update habits",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "credentials",
+										"value": "edgar",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Futbol\",\r\n    \"description\": \"ola\",\r\n    \"is_favourite\": true,\r\n    \"kind\": \"ME\",\r\n    \"color\": \"abcdef\",\r\n    \"units\": \"meters\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:3030/api/v1/habits/72656115-6904-48cb-9da1-f5834f2ec223",
+									"host": [
+										"localhost"
+									],
+									"port": "3030",
+									"path": [
+										"api",
+										"v1",
+										"habits",
+										"72656115-6904-48cb-9da1-f5834f2ec223"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "content-length",
+									"value": "40"
+								},
+								{
+									"key": "date",
+									"value": "Fri, 22 Sep 2023 01:22:34 GMT"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Habit updated successfully\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete Habits",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "credentials",
+								"value": "edgar",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:3030/api/v1/habits/72656115-6904-48cb-9da1-f5834f2ec223",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"habits",
+								"72656115-6904-48cb-9da1-f5834f2ec223"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Delete Habits",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "credentials",
+										"value": "edgar",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "localhost:3030/api/v1/habits/72656115-6904-48cb-9da1-f5834f2ec223",
+									"host": [
+										"localhost"
+									],
+									"port": "3030",
+									"path": [
+										"api",
+										"v1",
+										"habits",
+										"72656115-6904-48cb-9da1-f5834f2ec223"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "content-length",
+									"value": "40"
+								},
+								{
+									"key": "date",
+									"value": "Fri, 22 Sep 2023 01:23:20 GMT"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Habit deleted successfully\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Habit by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "credentials",
+								"value": "administrator",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:3030/api/v1/habits/a7b17371-6799-4593-9c8d-4c1088ffdd94",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"habits",
+								"a7b17371-6799-4593-9c8d-4c1088ffdd94"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get Habit by ID",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "credentials",
+										"value": "administrator",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "localhost:3030/api/v1/habits/a7b17371-6799-4593-9c8d-4c1088ffdd94",
+									"host": [
+										"localhost"
+									],
+									"port": "3030",
+									"path": [
+										"api",
+										"v1",
+										"habits",
+										"a7b17371-6799-4593-9c8d-4c1088ffdd94"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "content-length",
+									"value": "440"
+								},
+								{
+									"key": "date",
+									"value": "Fri, 22 Sep 2023 01:25:43 GMT"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Successfully retrieved habit\",\n    \"habit\": {\n        \"hab_id\": \"a7b17371-6799-4593-9c8d-4c1088ffdd94\",\n        \"hab_name\": \"Ping Pong 10\",\n        \"hab_description\": \"ola\",\n        \"hab_created_at\": \"2023-09-21T20:25:14.908333\",\n        \"hab_updated_at\": \"2023-09-21T20:25:14.908349\",\n        \"hab_is_favorite\": true,\n        \"hab_is_yn\": true,\n        \"hab_color\": \"abcdef\",\n        \"hab_units\": \"abcdefghij\",\n        \"hab_goal\": \"21312.23\",\n        \"hab_freq_type\": \"weekly\",\n        \"usr_id\": \"edgar\",\n        \"cat_id\": \"f4941e89-18a0-4c40-888d-2f038de33647\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Habit By ID and data",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "credentials",
+								"value": "administrator",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:3030/api/v1/habits/a7b17371-6799-4593-9c8d-4c1088ffdd94/data",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"habits",
+								"a7b17371-6799-4593-9c8d-4c1088ffdd94",
+								"data"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get Habit By ID and data",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "credentials",
+										"value": "administrator",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "localhost:3030/api/v1/habits/a7b17371-6799-4593-9c8d-4c1088ffdd94/data",
+									"host": [
+										"localhost"
+									],
+									"port": "3030",
+									"path": [
+										"api",
+										"v1",
+										"habits",
+										"a7b17371-6799-4593-9c8d-4c1088ffdd94",
+										"data"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "content-length",
+									"value": "379"
+								},
+								{
+									"key": "date",
+									"value": "Fri, 22 Sep 2023 01:26:30 GMT"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Successfully retrieved habit & recurrences & data\",\n    \"habit\": {\n        \"hab_id\": \"a7b17371-6799-4593-9c8d-4c1088ffdd94\",\n        \"hab_name\": \"Ping Pong 10\",\n        \"hab_description\": \"ola\",\n        \"hab_is_favorite\": true,\n        \"hab_is_yn\": true,\n        \"hab_color\": \"abcdef\",\n        \"hab_units\": \"abcdefghij\",\n        \"hab_goal\": \"21312.23\",\n        \"hab_freq_type\": \"weekly\",\n        \"usr_id\": \"edgar\",\n        \"cat_id\": \"f4941e89-18a0-4c40-888d-2f038de33647\",\n        \"data\": []\n    }\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "[DEPRECATED] Recurrences",
+			"item": [
+				{
+					"name": "Create Recurrency",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"frequency_type\":\"weekly\",\r\n    \"frequency_data\":\"2023-10-27\",\r\n    \"goal\": 2000,\r\n    \"habit_id\":\"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3030/api/v1/recurrences/",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"recurrences",
+								""
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Create Recurrency",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"frequency_type\":\"weekly\",\r\n    \"frequency_data\":\"2023-10-27\",\r\n    \"goal\": 2000,\r\n    \"habit_id\":\"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:3030/api/v1/recurrences/",
+									"host": [
+										"localhost"
+									],
+									"port": "3030",
+									"path": [
+										"api",
+										"v1",
+										"recurrences",
+										""
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "content-length",
+									"value": "89"
+								},
+								{
+									"key": "date",
+									"value": "Tue, 19 Sep 2023 18:36:04 GMT"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Recurrence created successfully\",\n    \"id\": \"3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get recurrence by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3030/api/v1/recurrences/001054d0-3bf1-477b-a2dc-bccc5fafd22a",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"recurrences",
+								"001054d0-3bf1-477b-a2dc-bccc5fafd22a"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get recurrence by ID",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:3030/api/v1/recurrences/001054d0-3bf1-477b-a2dc-bccc5fafd22a",
+									"host": [
+										"localhost"
+									],
+									"port": "3030",
+									"path": [
+										"api",
+										"v1",
+										"recurrences",
+										"001054d0-3bf1-477b-a2dc-bccc5fafd22a"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "content-length",
+									"value": "250"
+								},
+								{
+									"key": "date",
+									"value": "Tue, 19 Sep 2023 18:36:08 GMT"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Successfully retrieved recurrence\",\n    \"recurrence\": {\n        \"hab_rec_id\": \"001054d0-3bf1-477b-a2dc-bccc5fafd22a\",\n        \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n        \"hab_rec_freq_type\": \"weekly2\",\n        \"hab_rec_goal\": \"2000.00\",\n        \"hab_rec_freq_data\": \"2023-10-27\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Get recurrence, data by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3030/api/v1/recurrences/5f11fbba-384d-4e22-9f69-8a15936c5fa2/data",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"recurrences",
+								"5f11fbba-384d-4e22-9f69-8a15936c5fa2",
+								"data"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get recurrence, data by ID",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:3030/api/v1/recurrences/5f11fbba-384d-4e22-9f69-8a15936c5fa2/data",
+									"host": [
+										"localhost"
+									],
+									"port": "3030",
+									"path": [
+										"api",
+										"v1",
+										"recurrences",
+										"5f11fbba-384d-4e22-9f69-8a15936c5fa2",
+										"data"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "content-length",
+									"value": "44"
+								},
+								{
+									"key": "date",
+									"value": "Tue, 19 Sep 2023 18:36:12 GMT"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Record not found\",\n    \"errors\": null\n}"
+						}
+					]
+				},
+				{
+					"name": "Get recurrences by Habit",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3030/api/v1/recurrences/habit/9e0dfc33-52c7-4a2b-9ae5-dce0806c638c",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"recurrences",
+								"habit",
+								"9e0dfc33-52c7-4a2b-9ae5-dce0806c638c"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "New Request",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:3030/api/v1/recurrences/habit/9e0dfc33-52c7-4a2b-9ae5-dce0806c638c",
+									"host": [
+										"localhost"
+									],
+									"port": "3030",
+									"path": [
+										"api",
+										"v1",
+										"recurrences",
+										"habit",
+										"9e0dfc33-52c7-4a2b-9ae5-dce0806c638c"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "content-length",
+									"value": "442"
+								},
+								{
+									"key": "date",
+									"value": "Tue, 19 Sep 2023 18:36:15 GMT"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Successfully retrieved recurrences\",\n    \"recurrences\": [\n        {\n            \"hab_rec_id\": \"f0ce5887-3852-415d-861d-5bb1944ba7cf\",\n            \"hab_id\": \"9e0dfc33-52c7-4a2b-9ae5-dce0806c638c\",\n            \"hab_rec_freq_type\": \"weekly\",\n            \"hab_rec_goal\": \"2000.00\",\n            \"hab_rec_freq_data\": \"2023-10-08\"\n        },\n        {\n            \"hab_rec_id\": \"0b6c7b1d-3fbd-431c-b894-1a6b2294828e\",\n            \"hab_id\": \"9e0dfc33-52c7-4a2b-9ae5-dce0806c638c\",\n            \"hab_rec_freq_type\": \"weekly\",\n            \"hab_rec_goal\": \"2000.00\",\n            \"hab_rec_freq_data\": \"2023-10-18\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Update recurrence data",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "localhost:3030/api/v1/recurrences/69a70399-3bfe-4f7c-b80f-c6cce600449a",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"recurrences",
+								"69a70399-3bfe-4f7c-b80f-c6cce600449a"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Update recurrence data",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "localhost:3030/api/v1/recurrences/69a70399-3bfe-4f7c-b80f-c6cce600449a",
+									"host": [
+										"localhost"
+									],
+									"port": "3030",
+									"path": [
+										"api",
+										"v1",
+										"recurrences",
+										"69a70399-3bfe-4f7c-b80f-c6cce600449a"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "content-length",
+									"value": "118"
+								},
+								{
+									"key": "date",
+									"value": "Tue, 19 Sep 2023 18:36:19 GMT"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Invalid body: Request body deserialize error: EOF while parsing a value at line 1 column 0\",\n    \"errors\": null\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete recurrence data",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3030/api/v1/recurrences/69a70399-3bfe-4f7c-b80f-c6cce600449a",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"recurrences",
+								"69a70399-3bfe-4f7c-b80f-c6cce600449a"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Delete recurrence data",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "localhost:3030/api/v1/recurrences/69a70399-3bfe-4f7c-b80f-c6cce600449a",
+									"host": [
+										"localhost"
+									],
+									"port": "3030",
+									"path": [
+										"api",
+										"v1",
+										"recurrences",
+										"69a70399-3bfe-4f7c-b80f-c6cce600449a"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "content-length",
+									"value": "45"
+								},
+								{
+									"key": "date",
+									"value": "Tue, 19 Sep 2023 18:36:28 GMT"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Recurrence deleted successfully\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Events",
+			"item": [
+				{
+					"name": "Get habit events",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3030/api/v1/events/habit/8db4bc6b-20f9-454f-bd6f-1d30736e2b22?start_date=2023-09-18&end_date=2024-09-30",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"events",
+								"habit",
+								"8db4bc6b-20f9-454f-bd6f-1d30736e2b22"
+							],
+							"query": [
+								{
+									"key": "start_date",
+									"value": "2023-09-18"
+								},
+								{
+									"key": "end_date",
+									"value": "2024-09-30"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get habit events",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:3030/api/v1/events/habit/8db4bc6b-20f9-454f-bd6f-1d30736e2b22?start_date=2023-09-18&end_date=2024-09-30",
+									"host": [
+										"localhost"
+									],
+									"port": "3030",
+									"path": [
+										"api",
+										"v1",
+										"events",
+										"habit",
+										"8db4bc6b-20f9-454f-bd6f-1d30736e2b22"
+									],
+									"query": [
+										{
+											"key": "start_date",
+											"value": "2023-09-18"
+										},
+										{
+											"key": "end_date",
+											"value": "2024-09-30"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "content-length",
+									"value": "27631"
+								},
+								{
+									"key": "date",
+									"value": "Wed, 20 Sep 2023 02:55:52 GMT"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Successfully retrieved events\",\n    \"events\": [\n        {\n            \"date\": \"2024-09-27\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"001054d0-3bf1-477b-a2dc-bccc5fafd22a\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly2\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-09-27\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"40ed8805-a563-47be-a7c5-90faf9d34f49\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-09-27\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-09-20\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"40ed8805-a563-47be-a7c5-90faf9d34f49\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-09-20\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-09-13\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"001054d0-3bf1-477b-a2dc-bccc5fafd22a\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly2\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-09-13\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"40ed8805-a563-47be-a7c5-90faf9d34f49\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-09-13\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-09-06\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"40ed8805-a563-47be-a7c5-90faf9d34f49\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-09-06\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-08-30\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"001054d0-3bf1-477b-a2dc-bccc5fafd22a\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly2\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-08-30\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"40ed8805-a563-47be-a7c5-90faf9d34f49\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-08-30\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-08-23\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"40ed8805-a563-47be-a7c5-90faf9d34f49\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-08-23\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-08-16\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"001054d0-3bf1-477b-a2dc-bccc5fafd22a\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly2\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-08-16\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"40ed8805-a563-47be-a7c5-90faf9d34f49\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-08-16\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-08-09\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"40ed8805-a563-47be-a7c5-90faf9d34f49\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-08-09\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-08-02\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"001054d0-3bf1-477b-a2dc-bccc5fafd22a\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly2\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-08-02\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"40ed8805-a563-47be-a7c5-90faf9d34f49\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-08-02\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-07-26\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"40ed8805-a563-47be-a7c5-90faf9d34f49\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-07-26\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-07-19\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"001054d0-3bf1-477b-a2dc-bccc5fafd22a\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly2\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-07-19\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"40ed8805-a563-47be-a7c5-90faf9d34f49\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-07-19\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-07-12\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"40ed8805-a563-47be-a7c5-90faf9d34f49\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-07-12\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-07-05\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"001054d0-3bf1-477b-a2dc-bccc5fafd22a\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly2\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-07-05\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"40ed8805-a563-47be-a7c5-90faf9d34f49\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-07-05\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-06-28\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"40ed8805-a563-47be-a7c5-90faf9d34f49\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-06-28\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-06-21\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"001054d0-3bf1-477b-a2dc-bccc5fafd22a\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly2\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-06-21\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"40ed8805-a563-47be-a7c5-90faf9d34f49\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-06-21\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-06-14\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"40ed8805-a563-47be-a7c5-90faf9d34f49\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-06-14\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-06-07\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"001054d0-3bf1-477b-a2dc-bccc5fafd22a\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly2\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-06-07\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"40ed8805-a563-47be-a7c5-90faf9d34f49\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-06-07\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-05-31\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"40ed8805-a563-47be-a7c5-90faf9d34f49\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-05-31\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-05-24\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"001054d0-3bf1-477b-a2dc-bccc5fafd22a\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly2\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-05-24\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"40ed8805-a563-47be-a7c5-90faf9d34f49\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-05-24\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-05-17\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"40ed8805-a563-47be-a7c5-90faf9d34f49\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-05-17\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-05-10\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"001054d0-3bf1-477b-a2dc-bccc5fafd22a\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly2\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-05-10\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"40ed8805-a563-47be-a7c5-90faf9d34f49\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-05-10\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-05-03\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"40ed8805-a563-47be-a7c5-90faf9d34f49\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-05-03\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-04-26\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"001054d0-3bf1-477b-a2dc-bccc5fafd22a\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly2\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-04-26\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"40ed8805-a563-47be-a7c5-90faf9d34f49\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-04-26\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-04-19\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"40ed8805-a563-47be-a7c5-90faf9d34f49\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-04-19\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-04-12\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"001054d0-3bf1-477b-a2dc-bccc5fafd22a\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly2\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-04-12\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"40ed8805-a563-47be-a7c5-90faf9d34f49\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-04-12\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-04-05\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"40ed8805-a563-47be-a7c5-90faf9d34f49\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-04-05\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-03-29\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"001054d0-3bf1-477b-a2dc-bccc5fafd22a\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly2\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-03-29\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"40ed8805-a563-47be-a7c5-90faf9d34f49\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-03-29\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-03-22\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"40ed8805-a563-47be-a7c5-90faf9d34f49\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-03-22\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-03-15\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"001054d0-3bf1-477b-a2dc-bccc5fafd22a\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly2\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-03-15\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"40ed8805-a563-47be-a7c5-90faf9d34f49\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-03-15\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-03-08\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"40ed8805-a563-47be-a7c5-90faf9d34f49\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-03-08\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-03-01\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"001054d0-3bf1-477b-a2dc-bccc5fafd22a\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly2\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-03-01\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"40ed8805-a563-47be-a7c5-90faf9d34f49\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-03-01\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-02-23\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"40ed8805-a563-47be-a7c5-90faf9d34f49\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-02-23\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-02-16\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"001054d0-3bf1-477b-a2dc-bccc5fafd22a\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly2\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-02-16\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"40ed8805-a563-47be-a7c5-90faf9d34f49\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-02-16\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-02-09\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"40ed8805-a563-47be-a7c5-90faf9d34f49\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-02-09\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-02-02\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"001054d0-3bf1-477b-a2dc-bccc5fafd22a\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly2\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-02-02\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"40ed8805-a563-47be-a7c5-90faf9d34f49\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-02-02\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-01-26\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"40ed8805-a563-47be-a7c5-90faf9d34f49\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-01-26\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-01-19\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"001054d0-3bf1-477b-a2dc-bccc5fafd22a\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly2\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-01-19\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"40ed8805-a563-47be-a7c5-90faf9d34f49\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-01-19\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-01-12\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"40ed8805-a563-47be-a7c5-90faf9d34f49\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-01-12\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-01-05\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"001054d0-3bf1-477b-a2dc-bccc5fafd22a\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly2\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-01-05\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"40ed8805-a563-47be-a7c5-90faf9d34f49\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2024-01-05\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2023-12-29\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"40ed8805-a563-47be-a7c5-90faf9d34f49\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2023-12-29\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2023-12-22\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"001054d0-3bf1-477b-a2dc-bccc5fafd22a\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly2\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2023-12-22\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"40ed8805-a563-47be-a7c5-90faf9d34f49\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2023-12-22\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2023-12-15\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"40ed8805-a563-47be-a7c5-90faf9d34f49\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2023-12-15\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2023-12-08\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"001054d0-3bf1-477b-a2dc-bccc5fafd22a\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly2\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2023-12-08\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"40ed8805-a563-47be-a7c5-90faf9d34f49\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2023-12-08\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2023-12-01\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"40ed8805-a563-47be-a7c5-90faf9d34f49\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2023-12-01\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2023-11-24\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"001054d0-3bf1-477b-a2dc-bccc5fafd22a\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly2\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2023-11-24\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"40ed8805-a563-47be-a7c5-90faf9d34f49\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2023-11-24\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2023-11-17\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"40ed8805-a563-47be-a7c5-90faf9d34f49\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2023-11-17\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2023-11-10\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"001054d0-3bf1-477b-a2dc-bccc5fafd22a\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly2\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2023-11-10\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"40ed8805-a563-47be-a7c5-90faf9d34f49\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2023-11-10\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2023-11-03\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"40ed8805-a563-47be-a7c5-90faf9d34f49\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2023-11-03\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2023-10-27\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"001054d0-3bf1-477b-a2dc-bccc5fafd22a\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly2\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2023-10-27\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"40ed8805-a563-47be-a7c5-90faf9d34f49\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        },\n        {\n            \"date\": \"2023-10-27\",\n            \"recurrence\": {\n                \"hab_rec_id\": \"3ebe1cd7-9e9d-4a4e-86ad-bf6f46c93857\",\n                \"hab_id\": \"8db4bc6b-20f9-454f-bd6f-1d30736e2b22\",\n                \"hab_rec_freq_type\": \"weekly\",\n                \"hab_rec_goal\": \"2000.00\",\n                \"hab_rec_freq_data\": \"2023-10-27\"\n            }\n        }\n    ]\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Data",
+			"item": [
+				{
+					"name": "Get habit's data",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "credentials",
+								"value": "edgar",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:3030/api/v1/habitdata/habit/a7b17371-6799-4593-9c8d-4c1088ffdd94",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"habitdata",
+								"habit",
+								"a7b17371-6799-4593-9c8d-4c1088ffdd94"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get habit's data",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "credentials",
+										"value": "edgar",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "localhost:3030/api/v1/habitdata/habit/a7b17371-6799-4593-9c8d-4c1088ffdd94",
+									"host": [
+										"localhost"
+									],
+									"port": "3030",
+									"path": [
+										"api",
+										"v1",
+										"habitdata",
+										"habit",
+										"a7b17371-6799-4593-9c8d-4c1088ffdd94"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "content-length",
+									"value": "227"
+								},
+								{
+									"key": "date",
+									"value": "Fri, 22 Sep 2023 01:56:36 GMT"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Successfully retrieved habit data\",\n    \"habit_data\": [\n        {\n            \"hab_dat_id\": \"f42b1780-95ba-4336-bcf0-d9e752ad0fb9\",\n            \"hab_dat_amount\": \"3000.00\",\n            \"hab_dat_collected_at\": \"2023-09-22\",\n            \"hab_id\": \"a7b17371-6799-4593-9c8d-4c1088ffdd94\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Add habit's data",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "credentials",
+								"value": "edgar",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"amount\": 3000,\r\n    \"habit_id\": \"a7b17371-6799-4593-9c8d-4c1088ffdd94\",\r\n    \"collected_at\": \"2023-09-23\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3030/api/v1/habitdata",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"habitdata"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete habit's data",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3030/api/v1/habitdata/e781f935-cc7b-41d0-993b-7e2f0e863e03",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"habitdata",
+								"e781f935-cc7b-41d0-993b-7e2f0e863e03"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update habit's data",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "credentials",
+								"value": "edgar",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"amount\": 3000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3030/api/v1/habitdata/f42b1780-95ba-4336-bcf0-d9e752ad0fb9",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"habitdata",
+								"f42b1780-95ba-4336-bcf0-d9e752ad0fb9"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Update habit's data",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "credentials",
+										"value": "edgar",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"amount\": 3000\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:3030/api/v1/habitdata/f42b1780-95ba-4336-bcf0-d9e752ad0fb9",
+									"host": [
+										"localhost"
+									],
+									"port": "3030",
+									"path": [
+										"api",
+										"v1",
+										"habitdata",
+										"f42b1780-95ba-4336-bcf0-d9e752ad0fb9"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "content-length",
+									"value": "44"
+								},
+								{
+									"key": "date",
+									"value": "Fri, 22 Sep 2023 01:59:03 GMT"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Record not found\",\n    \"errors\": null\n}"
+						}
+					]
+				},
+				{
+					"name": "Get user's habit data",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "credentials",
+								"value": "edgar",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:3030/api/v1/habitdata/",
+							"host": [
+								"localhost"
+							],
+							"port": "3030",
+							"path": [
+								"api",
+								"v1",
+								"habitdata",
+								""
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get user's habit data",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "credentials",
+										"value": "edgar",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "localhost:3030/api/v1/habitdata/",
+									"host": [
+										"localhost"
+									],
+									"port": "3030",
+									"path": [
+										"api",
+										"v1",
+										"habitdata",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "content-length",
+									"value": "234"
+								},
+								{
+									"key": "date",
+									"value": "Fri, 22 Sep 2023 01:50:40 GMT"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Successfully retrieved user's habit data\",\n    \"habit_data\": [\n        {\n            \"hab_dat_id\": \"f42b1780-95ba-4336-bcf0-d9e752ad0fb9\",\n            \"hab_dat_amount\": \"3000.00\",\n            \"hab_dat_collected_at\": \"2023-09-22\",\n            \"hab_id\": \"a7b17371-6799-4593-9c8d-4c1088ffdd94\"\n        }\n    ]\n}"
+						}
+					]
+				}
+			]
+		}
+	]
+}
