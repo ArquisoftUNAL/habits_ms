@@ -46,7 +46,7 @@ impl DBManager {
             hab_description: data.description,
             hab_created_at: chrono::Local::now().naive_local(),
             hab_updated_at: chrono::Local::now().naive_local(),
-            hab_is_favorite: data.is_favourite,
+            hab_is_favorite: data.is_favorite,
             hab_is_yn: data.is_yn,
             hab_color: data.color,
             hab_units: data.units,

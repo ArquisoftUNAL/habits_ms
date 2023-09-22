@@ -53,7 +53,7 @@ pub fn seed_database(pool: PostgresPool) -> Result<(), String> {
         let habit = HabitCreateSchema {
             name: Faker.fake::<String>().chars().take(45).collect::<String>(),
             description: Faker.fake::<String>().chars().take(45).collect::<String>(),
-            is_favourite: Faker.fake(),
+            is_favorite: Faker.fake(),
             units: Faker.fake::<String>().chars().take(5).collect::<String>(),
             is_yn: Faker.fake(),
             goal: BigDecimal::from_str(

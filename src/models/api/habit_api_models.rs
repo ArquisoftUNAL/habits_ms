@@ -44,7 +44,7 @@ pub struct HabitCreateSchema {
     #[validate(length(min = 1, max = 255))]
     pub description: String,
 
-    pub is_favourite: bool,
+    pub is_favorite: bool,
 
     pub is_yn: bool,
 
@@ -75,7 +75,7 @@ pub struct HabitUpdateSchema {
     pub description: Option<String>,
 
     #[diesel(column_name = "hab_is_favorite")]
-    pub is_favourite: Option<bool>,
+    pub is_favorite: Option<bool>,
 
     #[diesel(column_name = "hab_is_yn")]
     pub is_yn: Option<bool>,
