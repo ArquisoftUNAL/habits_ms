@@ -18,6 +18,8 @@ pub async fn get_categories_handler(
     manager: DBManager,
     params: RangeParams,
 ) -> Result<impl Reply, Rejection> {
+    // All users can access this route
+
     let result = manager.get_all_categories(params.categories_page, params.categories_per_page);
 
     if result.is_err() {
@@ -61,8 +63,15 @@ pub async fn get_category_by_id_handler(
 // POST Route
 pub async fn create_category_handler(
     manager: DBManager,
+    authentication: AuthData,
     data: CategoryCreateSchema,
 ) -> Result<impl Reply, Rejection> {
+    if !matches!(authentication.role, AuthRole::Administrator) {
+        return Err(warp::reject::custom(Error::AuthorizationError(
+            "Only administrators can create categories".to_string(),
+        )));
+    }
+
     // Validate input
     let validation_result = data.validate();
 
@@ -90,8 +99,15 @@ pub async fn create_category_handler(
 // DELETE Route
 pub async fn delete_category_handler(
     manager: DBManager,
+    authentication: AuthData,
     id: Uuid,
 ) -> Result<impl Reply, Rejection> {
+    if !matches!(authentication.role, AuthRole::Administrator) {
+        return Err(warp::reject::custom(Error::AuthorizationError(
+            "Only administrators can create categories".to_string(),
+        )));
+    }
+
     let result = manager.delete_category(id);
 
     if result.is_err() {
@@ -109,9 +125,16 @@ pub async fn delete_category_handler(
 // UPDATE Route
 pub async fn update_category_handler(
     manager: DBManager,
+    authentication: AuthData,
     id: Uuid,
     data: CategoryUpdateSchema,
 ) -> Result<impl Reply, Rejection> {
+    if !matches!(authentication.role, AuthRole::Administrator) {
+        return Err(warp::reject::custom(Error::AuthorizationError(
+            "Only administrators can create categories".to_string(),
+        )));
+    }
+
     // Validate input
     let validation_result = data.validate();
 

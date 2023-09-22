@@ -1,9 +1,9 @@
 use crate::db::{DBManager, PostgresPool};
 use crate::models::api::{
-    category_api_models::CategoryCreateSchema, data_api_models::HabitDataSchema,
-    habit_api_models::HabitCreateSchema, recurrence_api_models::RecurrenceCreateSchema,
+    category_api_models::CategoryCreateSchema, data_api_models::HabitDataCreateSchema,
+    habit_api_models::HabitCreateSchema,
 };
-use crate::models::database::RecDataEnum;
+use crate::models::database::HabFreqTypeEnum;
 use bigdecimal::BigDecimal;
 use fake::{faker, Fake, Faker};
 use std::str::FromStr;
@@ -49,18 +49,30 @@ pub fn seed_database(pool: PostgresPool) -> Result<(), String> {
     let mut habits_ids: Vec<Uuid> = Vec::new();
 
     for i in 0..BASE_QUANTITY {
+        let user_id = user_ids[(i % user_ids.len() as i32) as usize].clone();
         let habit = HabitCreateSchema {
             name: Faker.fake::<String>().chars().take(45).collect::<String>(),
             description: Faker.fake::<String>().chars().take(45).collect::<String>(),
             is_favourite: Faker.fake(),
             units: Faker.fake::<String>().chars().take(5).collect::<String>(),
             is_yn: Faker.fake(),
+            goal: BigDecimal::from_str(
+                faker::number::en::NumberWithFormat("##.##")
+                    .fake::<String>()
+                    .as_str(),
+            )
+            .unwrap(),
+            frequency_type: match (i % 3) as i32 {
+                0 => HabFreqTypeEnum::daily {},
+                1 => HabFreqTypeEnum::weekly {},
+                2 => HabFreqTypeEnum::monthly {},
+                _ => HabFreqTypeEnum::daily {},
+            },
             color: Faker.fake::<String>().chars().take(6).collect::<String>(),
-            user_id: user_ids[(i % user_ids.len() as i32) as usize].clone(),
             category: categories_ids[(i % categories_ids.len() as i32) as usize].clone(),
         };
 
-        let habit_id = manager.add_habit(habit);
+        let habit_id = manager.add_habit(user_id, habit);
 
         if habit_id.is_err() {
             return Err(format!(
@@ -72,54 +84,22 @@ pub fn seed_database(pool: PostgresPool) -> Result<(), String> {
         habits_ids.push(habit_id.unwrap());
     }
 
-    println!("Seeding recurrences");
-
-    // Create (base) recurrences
-    let mut recurrences_ids: Vec<Uuid> = Vec::new();
-
-    for i in 0..BASE_QUANTITY * 2 {
-        let recurrence = RecurrenceCreateSchema {
-            frequency_type: match (i % 3) as i32 {
-                0 => RecDataEnum::daily {},
-                1 => RecDataEnum::weekly {},
-                2 => RecDataEnum::monthly {},
-                _ => RecDataEnum::daily {},
-            },
-            frequency_data: Faker.fake(),
-            habit_id: habits_ids[(i % habits_ids.len() as i32) as usize].clone(),
-            goal: BigDecimal::from_str(
-                faker::number::en::NumberWithFormat("##.##")
-                    .fake::<String>()
-                    .as_str(),
-            )
-            .unwrap(),
-        };
-
-        let recurrence_id = manager.add_recurrence(recurrence);
-
-        if recurrence_id.is_err() {
-            return Err(format!(
-                "[Seeder] Error creating recurrence: {:?}",
-                recurrence_id.err().unwrap()
-            ));
-        }
-
-        recurrences_ids.push(recurrence_id.unwrap());
-    }
-
     println!("Seeding habits data");
 
     // Create (base) data
-    for i in 0..BASE_QUANTITY * 10 {
-        let data = HabitDataSchema {
+    for i in 0..BASE_QUANTITY * 100 {
+        let data = HabitDataCreateSchema {
             amount: BigDecimal::from_str(
                 faker::number::en::NumberWithFormat("##.##")
                     .fake::<String>()
                     .as_str(),
             )
             .unwrap(),
-            collected_at: Faker.fake(),
-            recurrence_id: recurrences_ids[(i % recurrences_ids.len() as i32) as usize].clone(),
+            collected_at: Some(
+                chrono::Local::now().date_naive()
+                    + chrono::Duration::days((i - BASE_QUANTITY * 100 - 10) as i64),
+            ),
+            habit_id: habits_ids[(i % habits_ids.len() as i32) as usize].clone(),
         };
 
         let data_id = manager.add_habit_data(data);

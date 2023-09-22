@@ -1,4 +1,3 @@
-use uuid::Uuid;
 use warp::test;
 
 #[tokio::test]
@@ -9,6 +8,7 @@ async fn test_category_creation() {
         .json(&serde_json::json!({
             "name": "Test Category",
         }))
+        .header("credentials", "administrator")
         .reply(&crate::routes::get_routes(
             crate::db::create_pool().unwrap(),
         ))
@@ -25,6 +25,7 @@ async fn test_category_wrong_creation() {
         .json(&serde_json::json!({
             "name": "4",
         }))
+        .header("credentials", "administrator")
         .reply(&crate::routes::get_routes(
             crate::db::create_pool().unwrap(),
         ))
@@ -50,11 +51,12 @@ async fn test_category_query() {
 async fn test_habit_query() {
     let value = test::request()
         .method("GET")
-        .path("/api/v1/habits/user/jfadsfdsf")
+        .path("/api/v1/habits/")
+        .header("credentials", "administrator")
         .reply(&crate::routes::get_routes(
             crate::db::create_pool().unwrap(),
         ))
         .await;
 
-    assert_eq!(value.status(), 200);
+    assert_eq!(value.status(), 401);
 }

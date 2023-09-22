@@ -1,42 +1,15 @@
-use crate::models::database::{Habit, HabitRecurrence};
 use chrono::NaiveDate;
 use serde_derive::Serialize;
 
 // Embedded models
 #[derive(Debug, Serialize)]
-pub struct EventWithCount {
+pub struct Event {
     pub date: NaiveDate,
-    pub count: i64,
-}
-
-#[derive(Debug, Serialize)]
-pub struct EventWithHabit {
-    pub date: NaiveDate,
-    pub habit: Habit,
-    pub recurrence: HabitRecurrence,
-}
-
-#[derive(Debug, Serialize)]
-pub struct EventWithRecurrence {
-    pub date: NaiveDate,
-    pub recurrence: HabitRecurrence,
 }
 
 // Response models
 #[derive(Debug, Serialize)]
-pub struct EventsHabitsMultipleQueryResponse {
+pub struct EventsMultipleQueryResponse {
     pub message: String,
-    pub events: Vec<EventWithHabit>,
-}
-
-#[derive(Debug, Serialize)]
-pub struct EventsCountMultipleQueryResponse {
-    pub message: String,
-    pub events: Vec<EventWithCount>,
-}
-
-#[derive(Debug, Serialize)]
-pub struct EventsRecurrencesMultipleQueryResponse {
-    pub message: String,
-    pub events: Vec<EventWithRecurrence>,
+    pub events: Vec<Event>,
 }

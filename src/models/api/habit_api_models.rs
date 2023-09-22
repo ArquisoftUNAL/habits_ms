@@ -1,19 +1,15 @@
-use crate::models::{
-    api::recurrence_api_models::*,
-    database::{Habit, HabitRecurrence},
-};
+use crate::models::database::{HabFreqTypeEnum, Habit, HabitDataCollected};
 use crate::schema::habit;
 use diesel::query_builder::AsChangeset;
 use serde_derive::{Deserialize, Serialize};
 
-// use bigdecimal::BigDecimal;
+use bigdecimal::BigDecimal;
 use uuid::Uuid;
-
 use validator::Validate;
 
 // Embedded models
 #[derive(Debug, Serialize)]
-pub struct HabitWithRecurrences {
+pub struct HabitWithData {
     pub hab_id: Uuid,
 
     pub hab_name: String,
@@ -28,34 +24,15 @@ pub struct HabitWithRecurrences {
 
     pub hab_units: String,
 
-    pub usr_id: String,
+    pub hab_goal: BigDecimal,
 
-    pub cat_id: Uuid,
-
-    pub recurrences: Vec<HabitRecurrence>,
-}
-
-#[derive(Debug, Serialize)]
-pub struct HabitRecurrencesAndData {
-    pub hab_id: Uuid,
-
-    pub hab_name: String,
-
-    pub hab_description: String,
-
-    pub hab_is_favorite: bool,
-
-    pub hab_is_yn: bool,
-
-    pub hab_color: String,
-
-    pub hab_units: String,
+    pub hab_freq_type: HabFreqTypeEnum,
 
     pub usr_id: String,
 
     pub cat_id: Uuid,
 
-    pub recurrences: Vec<RecurrenceWithData>,
+    pub data: Vec<HabitDataCollected>,
 }
 
 // Requests schemas
@@ -77,7 +54,10 @@ pub struct HabitCreateSchema {
     #[validate(length(min = 1, max = 10))]
     pub units: String,
 
-    pub user_id: String,
+    #[validate(custom = "crate::validators::validate_bigdecimal")]
+    pub goal: BigDecimal,
+
+    pub frequency_type: HabFreqTypeEnum,
 
     pub category: Uuid,
 }
@@ -108,8 +88,12 @@ pub struct HabitUpdateSchema {
     #[diesel(column_name = "hab_units")]
     pub units: Option<String>,
 
-    #[diesel(column_name = "usr_id")]
-    pub user_id: Option<String>,
+    #[validate(custom = "crate::validators::validate_bigdecimal")]
+    #[diesel(column_name = "hab_goal")]
+    pub goal: Option<BigDecimal>,
+
+    #[diesel(column_name = "hab_freq_type")]
+    pub frequency_type: Option<HabFreqTypeEnum>,
 
     #[diesel(column_name = "cat_id")]
     pub category: Option<Uuid>,
@@ -131,17 +115,10 @@ pub struct HabitMultipleQueryResponse {
 }
 
 #[derive(Debug, Serialize)]
-pub struct HabitAndRecurrencesMultipleQueryResponse {
+pub struct HabitAndDataMultipleQueryResponse {
     pub message: String,
 
-    pub habits: Vec<HabitWithRecurrences>,
-}
-
-#[derive(Debug, Serialize)]
-pub struct HabitsAndRecurrencesAndDataMultipleQueryResponse {
-    pub message: String,
-
-    pub habits: Vec<HabitRecurrencesAndData>,
+    pub habits: Vec<HabitWithData>,
 }
 
 #[derive(Debug, Serialize)]
@@ -152,15 +129,8 @@ pub struct HabitSingleQueryResponse {
 }
 
 #[derive(Debug, Serialize)]
-pub struct HabitAndRecurrencesSingleQueryResponse {
+pub struct HabitAndDataSingleQueryResponse {
     pub message: String,
 
-    pub habit: HabitWithRecurrences,
-}
-
-#[derive(Debug, Serialize)]
-pub struct HabitAndRecurrencesAndDataSingleQueryResponse {
-    pub message: String,
-
-    pub habit: HabitRecurrencesAndData,
+    pub habit: HabitWithData,
 }

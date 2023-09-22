@@ -22,3 +22,4 @@ validator = { version = "0.16.1", features = ["derive"] }
 thiserror = "1.0.20"
 diesel-derive-enum = { version = "2.1.0", features = ["postgres"] }
 fake = { version = "2.8.0", features = ["chrono"]}
+tokio-cron-scheduler = "0.9.4"

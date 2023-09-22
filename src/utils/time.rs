@@ -1,13 +1,15 @@
 use chrono::{Datelike, Duration, Months, NaiveDate};
 
-use crate::models::database::RecDataEnum;
+use crate::models::database::HabFreqTypeEnum;
 use std::mem;
+
+const REFERENCE_DATE: NaiveDate = NaiveDate::from_ymd_opt(2018, 1, 1).unwrap();
 
 pub struct DateRange {
     pub start_date: NaiveDate,
     pub end_date: NaiveDate,
-    pub recurrence_type: RecDataEnum,
-    pub frequency_data: NaiveDate,
+    pub frequency_type: HabFreqTypeEnum,
+    pub reference_data: NaiveDate,
 
     // Function to get next date based on recurrence type
     pub get_next_date: fn(NaiveDate) -> NaiveDate,
@@ -15,15 +17,16 @@ pub struct DateRange {
 
 impl DateRange {
     pub fn new(
-        start_date: NaiveDate,
+        // start_date: NaiveDate,
         end_date: NaiveDate,
-        recurrence_type: RecDataEnum,
-        frequency_data: NaiveDate,
+        frequency_type: HabFreqTypeEnum,
+        // frequency_data: NaiveDate,
     ) -> Self {
-        let mut start_date = start_date;
+        // Start date should be always the current date
+        let mut start_date = chrono::Utc::now().naive_utc().date();
         let end_date = end_date;
-        let recurrence_type = recurrence_type;
-        let frequency_data = frequency_data;
+        let frequency_type = frequency_type;
+        let frequency_data = REFERENCE_DATE;
 
         // Reference date represents the start of the habit, so we must match the start date with the reference date
         if start_date < frequency_data {
@@ -40,14 +43,21 @@ impl DateRange {
         let reference_day_of_month = frequency_data.day();
         let start_day_of_month = start_date.day();
 
-        let new_start_date = match recurrence_type {
-            RecDataEnum::daily => start_date + Duration::days(difference.num_days()),
-            RecDataEnum::weekly => {
+        let new_start_date = match frequency_type {
+            HabFreqTypeEnum::daily => start_date + Duration::days(difference.num_days()),
+
+            // TODO: Fix this
+            HabFreqTypeEnum::daily2 => {
+                let difference_parity = difference.num_days() % 2;
+
+                start_date + Duration::days(difference.num_days() + difference_parity)
+            }
+            HabFreqTypeEnum::weekly => {
                 let offset_days = (reference_day_of_week - start_day_of_week) % 7;
 
                 start_date + Duration::days(offset_days as i64)
             }
-            RecDataEnum::weekly2 => {
+            HabFreqTypeEnum::weekly2 => {
                 let full_weeks_difference_parity = difference.num_weeks() % 2;
                 let offset_days = (reference_day_of_week - start_day_of_week) % 7;
 
@@ -56,7 +66,7 @@ impl DateRange {
                     + Duration::days(offset_days as i64)
                     + Duration::weeks(full_weeks_difference_parity)
             }
-            RecDataEnum::monthly => {
+            HabFreqTypeEnum::monthly => {
                 if start_day_of_month < reference_day_of_month {
                     // Just a fixed days offset is needed
                     start_date
@@ -68,7 +78,7 @@ impl DateRange {
                         + Duration::days(-((start_day_of_month - reference_day_of_month) as i64))
                 }
             }
-            RecDataEnum::monthly2 => {
+            HabFreqTypeEnum::monthly2 => {
                 let reference_day_of_month = frequency_data.day();
                 let reference_month = frequency_data.month();
                 let start_day_of_month = start_date.day();
@@ -94,14 +104,15 @@ impl DateRange {
         };
 
         // Now define a function for getting the next date based on recurrence type
-        let get_next_date = match recurrence_type {
-            RecDataEnum::daily => |date: NaiveDate| date + Duration::days(1),
-            RecDataEnum::weekly => |date: NaiveDate| date + Duration::weeks(1),
-            RecDataEnum::weekly2 => |date: NaiveDate| date + Duration::weeks(2),
-            RecDataEnum::monthly => {
+        let get_next_date = match frequency_type {
+            HabFreqTypeEnum::daily => |date: NaiveDate| date + Duration::days(1),
+            HabFreqTypeEnum::daily2 => |date: NaiveDate| date + Duration::days(2),
+            HabFreqTypeEnum::weekly => |date: NaiveDate| date + Duration::weeks(1),
+            HabFreqTypeEnum::weekly2 => |date: NaiveDate| date + Duration::weeks(2),
+            HabFreqTypeEnum::monthly => {
                 |date: NaiveDate| date.checked_add_months(Months::new(1)).unwrap()
             }
-            RecDataEnum::monthly2 => {
+            HabFreqTypeEnum::monthly2 => {
                 |date: NaiveDate| date.checked_add_months(Months::new(2)).unwrap()
             }
         };
@@ -110,9 +121,8 @@ impl DateRange {
         DateRange {
             start_date,
             end_date,
-            recurrence_type,
-            frequency_data,
-
+            frequency_type,
+            reference_data: frequency_data,
             get_next_date,
         }
     }

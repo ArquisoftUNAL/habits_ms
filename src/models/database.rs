@@ -5,9 +5,10 @@ use serde_derive::{Deserialize, Serialize};
 use uuid::Uuid;
 
 #[derive(diesel_derive_enum::DbEnum, Debug, Deserialize, Serialize, Clone, Copy)]
-#[ExistingTypePath = "crate::schema::sql_types::RecDataType"]
-pub enum RecDataEnum {
+#[ExistingTypePath = "crate::schema::sql_types::HabFreqTypeEnum"]
+pub enum HabFreqTypeEnum {
     daily,
+    daily2,
     weekly,
     weekly2,
     monthly,
@@ -61,6 +62,10 @@ pub struct Habit {
 
     pub hab_units: String,
 
+    pub hab_goal: BigDecimal,
+
+    pub hab_freq_type: HabFreqTypeEnum,
+
     pub usr_id: String,
 
     pub cat_id: Uuid,
@@ -74,39 +79,11 @@ pub struct Habit {
     Insertable,
     Serialize,
     AsChangeset,
-    Associations,
     Identifiable,
+    Associations,
     Clone,
 )]
 #[diesel(belongs_to(Habit, foreign_key = hab_id))]
-#[diesel(primary_key(hab_rec_id))]
-#[diesel(table_name=crate::schema::habit_recurrence)]
-#[diesel(check_for_backend(diesel::pg::Pg))]
-pub struct HabitRecurrence {
-    pub hab_rec_id: Uuid,
-
-    pub hab_id: Uuid,
-
-    pub hab_rec_freq_type: RecDataEnum,
-
-    pub hab_rec_goal: BigDecimal,
-
-    pub hab_rec_freq_data: NaiveDate,
-}
-
-#[derive(
-    Debug,
-    Deserialize,
-    Queryable,
-    Selectable,
-    Insertable,
-    Serialize,
-    AsChangeset,
-    Identifiable,
-    Associations,
-    Clone,
-)]
-#[diesel(belongs_to(HabitRecurrence, foreign_key = hab_rec_id))]
 #[diesel(primary_key(hab_dat_id))]
 #[diesel(table_name=crate::schema::habit_data_collected)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
@@ -117,5 +94,5 @@ pub struct HabitDataCollected {
 
     pub hab_dat_collected_at: NaiveDate,
 
-    pub hab_rec_id: Uuid,
+    pub hab_id: Uuid,
 }

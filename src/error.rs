@@ -14,6 +14,12 @@ pub enum Error {
 
     #[error("Query error: {0}")]
     QueryError(#[from] diesel::result::Error),
+
+    #[error("Authentication error: {0}")]
+    AuthorizationError(String),
+
+    #[error("Bad request: {0}")]
+    BadRequest(String),
 }
 
 #[derive(Serialize)]
@@ -85,6 +91,16 @@ pub async fn handle_rejection(err: Rejection) -> std::result::Result<impl Reply,
                     None,
                 ),
             },
+            Error::AuthorizationError(error) => (
+                StatusCode::UNAUTHORIZED,
+                format!("Authorization error: {}", error),
+                None,
+            ),
+            Error::BadRequest(error) => (
+                StatusCode::BAD_REQUEST,
+                format!("Bad request: {}", error),
+                None,
+            ),
         }
     } else if let Some(e) = err.find::<warp::filters::body::BodyDeserializeError>() {
         (

@@ -1,8 +1,11 @@
 use crate::{
     db::DBManager,
     error::Error,
-    models::api::{habit_api_models::*, *},
-    utils::queries::{join_habit_recurrence_and_data, join_habit_with_recurrences},
+    models::{
+        api::{habit_api_models::*, *},
+        database::Habit,
+    },
+    utils::queries::join_habit_with_data,
 };
 
 use warp::{
@@ -17,8 +20,37 @@ use validator::Validate;
 // POST Route
 pub async fn create_habit_handler(
     manager: DBManager,
+    authentication: AuthData,
     data: HabitCreateSchema,
+    admin_params: AdminParams,
 ) -> Result<impl Reply, Rejection> {
+    // Check a user is logged in / provided the action
+    if matches!(authentication.role, AuthRole::Guest) {
+        return Err(warp::reject::custom(Error::AuthorizationError(
+            "User is not logged in".to_string(),
+        )));
+    }
+
+    let user_id: String;
+
+    if matches!(authentication.role, AuthRole::Administrator) {
+        if admin_params.user_id.is_none() {
+            return Err(warp::reject::custom(Error::AuthorizationError(
+                "Administrator must provide a user id".to_string(),
+            )));
+        }
+
+        user_id = admin_params.user_id.unwrap();
+    } else {
+        if authentication.requester_id.is_some() {
+            user_id = authentication.requester_id.unwrap();
+        } else {
+            return Err(warp::reject::custom(Error::AuthorizationError(
+                "Invalid user".to_string(),
+            )));
+        }
+    }
+
     // Validate input
     let validation_result = data.validate();
 
@@ -29,7 +61,7 @@ pub async fn create_habit_handler(
     }
 
     // Create model from request body
-    let result = manager.add_habit(data);
+    let result = manager.add_habit(user_id, data);
 
     if result.is_err() {
         let error = result.err().unwrap();
@@ -48,9 +80,37 @@ pub async fn create_habit_handler(
 // UPDATE (PATCH) Route
 pub async fn update_habits_handler(
     manager: DBManager,
+    authentication: AuthData,
     id: Uuid,
     data: HabitUpdateSchema,
 ) -> Result<impl Reply, Rejection> {
+    // Check a user is logged in / provided the action
+    if matches!(authentication.role, AuthRole::Guest) {
+        return Err(warp::reject::custom(Error::AuthorizationError(
+            "User is not logged in".to_string(),
+        )));
+    }
+
+    // CHeck if user is allowed to modify this habit
+    let mut is_accessible = matches!(authentication.role, AuthRole::Administrator);
+
+    if !is_accessible {
+        let result = manager.is_habit_accessible_by_user(authentication.requester_id.unwrap(), id);
+
+        if result.is_err() {
+            let error = result.err().unwrap();
+            return Err(warp::reject::custom(error));
+        }
+
+        is_accessible = result.unwrap();
+    }
+
+    if !is_accessible {
+        return Err(warp::reject::custom(Error::AuthorizationError(
+            "User is not allowed to modify this habit".to_string(),
+        )));
+    }
+
     // Validate input
     let validation_result = data.validate();
 
@@ -76,7 +136,38 @@ pub async fn update_habits_handler(
 }
 
 // DELETE Route
-pub async fn delete_habits_handler(manager: DBManager, id: Uuid) -> Result<impl Reply, Rejection> {
+pub async fn delete_habits_handler(
+    manager: DBManager,
+    authentication: AuthData,
+    id: Uuid,
+) -> Result<impl Reply, Rejection> {
+    // Check a user is logged in / provided the action
+    if matches!(authentication.role, AuthRole::Guest) {
+        return Err(warp::reject::custom(Error::AuthorizationError(
+            "User is not logged in".to_string(),
+        )));
+    }
+
+    // CHeck if user is allowed to modify this habit
+    let mut is_accessible = matches!(authentication.role, AuthRole::Administrator);
+
+    if !is_accessible {
+        let result = manager.is_habit_accessible_by_user(authentication.requester_id.unwrap(), id);
+
+        if result.is_err() {
+            let error = result.err().unwrap();
+            return Err(warp::reject::custom(error));
+        }
+
+        is_accessible = result.unwrap();
+    }
+
+    if !is_accessible {
+        return Err(warp::reject::custom(Error::AuthorizationError(
+            "User is not allowed to modify this habit".to_string(),
+        )));
+    }
+
     // Delete habit from database
     let result = manager.delete_habit(id);
 
@@ -94,13 +185,38 @@ pub async fn delete_habits_handler(manager: DBManager, id: Uuid) -> Result<impl 
 
 // GET Route
 pub async fn get_habits_by_user_id_handler(
-    id: String,
     params: RangeParams,
     manager: DBManager,
+    authentication: AuthData,
     data_params: DataIncludeParams,
+    admin_params: AdminParams,
 ) -> Result<impl Reply, Rejection> {
-    // Get habits from database
-    let user_id = id.clone();
+    // Check a user is logged in / provided the action
+    if matches!(authentication.role, AuthRole::Guest) {
+        return Err(warp::reject::custom(Error::AuthorizationError(
+            "User is not logged in".to_string(),
+        )));
+    }
+
+    let user_id: String;
+
+    if matches!(authentication.role, AuthRole::Administrator) {
+        if admin_params.user_id.is_none() {
+            return Err(warp::reject::custom(Error::AuthorizationError(
+                "Administrator must provide a user id".to_string(),
+            )));
+        }
+
+        user_id = admin_params.user_id.unwrap();
+    } else {
+        if authentication.requester_id.is_some() {
+            user_id = authentication.requester_id.unwrap();
+        } else {
+            return Err(warp::reject::custom(Error::AuthorizationError(
+                "Invalid user".to_string(),
+            )));
+        }
+    }
 
     let result = manager.get_all_user_habits(user_id, params.habits_page, params.habits_per_page);
 
@@ -111,27 +227,9 @@ pub async fn get_habits_by_user_id_handler(
 
     let result = result.unwrap();
 
-    // Join recurrences case
-    if data_params.include_recurrences.unwrap_or(false) {
-        let result = manager.join_habits_recurrences(result);
-
-        if result.is_err() {
-            let error = result.err().unwrap();
-            return Err(warp::reject::custom(error));
-        }
-
-        // Return response
-        let response = HabitAndRecurrencesMultipleQueryResponse {
-            message: format!("Successfully retrieved habits & recurrences for user"),
-            habits: result.unwrap(),
-        };
-
-        return Ok(with_status(json(&response), StatusCode::OK));
-    }
-
     // Join data case
     if data_params.include_data.unwrap_or(false) {
-        let result = manager.join_habits_recurrences_data(result);
+        let result = manager.join_habits_data(result);
 
         if result.is_err() {
             let error = result.err().unwrap();
@@ -139,8 +237,8 @@ pub async fn get_habits_by_user_id_handler(
         }
 
         // Return response
-        let response = HabitsAndRecurrencesAndDataMultipleQueryResponse {
-            message: format!("Successfully retrieved habits, recurrences & data for user"),
+        let response = HabitAndDataMultipleQueryResponse {
+            message: format!("Successfully retrieved habits & data for user"),
             habits: result.unwrap(),
         };
 
@@ -161,12 +259,51 @@ pub async fn get_habits_by_category_handler(
     id: Uuid,
     params: RangeParams,
     manager: DBManager,
+    authentication: AuthData,
+    admin_params: AdminParams,
 ) -> Result<impl Reply, Rejection> {
-    // Get habits from database
-    let category_id = id.clone();
+    if matches!(authentication.role, AuthRole::Guest) {
+        return Err(warp::reject::custom(Error::AuthorizationError(
+            "User is not logged in".to_string(),
+        )));
+    }
 
-    let result =
-        manager.get_all_category_habits(category_id, params.habits_page, params.habits_per_page);
+    let category_id = id.clone();
+    let result: Result<Vec<Habit>, Error>;
+
+    if matches!(authentication.role, AuthRole::Administrator) {
+        if admin_params.user_id.is_none() {
+            result = manager.get_all_category_habits(
+                category_id,
+                params.habits_page,
+                params.habits_per_page,
+            );
+        } else {
+            let user_id = admin_params.user_id.unwrap();
+
+            result = manager.get_all_user_category_habits(
+                user_id,
+                category_id,
+                params.habits_page,
+                params.habits_per_page,
+            );
+        }
+    } else {
+        if authentication.requester_id.is_some() {
+            let user_id = authentication.requester_id.unwrap();
+
+            result = manager.get_all_user_category_habits(
+                user_id,
+                category_id,
+                params.habits_page,
+                params.habits_per_page,
+            );
+        } else {
+            return Err(warp::reject::custom(Error::AuthorizationError(
+                "Invalid user".to_string(),
+            )));
+        }
+    }
 
     if result.is_err() {
         let error = result.err().unwrap();
@@ -189,10 +326,32 @@ pub async fn get_habit_by_id_handler(
     id: Uuid,
     params: RangeParams,
     manager: DBManager,
+    authentication: AuthData,
     data_params: DataIncludeParams,
 ) -> Result<impl Reply, Rejection> {
-    // Get habits from database
+    // Check a user is logged in / provided the action
+    if matches!(authentication.role, AuthRole::Guest) {
+        return Err(warp::reject::custom(Error::AuthorizationError(
+            "User is not logged in".to_string(),
+        )));
+    }
 
+    if matches!(authentication.role, AuthRole::User) {
+        let result = manager.is_habit_accessible_by_user(authentication.requester_id.unwrap(), id);
+
+        if result.is_err() {
+            let error = result.err().unwrap();
+            return Err(warp::reject::custom(error));
+        }
+
+        if !result.unwrap() {
+            return Err(warp::reject::custom(Error::AuthorizationError(
+                "User is not allowed to modify this habit".to_string(),
+            )));
+        }
+    }
+
+    // Get habits from database
     let result = manager.get_habit_by_id(id);
 
     if result.is_err() {
@@ -203,49 +362,21 @@ pub async fn get_habit_by_id_handler(
     // Check if user was not found (actually if no habits are related to it)
     let result = result.unwrap();
 
-    // Join recurrences case
-    if data_params.include_recurrences.unwrap_or(false) {
-        let recurrences = manager.get_all_habit_recurrences(
-            id,
-            params.recurrences_page,
-            params.recurrences_per_page,
-        );
-
-        if recurrences.is_err() {
-            let error = recurrences.err().unwrap();
-            return Err(warp::reject::custom(error));
-        }
-
-        let recurrences = recurrences.unwrap();
-
-        // Return response
-        let response = HabitAndRecurrencesSingleQueryResponse {
-            message: format!("Successfully retrieved habit & recurrences"),
-            habit: join_habit_with_recurrences(result, recurrences),
-        };
-
-        return Ok(with_status(json(&response), StatusCode::OK));
-    }
-
     // Join data case
     if data_params.include_data.unwrap_or(false) {
-        let recurrences = manager.get_all_habit_recurrences_data(
-            id,
-            params.recurrences_page,
-            params.recurrences_per_page,
-        );
+        let data = manager.get_all_habit_data(id, params.data_page, params.data_per_page);
 
-        if recurrences.is_err() {
-            let error = recurrences.err().unwrap();
+        if data.is_err() {
+            let error = data.err().unwrap();
             return Err(warp::reject::custom(error));
         }
 
-        let recurrences = recurrences.unwrap();
+        let data = data.unwrap();
 
         // Return response
-        let response = HabitAndRecurrencesAndDataSingleQueryResponse {
+        let response = HabitAndDataSingleQueryResponse {
             message: format!("Successfully retrieved habit & recurrences & data"),
-            habit: join_habit_recurrence_and_data(result, recurrences),
+            habit: join_habit_with_data(result, data),
         };
 
         return Ok(with_status(json(&response), StatusCode::OK));

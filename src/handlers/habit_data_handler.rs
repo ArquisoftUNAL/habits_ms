@@ -16,8 +16,32 @@ use validator::Validate;
 // POST Route
 pub async fn create_habit_data_handler(
     manager: DBManager,
-    data: HabitDataSchema,
+    authentication: AuthData,
+    data: HabitDataCreateSchema,
 ) -> Result<impl Reply, Rejection> {
+    // Check a user is logged in / provided the action
+    if matches!(authentication.role, AuthRole::Guest) {
+        return Err(warp::reject::custom(Error::AuthorizationError(
+            "User is not logged in".to_string(),
+        )));
+    }
+
+    if matches!(authentication.role, AuthRole::User) {
+        // Check if habit is accessible by user
+        let is_accessible = manager
+            .is_habit_accessible_by_user(authentication.requester_id.unwrap(), data.habit_id);
+
+        if is_accessible.is_err() {
+            return Err(warp::reject::custom(is_accessible.err().unwrap()));
+        }
+
+        if !is_accessible.unwrap() {
+            return Err(warp::reject::custom(Error::AuthorizationError(
+                "User is not authorized to access this habit".to_string(),
+            )));
+        }
+    }
+
     // Validate input
     let validation_result = data.validate();
 
@@ -25,6 +49,23 @@ pub async fn create_habit_data_handler(
         return Err(warp::reject::custom(Error::ValidationError(
             validation_result.err().unwrap(),
         )));
+    }
+
+    // Check if requested date is strictly after the last habit's data
+    let last_habit_data = manager.get_all_habit_data(data.habit_id, Some(1), Some(1));
+
+    if last_habit_data.is_err() {
+        return Err(warp::reject::custom(last_habit_data.err().unwrap()));
+    }
+
+    let last_habit_data = last_habit_data.unwrap();
+
+    if last_habit_data.len() > 0 && data.collected_at.is_some() {
+        if last_habit_data[0].hab_dat_collected_at > data.collected_at.unwrap() {
+            return Err(warp::reject::custom(Error::BadRequest(
+                "Requested date is before the last habit's data".to_string(),
+            )));
+        }
     }
 
     // Create model from request body
@@ -35,20 +76,48 @@ pub async fn create_habit_data_handler(
         return Err(warp::reject::custom(error));
     }
 
+    let (data_id, habit_id) = result.unwrap();
+
     // Return response
     let response = HabitDataCreateResponse {
         message: "Habit data created successfully".to_string(),
-        id: result.unwrap(),
+        id: data_id,
+        habit_id,
     };
+
     Ok(with_status(json(&response), StatusCode::CREATED))
 }
 
 // UPDATE (PATCH) Route
 pub async fn update_habit_data_handler(
     manager: DBManager,
+    authentication: AuthData,
     id: Uuid,
     data: HabitDataUpdateSchema,
 ) -> Result<impl Reply, Rejection> {
+    // Check a user is logged in / provided the action
+    if matches!(authentication.role, AuthRole::Guest) {
+        return Err(warp::reject::custom(Error::AuthorizationError(
+            "User is not logged in".to_string(),
+        )));
+    }
+
+    if matches!(authentication.role, AuthRole::User) {
+        // Check if habit is accessible by user
+        let is_accessible =
+            manager.is_habitdata_accessible_by_user(authentication.requester_id.unwrap(), id);
+
+        if is_accessible.is_err() {
+            return Err(warp::reject::custom(is_accessible.err().unwrap()));
+        }
+
+        if !is_accessible.unwrap() {
+            return Err(warp::reject::custom(Error::AuthorizationError(
+                "User is not authorized to access this habit data".to_string(),
+            )));
+        }
+    }
+
     // Validate input
     let validation_result = data.validate();
 
@@ -65,8 +134,9 @@ pub async fn update_habit_data_handler(
     }
 
     // Return response
-    let response = GeneralResponse {
+    let response = HabitDataUpdateDeleteResponse {
         message: "Habit data updated successfully".to_string(),
+        habit_id: result.unwrap(),
     };
 
     Ok(with_status(json(&response), StatusCode::OK))
@@ -75,8 +145,32 @@ pub async fn update_habit_data_handler(
 // DELETE Route
 pub async fn delete_habit_data_handler(
     manager: DBManager,
+    authentication: AuthData,
     id: Uuid,
 ) -> Result<impl Reply, Rejection> {
+    // Check a user is logged in / provided the action
+    if matches!(authentication.role, AuthRole::Guest) {
+        return Err(warp::reject::custom(Error::AuthorizationError(
+            "User is not logged in".to_string(),
+        )));
+    }
+
+    if matches!(authentication.role, AuthRole::User) {
+        // Check if habit is accessible by user
+        let is_accessible =
+            manager.is_habitdata_accessible_by_user(authentication.requester_id.unwrap(), id);
+
+        if is_accessible.is_err() {
+            return Err(warp::reject::custom(is_accessible.err().unwrap()));
+        }
+
+        if !is_accessible.unwrap() {
+            return Err(warp::reject::custom(Error::AuthorizationError(
+                "User is not authorized to access this habit data".to_string(),
+            )));
+        }
+    }
+
     let result = manager.delete_habit_data(id);
 
     if result.is_err() {
@@ -85,14 +179,42 @@ pub async fn delete_habit_data_handler(
     }
 
     // Return response
-    let response = GeneralResponse {
+    let response = HabitDataUpdateDeleteResponse {
         message: "Habit data deleted successfully".to_string(),
+        habit_id: result.unwrap(),
     };
     Ok(with_status(json(&response), StatusCode::OK))
 }
 
 // GET Route
-pub async fn get_data_by_id_handler(manager: DBManager, id: Uuid) -> Result<impl Reply, Rejection> {
+pub async fn get_data_by_id_handler(
+    manager: DBManager,
+    authentication: AuthData,
+    id: Uuid,
+) -> Result<impl Reply, Rejection> {
+    // Check a user is logged in / provided the action
+    if matches!(authentication.role, AuthRole::Guest) {
+        return Err(warp::reject::custom(Error::AuthorizationError(
+            "User is not logged in".to_string(),
+        )));
+    }
+
+    if matches!(authentication.role, AuthRole::User) {
+        // Check if habit is accessible by user
+        let is_accessible =
+            manager.is_habitdata_accessible_by_user(authentication.requester_id.unwrap(), id);
+
+        if is_accessible.is_err() {
+            return Err(warp::reject::custom(is_accessible.err().unwrap()));
+        }
+
+        if !is_accessible.unwrap() {
+            return Err(warp::reject::custom(Error::AuthorizationError(
+                "User is not authorized to access this habit data".to_string(),
+            )));
+        }
+    }
+
     // Get habits from database
     let result = manager.get_habit_data_by_id(id);
 
@@ -113,13 +235,37 @@ pub async fn get_data_by_id_handler(manager: DBManager, id: Uuid) -> Result<impl
 }
 
 // GET Route
-pub async fn get_data_by_recurrence_handler(
+pub async fn get_data_by_habit_handler(
     id: Uuid,
     params: RangeParams,
     manager: DBManager,
+    authentication: AuthData,
 ) -> Result<impl Reply, Rejection> {
+    // Check a user is logged in / provided the action
+    if matches!(authentication.role, AuthRole::Guest) {
+        return Err(warp::reject::custom(Error::AuthorizationError(
+            "User is not logged in".to_string(),
+        )));
+    }
+
+    if matches!(authentication.role, AuthRole::User) {
+        // Check if habit is accessible by user
+        let is_accessible =
+            manager.is_habit_accessible_by_user(authentication.requester_id.unwrap(), id);
+
+        if is_accessible.is_err() {
+            return Err(warp::reject::custom(is_accessible.err().unwrap()));
+        }
+
+        if !is_accessible.unwrap() {
+            return Err(warp::reject::custom(Error::AuthorizationError(
+                "User is not authorized to access this habit".to_string(),
+            )));
+        }
+    }
+
     // Get habits from database
-    let result = manager.get_all_recurrence_data(id, params.data_page, params.data_per_page);
+    let result = manager.get_all_habit_data(id, params.data_page, params.data_per_page);
 
     if result.is_err() {
         let error = result.err().unwrap();
@@ -131,6 +277,59 @@ pub async fn get_data_by_recurrence_handler(
     // Return response
     let response = HabitDataMultipleQueryResponse {
         message: format!("Successfully retrieved habit data"),
+        habit_data: result,
+    };
+
+    Ok(with_status(json(&response), StatusCode::OK))
+}
+
+// GET Route
+pub async fn get_data_by_user_handler(
+    params: RangeParams,
+    admin_params: AdminParams,
+    manager: DBManager,
+    authentication: AuthData,
+) -> Result<impl Reply, Rejection> {
+    // Check a user is logged in / provided the action
+    if matches!(authentication.role, AuthRole::Guest) {
+        return Err(warp::reject::custom(Error::AuthorizationError(
+            "User is not logged in".to_string(),
+        )));
+    }
+
+    let user_id: String;
+
+    if matches!(authentication.role, AuthRole::Administrator) {
+        if admin_params.user_id.is_none() {
+            return Err(warp::reject::custom(Error::AuthorizationError(
+                "Administrator must provide a user id".to_string(),
+            )));
+        }
+
+        user_id = admin_params.user_id.unwrap();
+    } else {
+        if authentication.requester_id.is_some() {
+            user_id = authentication.requester_id.unwrap();
+        } else {
+            return Err(warp::reject::custom(Error::AuthorizationError(
+                "Invalid user".to_string(),
+            )));
+        }
+    }
+
+    // Get habits from database
+    let result = manager.get_all_user_habitdata(user_id, params.data_page, params.data_per_page);
+
+    if result.is_err() {
+        let error = result.err().unwrap();
+        return Err(warp::reject::custom(error));
+    }
+
+    let result = result.unwrap();
+
+    // Return response
+    let response = HabitDataMultipleQueryResponse {
+        message: format!("Successfully retrieved user's habit data"),
         habit_data: result,
     };
 

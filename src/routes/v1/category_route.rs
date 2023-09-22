@@ -2,7 +2,7 @@ use crate::{
     db::PostgresPool,
     handlers::category_handler,
     models::api::{DataIncludeParams, RangeParams},
-    utils::with_db_manager,
+    utils::{with_authenticator, with_db_manager},
 };
 
 use warp::filters::BoxedFilter;
@@ -16,12 +16,14 @@ pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
     let create_category = base_category_route
         .and(warp::post())
         .and(with_db_manager(pool.clone()))
+        .and(with_authenticator())
         .and(warp::body::json())
         .and_then(category_handler::create_category_handler);
 
     let update_category = base_category_route
         .and(warp::patch())
         .and(with_db_manager(pool.clone()))
+        .and(with_authenticator())
         .and(warp::path::param::<Uuid>())
         .and(warp::body::json())
         .and_then(category_handler::update_category_handler);
@@ -29,6 +31,7 @@ pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
     let delete_category = base_category_route
         .and(warp::delete())
         .and(with_db_manager(pool.clone()))
+        .and(with_authenticator())
         .and(warp::path::param::<Uuid>())
         .and_then(category_handler::delete_category_handler);
 

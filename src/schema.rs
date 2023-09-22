@@ -2,8 +2,8 @@
 
 pub mod sql_types {
     #[derive(diesel::query_builder::QueryId, diesel::sql_types::SqlType)]
-    #[diesel(postgres_type(name = "rec_data_type"))]
-    pub struct RecDataType;
+    #[diesel(postgres_type(name = "hab_freq_type_enum"))]
+    pub struct HabFreqTypeEnum;
 }
 
 diesel::table! {
@@ -15,6 +15,9 @@ diesel::table! {
 }
 
 diesel::table! {
+    use diesel::sql_types::*;
+    use super::sql_types::HabFreqTypeEnum;
+
     habit (hab_id) {
         hab_id -> Uuid,
         #[max_length = 255]
@@ -29,6 +32,8 @@ diesel::table! {
         hab_color -> Varchar,
         #[max_length = 10]
         hab_units -> Varchar,
+        hab_goal -> Numeric,
+        hab_freq_type -> HabFreqTypeEnum,
         #[max_length = 24]
         usr_id -> Varchar,
         cat_id -> Uuid,
@@ -40,30 +45,15 @@ diesel::table! {
         hab_dat_id -> Uuid,
         hab_dat_amount -> Numeric,
         hab_dat_collected_at -> Date,
-        hab_rec_id -> Uuid,
-    }
-}
-
-diesel::table! {
-    use diesel::sql_types::*;
-    use super::sql_types::RecDataType;
-
-    habit_recurrence (hab_rec_id) {
-        hab_rec_id -> Uuid,
-        hab_rec_freq_type -> RecDataType,
-        hab_rec_goal -> Numeric,
-        hab_rec_freq_data -> Date,
         hab_id -> Uuid,
     }
 }
 
 diesel::joinable!(habit -> category (cat_id));
-diesel::joinable!(habit_data_collected -> habit_recurrence (hab_rec_id));
-diesel::joinable!(habit_recurrence -> habit (hab_id));
+diesel::joinable!(habit_data_collected -> habit (hab_id));
 
 diesel::allow_tables_to_appear_in_same_query!(
     category,
     habit,
     habit_data_collected,
-    habit_recurrence,
 );

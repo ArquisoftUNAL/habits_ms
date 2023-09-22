@@ -24,11 +24,6 @@ pub fn create_pool() -> Result<PostgresPool, Error> {
     let pool = Pool::builder()
         .max_size(15)
         .connection_timeout(Duration::from_secs(10))
-        // .error_handler(Box::new(|err: R2D2Error, conn| {
-        //     println!("Error on connection: {}", err);
-        //     // For other errors, return an error
-        //     Err(Error::DBConnectionError(err))
-        // }))
         .build(manager)
         .or_else(|err| Err(Error::DBConnectionError(err)));
 
@@ -43,8 +38,6 @@ pub fn create_pool() -> Result<PostgresPool, Error> {
 
 impl DBManager {
     pub fn new(connection: PostgresPool) -> DBManager {
-        DBManager {
-            connection: connection,
-        }
+        DBManager { connection }
     }
 }
