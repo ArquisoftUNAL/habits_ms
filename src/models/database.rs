@@ -66,6 +66,8 @@ pub struct Habit {
 
     pub hab_freq_type: HabFreqTypeEnum,
 
+    pub hab_next_closure_date: chrono::NaiveDate,
+
     pub usr_id: String,
 
     pub cat_id: Uuid,

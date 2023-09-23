@@ -2,6 +2,7 @@ pub mod category_route;
 pub mod events_route;
 pub mod habit_data_route;
 pub mod habits_route;
+pub mod ownership_route;
 
 use crate::db::PostgresPool;
 use warp::filters::BoxedFilter;
@@ -15,5 +16,6 @@ pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
         .or(v1.and(habit_data_route::get_routes(pool.clone())))
         .or(v1.and(category_route::get_routes(pool.clone())))
         .or(v1.and(events_route::get_routes(pool.clone())))
+        .or(v1.and(ownership_route::get_routes(pool.clone())))
         .boxed()
 }

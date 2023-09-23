@@ -1,0 +1,7 @@
+mutation notifyHabUpdate(
+    $id: String!
+) {
+    notifyHabitUpdate(habit_id: $id) {
+        message
+    }
+}

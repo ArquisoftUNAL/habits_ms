@@ -13,12 +13,13 @@ mod queries;
 mod routes;
 mod schema;
 mod seeders;
+mod services;
 mod tests;
 mod utils;
 mod validators;
 
 // Read parameters passed from cargo to see if we are just seeding the database
-use std::env;
+use std::{env, thread};
 
 use tokio_cron_scheduler::{Job, JobScheduler};
 
@@ -51,12 +52,22 @@ async fn main() {
     // Initialize jobs
     let sched = JobScheduler::new().await;
 
-    let jobs_pool = pool.clone();
-
     if !sched.is_err() {
         let sched = sched.unwrap();
-        let job = Job::new("1/6 * * * * *", move |_, _| {
-            jobs::check_reminders_update(jobs_pool.clone());
+        let job = Job::new_async("1/6 * * * * *", move |_, _| {
+            let jobs_pool = db::create_pool();
+
+            if jobs_pool.is_err() {
+                println!("Error creating pool: {:?}", jobs_pool.err());
+                return Box::pin(async move {});
+            }
+
+            let jobs_pool = jobs_pool.unwrap();
+
+            Box::pin(async move {
+                println!("Checking reminders");
+                jobs::check_reminders_update(jobs_pool.clone()).await;
+            })
         });
 
         if !job.is_err() {
@@ -73,8 +84,7 @@ async fn main() {
                         println!("Scheduler exited with error: {:?}", result.err());
                     }
                 });
-            }
-            {
+            } else {
                 println!("Error adding job: {:?}", result.err());
             }
         } else {

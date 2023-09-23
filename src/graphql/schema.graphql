@@ -1,0 +1,25 @@
+schema {
+    mutation: MutationRoot
+}
+
+type OperationOutput {
+    message: String!
+}
+
+input NotificationInsert {
+    title: String!
+    body: String!
+    init_date: String!
+    should_email: Boolean!
+    user_id: String!
+}
+
+type MutationRoot {
+    enqueueNotification(
+        data: [NotificationInsert!]!
+    ) : OperationOutput!
+
+    notifyHabitUpdate(
+        habit_id: String!
+    ) : OperationOutput!
+}

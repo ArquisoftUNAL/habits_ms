@@ -1,0 +1,7 @@
+mutation notifyReminder(
+    $input: [NotificationInsert!]!
+) {
+    enqueueNotification(data: $input) {
+        message
+    }
+}

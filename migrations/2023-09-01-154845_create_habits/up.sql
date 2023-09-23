@@ -17,6 +17,9 @@ CREATE TABLE habit (
 
     hab_goal DECIMAL(10,2) NOT NULL,
     hab_freq_type hab_freq_type_enum NOT NULL,
+
+    -- Save next time this habit frequency will restart
+    hab_next_closure_date DATE NOT NULL,
     
     usr_id VARCHAR(24) NOT NULL,
     cat_id UUID NOT NULL,
@@ -25,3 +28,29 @@ CREATE TABLE habit (
         FOREIGN KEY (cat_id) 
             REFERENCES category(cat_id)
 );
+
+CREATE FUNCTION get_next_closure_date(
+    freq_type hab_freq_type_enum,
+    prev_closure_date DATE
+) 
+    RETURNS DATE
+    LANGUAGE plpgsql
+    AS
+    $$
+    BEGIN
+        CASE freq_type
+            WHEN 'daily' THEN
+                RETURN prev_closure_date + INTERVAL '1 day';
+            WHEN 'daily2' THEN
+                RETURN prev_closure_date + INTERVAL '2 day';
+            WHEN 'weekly' THEN
+                RETURN prev_closure_date + INTERVAL '1 week';
+            WHEN 'weekly2' THEN
+                RETURN prev_closure_date + INTERVAL '2 week';
+            WHEN 'monthly' THEN
+                RETURN prev_closure_date + INTERVAL '1 month';
+            WHEN 'monthly2' THEN
+                RETURN prev_closure_date + INTERVAL '2 month';
+        END CASE;
+    END;
+    $$

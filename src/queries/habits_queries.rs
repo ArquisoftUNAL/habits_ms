@@ -4,9 +4,13 @@ use crate::{
     models::api::habit_api_models::*,
     models::database::Habit,
     schema::*,
-    utils::{DEFAULT_QUERY_LIMIT, MAX_QUERY_LIMIT},
+    utils::{
+        time::{get_next_closure_date, DateRange},
+        DEFAULT_QUERY_LIMIT, HABIT_CREATION_DATE_AS_REFERENCE, MAX_QUERY_LIMIT,
+    },
 };
 
+use chrono::NaiveDate;
 use diesel::prelude::*;
 
 use uuid::Uuid;
@@ -40,18 +44,38 @@ impl DBManager {
 
     // Add an habit
     pub fn add_habit(&self, user_id: String, data: HabitCreateSchema) -> Result<Uuid, Error> {
+        let current_datetime = chrono::Local::now().naive_local();
+        let current_date = current_datetime.date();
+
+        let closure_date: NaiveDate;
+
+        if HABIT_CREATION_DATE_AS_REFERENCE {
+            closure_date = current_date;
+        } else {
+            closure_date = DateRange::get_next_closest_date(
+                data.frequency_type,
+                // Change if habit start should be another (usually a week later from current date)
+                Some(current_date),
+                // Change to None when reference date should be another (usually a constant)
+                None,
+            );
+        }
+
         let habit = Habit {
             hab_id: Uuid::new_v4(),
             hab_name: data.name,
             hab_description: data.description,
-            hab_created_at: chrono::Local::now().naive_local(),
-            hab_updated_at: chrono::Local::now().naive_local(),
+            hab_created_at: current_datetime,
+            hab_updated_at: current_datetime,
             hab_is_favorite: data.is_favorite,
             hab_is_yn: data.is_yn,
             hab_color: data.color,
             hab_units: data.units,
             hab_goal: data.goal,
             hab_freq_type: data.frequency_type,
+
+            hab_next_closure_date: closure_date,
+
             usr_id: user_id,
             cat_id: data.category,
         };
@@ -232,6 +256,49 @@ impl DBManager {
 
         if search.is_err() {
             return Err(Error::QueryError(search.err().unwrap()));
+        }
+
+        Ok(search.unwrap())
+    }
+
+    // Get pending habits and update their closure date
+    pub fn get_update_pending_habits(&self) -> Result<Vec<Habit>, Error> {
+        let current_datetime = chrono::Local::now().naive_local();
+        let current_date = current_datetime.date();
+
+        let conn = self.connection.get();
+
+        if conn.is_err() {
+            return Err(Error::DBConnectionError(conn.err().unwrap()));
+        }
+
+        // Get habits to update
+        let search = habit::table
+            .select(Habit::as_select())
+            .filter(habit::hab_next_closure_date.le(current_date))
+            .load::<Habit>(&mut conn.unwrap());
+
+        if search.is_err() {
+            return Err(Error::QueryError(search.err().unwrap()));
+        }
+
+        let conn = self.connection.get();
+
+        if conn.is_err() {
+            return Err(Error::DBConnectionError(conn.err().unwrap()));
+        }
+
+        // Update all habits that are pending
+        let update = diesel::update(habit::table)
+            .set(habit::hab_next_closure_date.eq(get_next_closure_date(
+                habit::hab_freq_type,
+                habit::hab_next_closure_date,
+            )))
+            .filter(habit::hab_next_closure_date.le(current_date))
+            .get_result::<Habit>(&mut conn.unwrap());
+
+        if update.is_err() {
+            return Err(Error::QueryError(update.err().unwrap()));
         }
 
         Ok(search.unwrap())

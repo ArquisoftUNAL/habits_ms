@@ -3,7 +3,7 @@ use crate::{
     error::Error,
     models::{api::events_api_models::*, database::Habit},
     schema::*,
-    utils::{time::DateRange, DEFAULT_QUERY_LIMIT},
+    utils::{time::DateRange, DEFAULT_QUERY_LIMIT, HABIT_CREATION_DATE_AS_REFERENCE},
 };
 use diesel::prelude::*;
 use uuid::Uuid;
@@ -34,7 +34,7 @@ impl DBManager {
             return Err(Error::QueryError(query.err().unwrap()));
         }
 
-        let habit = query.unwrap();
+        let habit: Habit = query.unwrap();
 
         let start_date = start_date.unwrap_or(chrono::Local::now().naive_local().date());
 
@@ -43,7 +43,15 @@ impl DBManager {
 
         let mut vec = Vec::new();
 
-        let data_range = DateRange::new(end_date, habit.hab_freq_type);
+        let data_range = DateRange::new(
+            end_date,
+            habit.hab_freq_type,
+            Some(start_date),
+            Some(match HABIT_CREATION_DATE_AS_REFERENCE {
+                true => habit.hab_created_at.date(),
+                false => start_date,
+            }),
+        );
 
         for date_ocurrence in data_range {
             let event = Event {

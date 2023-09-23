@@ -1,32 +1,95 @@
 use chrono::{Datelike, Duration, Months, NaiveDate};
+use diesel::sql_types::Date;
 
-use crate::models::database::HabFreqTypeEnum;
+use crate::{models::database::HabFreqTypeEnum, schema::sql_types};
 use std::mem;
 
-const REFERENCE_DATE: NaiveDate = NaiveDate::from_ymd_opt(2018, 1, 1).unwrap();
+pub const REFERENCE_DATE: NaiveDate = NaiveDate::from_ymd_opt(2018, 1, 1).unwrap();
 
 pub struct DateRange {
-    pub start_date: NaiveDate,
-    pub end_date: NaiveDate,
-    pub frequency_type: HabFreqTypeEnum,
-    pub reference_data: NaiveDate,
+    start_date: NaiveDate,
+    end_date: NaiveDate,
 
     // Function to get next date based on recurrence type
-    pub get_next_date: fn(NaiveDate) -> NaiveDate,
+    get_next_date: fn(NaiveDate) -> NaiveDate,
 }
 
 impl DateRange {
     pub fn new(
-        // start_date: NaiveDate,
         end_date: NaiveDate,
         frequency_type: HabFreqTypeEnum,
-        // frequency_data: NaiveDate,
+        start_date: Option<NaiveDate>,
+        frequency_data: Option<NaiveDate>,
     ) -> Self {
-        // Start date should be always the current date
-        let mut start_date = chrono::Utc::now().naive_utc().date();
-        let end_date = end_date;
+        // Now define a function for getting the next date based on recurrence type
+        let start_date = Self::get_next_closest_date(frequency_type, start_date, frequency_data);
+        let get_next_date = Self::generate_date_generator(frequency_type);
+
+        DateRange {
+            start_date,
+            end_date,
+            get_next_date,
+        }
+    }
+
+    pub fn _new_no_verification(
+        start_date: Option<NaiveDate>,
+        end_date: Option<NaiveDate>,
+        frequency_type: HabFreqTypeEnum,
+    ) -> Self {
+        // Now define a function for getting the next date based on recurrence type
+        let start_date = match start_date {
+            Some(date) => date,
+            None => chrono::Utc::now().naive_utc().date(),
+        };
+
+        let end_date = match end_date {
+            Some(date) => date,
+            None => chrono::Utc::now().naive_utc().date(),
+        };
+
+        let get_next_date = Self::generate_date_generator(frequency_type);
+
+        DateRange {
+            start_date,
+            end_date,
+            get_next_date,
+        }
+    }
+
+    pub fn generate_date_generator(frequency_type: HabFreqTypeEnum) -> fn(NaiveDate) -> NaiveDate {
+        let get_next_date = match frequency_type {
+            HabFreqTypeEnum::daily => |date: NaiveDate| date + Duration::days(1),
+            HabFreqTypeEnum::daily2 => |date: NaiveDate| date + Duration::days(2),
+            HabFreqTypeEnum::weekly => |date: NaiveDate| date + Duration::weeks(1),
+            HabFreqTypeEnum::weekly2 => |date: NaiveDate| date + Duration::weeks(2),
+            HabFreqTypeEnum::monthly => {
+                |date: NaiveDate| date.checked_add_months(Months::new(1)).unwrap()
+            }
+            HabFreqTypeEnum::monthly2 => {
+                |date: NaiveDate| date.checked_add_months(Months::new(2)).unwrap()
+            }
+        };
+
+        get_next_date
+    }
+
+    pub fn get_next_closest_date(
+        frequency_type: HabFreqTypeEnum,
+        start_date: Option<NaiveDate>,
+        reference_date: Option<NaiveDate>,
+    ) -> NaiveDate {
         let frequency_type = frequency_type;
-        let frequency_data = REFERENCE_DATE;
+
+        // Start date should be always the current date
+        let mut start_date = match start_date {
+            Some(date) => date,
+            None => chrono::Utc::now().naive_utc().date(),
+        };
+        let frequency_data = match reference_date {
+            Some(date) => date,
+            None => REFERENCE_DATE,
+        };
 
         // Reference date represents the start of the habit, so we must match the start date with the reference date
         if start_date < frequency_data {
@@ -103,28 +166,7 @@ impl DateRange {
             }
         };
 
-        // Now define a function for getting the next date based on recurrence type
-        let get_next_date = match frequency_type {
-            HabFreqTypeEnum::daily => |date: NaiveDate| date + Duration::days(1),
-            HabFreqTypeEnum::daily2 => |date: NaiveDate| date + Duration::days(2),
-            HabFreqTypeEnum::weekly => |date: NaiveDate| date + Duration::weeks(1),
-            HabFreqTypeEnum::weekly2 => |date: NaiveDate| date + Duration::weeks(2),
-            HabFreqTypeEnum::monthly => {
-                |date: NaiveDate| date.checked_add_months(Months::new(1)).unwrap()
-            }
-            HabFreqTypeEnum::monthly2 => {
-                |date: NaiveDate| date.checked_add_months(Months::new(2)).unwrap()
-            }
-        };
-
-        start_date = new_start_date;
-        DateRange {
-            start_date,
-            end_date,
-            frequency_type,
-            reference_data: frequency_data,
-            get_next_date,
-        }
+        new_start_date
     }
 }
 
@@ -141,3 +183,11 @@ impl Iterator for DateRange {
         Some(mem::replace(&mut self.start_date, next))
     }
 }
+
+// Define a SQL function that handles database closure date update
+diesel::sql_function!(
+    fn get_next_closure_date(
+        frequency_type: sql_types::HabFreqTypeEnum,
+        prev_closure_date: Date,
+    ) -> Date
+);

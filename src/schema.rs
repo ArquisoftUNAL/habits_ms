@@ -34,6 +34,7 @@ diesel::table! {
         hab_units -> Varchar,
         hab_goal -> Numeric,
         hab_freq_type -> HabFreqTypeEnum,
+        hab_next_closure_date -> Date,
         #[max_length = 24]
         usr_id -> Varchar,
         cat_id -> Uuid,
