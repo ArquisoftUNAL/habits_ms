@@ -4,7 +4,7 @@ use diesel::sql_types::Date;
 use crate::{models::database::HabFreqTypeEnum, schema::sql_types};
 use std::mem;
 
-pub const REFERENCE_DATE: NaiveDate = NaiveDate::from_ymd_opt(2018, 1, 1).unwrap();
+pub const REFERENCE_DATE: Option<NaiveDate> = NaiveDate::from_ymd_opt(2018, 1, 1);
 
 pub struct DateRange {
     start_date: NaiveDate,
@@ -88,7 +88,7 @@ impl DateRange {
         };
         let frequency_data = match reference_date {
             Some(date) => date,
-            None => REFERENCE_DATE,
+            None => REFERENCE_DATE.unwrap_or(chrono::Utc::now().naive_utc().date()),
         };
 
         // Reference date represents the start of the habit, so we must match the start date with the reference date

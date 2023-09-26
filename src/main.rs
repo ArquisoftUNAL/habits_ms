@@ -2,7 +2,6 @@
 
 // Disable camelcase warnings, due to postgres enum types being allways in lowercase
 #![allow(non_camel_case_types)]
-#![feature(const_option)]
 
 mod db;
 mod error;
