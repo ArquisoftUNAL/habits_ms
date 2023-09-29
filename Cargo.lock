@@ -522,7 +522,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "habitus_activities"
+name = "habitus_habits"
 version = "1.71.1"
 dependencies = [
  "bigdecimal",
