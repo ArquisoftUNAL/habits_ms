@@ -29,7 +29,9 @@ async fn main() {
 
     if pool.is_err() {
         println!("[MAIN] Error creating pool: {:?}", pool.err());
-        return;
+
+        // Throw error and exit (in order to force container to restart)
+        panic!();
     }
 
     let pool = pool.unwrap();

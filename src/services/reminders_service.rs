@@ -17,18 +17,14 @@ struct NotifyReminder;
 use notify_reminder::{NotificationInsert, Variables as NotifyReminderVariables};
 
 pub async fn enqueue_reminders_service(habits: Vec<Habit>) -> Result<(), reqwest::Error> {
-    println!("Testing notification enqueueing x1.5");
     // Comunicate with gateway to enqueue reminders of habits
     let gateway_url = std::env::var("GATEWAY_URL").unwrap_or("http://localhost:4000".to_string());
-    println!("Testing notification enqueueing x1.6");
     let client = Client::new();
-    println!("Testing notification enqueueing x1.7");
 
     let mut notifications: Vec<NotificationInsert> = Vec::new();
 
     let current_date: NaiveDate = chrono::Local::now().naive_local().date();
 
-    println!("Testing notification enqueueing x1.7");
     for habit in habits {
         notifications.push(NotificationInsert {
             title: format!("Reminder for habit {}", habit.hab_name),
@@ -39,12 +35,9 @@ pub async fn enqueue_reminders_service(habits: Vec<Habit>) -> Result<(), reqwest
         });
     }
 
-    println!("Testing notification enqueueing x1.8");
     let variables = NotifyReminderVariables {
         input: notifications,
     };
-
-    println!("Testing notification enqueueing x2");
 
     let response_body = post_graphql::<NotifyReminder, _>(&client, gateway_url, variables).await;
 
