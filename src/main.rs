@@ -18,7 +18,7 @@ mod utils;
 mod validators;
 
 // Read parameters passed from cargo to see if we are just seeding the database
-use std::{env, thread};
+use std::env;
 
 use tokio_cron_scheduler::{Job, JobScheduler};
 
@@ -28,7 +28,7 @@ async fn main() {
     let pool = db::create_pool();
 
     if pool.is_err() {
-        println!("Error creating pool: {:?}", pool.err());
+        println!("[MAIN] Error creating pool: {:?}", pool.err());
         return;
     }
 
@@ -42,7 +42,7 @@ async fn main() {
             let result = seeders::seed_database(pool.clone());
 
             if result.is_err() {
-                println!("Error seeding database: {:?}", result.err());
+                println!("[SEEDING] Error seeding database: {:?}", result.err());
             }
             return;
         }
@@ -57,14 +57,13 @@ async fn main() {
             let jobs_pool = db::create_pool();
 
             if jobs_pool.is_err() {
-                println!("Error creating pool: {:?}", jobs_pool.err());
+                println!("[JOBS] Error creating pool: {:?}", jobs_pool.err());
                 return Box::pin(async move {});
             }
 
             let jobs_pool = jobs_pool.unwrap();
 
             Box::pin(async move {
-                println!("Checking reminders");
                 jobs::check_reminders_update(jobs_pool.clone()).await;
             })
         });
