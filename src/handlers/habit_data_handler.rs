@@ -76,13 +76,12 @@ pub async fn create_habit_data_handler(
         return Err(warp::reject::custom(error));
     }
 
-    let (data_id, habit_id) = result.unwrap();
+    let data = result.unwrap();
 
     // Return response
     let response = HabitDataCreateResponse {
         message: "Habit data created successfully".to_string(),
-        id: data_id,
-        habit_id,
+        data,
     };
 
     Ok(with_status(json(&response), StatusCode::CREATED))
@@ -136,7 +135,7 @@ pub async fn update_habit_data_handler(
     // Return response
     let response = HabitDataUpdateDeleteResponse {
         message: "Habit data updated successfully".to_string(),
-        habit_id: result.unwrap(),
+        data: result.unwrap(),
     };
 
     Ok(with_status(json(&response), StatusCode::OK))
@@ -181,7 +180,7 @@ pub async fn delete_habit_data_handler(
     // Return response
     let response = HabitDataUpdateDeleteResponse {
         message: "Habit data deleted successfully".to_string(),
-        habit_id: result.unwrap(),
+        data: result.unwrap(),
     };
     Ok(with_status(json(&response), StatusCode::OK))
 }

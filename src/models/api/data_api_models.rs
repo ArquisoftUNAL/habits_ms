@@ -35,16 +35,14 @@ pub struct HabitDataUpdateSchema {
 pub struct HabitDataCreateResponse {
     pub message: String,
 
-    pub id: Uuid,
-
-    pub habit_id: Uuid,
+    pub data: HabitDataCollected,
 }
 
 #[derive(Debug, Serialize)]
 pub struct HabitDataUpdateDeleteResponse {
     pub message: String,
 
-    pub habit_id: Uuid,
+    pub data: HabitDataCollected,
 }
 
 #[derive(Debug, Serialize)]

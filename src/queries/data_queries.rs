@@ -79,7 +79,7 @@ impl DBManager {
     }
 
     // Add a habit data record
-    pub fn add_habit_data(&self, data: HabitDataCreateSchema) -> Result<(Uuid, Uuid), Error> {
+    pub fn add_habit_data(&self, data: HabitDataCreateSchema) -> Result<HabitDataCollected, Error> {
         let habit_data = HabitDataCollected {
             hab_dat_id: Uuid::new_v4(),
             hab_dat_amount: data.amount,
@@ -95,57 +95,60 @@ impl DBManager {
             return Err(Error::DBConnectionError(conn.err().unwrap()));
         }
 
-        let search = diesel::insert_into(habit_data_collected::table)
+        let query = diesel::insert_into(habit_data_collected::table)
             .values(&habit_data)
-            .execute(&mut conn.unwrap())
-            .map(|_| (habit_data.hab_dat_id, habit_data.hab_id));
+            .get_result(&mut conn.unwrap());
 
-        if search.is_err() {
-            return Err(Error::QueryError(search.err().unwrap()));
+        if query.is_err() {
+            return Err(Error::QueryError(query.err().unwrap()));
         }
 
-        Ok(search.unwrap())
+        Ok(query.unwrap())
     }
 
     // Delete recurrence
-    pub fn delete_habit_data(&self, id: Uuid) -> Result<Uuid, Error> {
+    pub fn delete_habit_data(&self, id: Uuid) -> Result<HabitDataCollected, Error> {
         let conn = self.connection.get();
 
         if conn.is_err() {
             return Err(Error::DBConnectionError(conn.err().unwrap()));
         }
 
-        let search = diesel::delete(
+        let query = diesel::delete(
             habit_data_collected::table.filter(habit_data_collected::hab_dat_id.eq(id)),
         )
         .get_result::<HabitDataCollected>(&mut conn.unwrap());
 
-        if search.is_err() {
-            return Err(Error::QueryError(search.err().unwrap()));
+        if query.is_err() {
+            return Err(Error::QueryError(query.err().unwrap()));
         }
 
-        Ok(search.unwrap().hab_id)
+        Ok(query.unwrap())
     }
 
     // Update an habit
-    pub fn update_habit_data(&self, id: Uuid, data: HabitDataUpdateSchema) -> Result<Uuid, Error> {
+    pub fn update_habit_data(
+        &self,
+        id: Uuid,
+        data: HabitDataUpdateSchema,
+    ) -> Result<HabitDataCollected, Error> {
         let conn = self.connection.get();
 
         if conn.is_err() {
             return Err(Error::DBConnectionError(conn.err().unwrap()));
         }
 
-        let search = diesel::update(
+        let query = diesel::update(
             habit_data_collected::table.filter(habit_data_collected::hab_dat_id.eq(id)),
         )
         .set(&data)
         .get_result::<HabitDataCollected>(&mut conn.unwrap());
 
-        if search.is_err() {
-            return Err(Error::QueryError(search.err().unwrap()));
+        if query.is_err() {
+            return Err(Error::QueryError(query.err().unwrap()));
         }
 
-        Ok(search.unwrap().hab_id)
+        Ok(query.unwrap())
     }
 
     // Filter a specific habit

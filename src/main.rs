@@ -55,7 +55,7 @@ async fn main() {
 
     if !sched.is_err() {
         let sched = sched.unwrap();
-        let job = Job::new_async("1/6 * * * * *", move |_, _| {
+        let job = Job::new_async("* 1 * * * * *", move |_, _| {
             let jobs_pool = db::create_pool();
 
             if jobs_pool.is_err() {
