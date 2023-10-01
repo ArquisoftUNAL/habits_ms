@@ -6,7 +6,7 @@ type OperationOutput {
     message: String!
 }
 
-input NotificationInsert {
+input NotificationQueueInsert {
     title: String!
     body: String!
     init_date: String!
@@ -16,7 +16,7 @@ input NotificationInsert {
 
 type MutationRoot {
     enqueueNotification(
-        data: [NotificationInsert!]!
+        data: [NotificationQueueInsert!]!
     ) : OperationOutput!
 
     notifyHabitUpdate(

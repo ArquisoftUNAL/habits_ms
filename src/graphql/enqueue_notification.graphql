@@ -1,5 +1,5 @@
 mutation notifyReminder(
-    $input: [NotificationInsert!]!
+    $input: [NotificationQueueInsert!]!
 ) {
     enqueueNotification(data: $input) {
         message

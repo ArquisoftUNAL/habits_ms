@@ -14,19 +14,19 @@ use crate::models::database::Habit;
 )]
 struct NotifyReminder;
 
-use notify_reminder::{NotificationInsert, Variables as NotifyReminderVariables};
+use notify_reminder::{NotificationQueueInsert, Variables as NotifyReminderVariables};
 
 pub async fn enqueue_reminders_service(habits: Vec<Habit>) -> Result<(), reqwest::Error> {
     // Comunicate with gateway to enqueue reminders of habits
     let gateway_url = std::env::var("GATEWAY_URL").unwrap_or("http://localhost:4000".to_string());
     let client = Client::new();
 
-    let mut notifications: Vec<NotificationInsert> = Vec::new();
+    let mut notifications: Vec<NotificationQueueInsert> = Vec::new();
 
     let current_date: NaiveDate = chrono::Local::now().naive_local().date();
 
     for habit in habits {
-        notifications.push(NotificationInsert {
+        notifications.push(NotificationQueueInsert {
             title: format!("Reminder for habit {}", habit.hab_name),
             body: format!("Your habit just restarted its period! Remember to do it today!"),
             init_date: current_date.to_string(),
