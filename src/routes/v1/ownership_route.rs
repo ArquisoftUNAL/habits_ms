@@ -10,12 +10,21 @@ use warp::Filter;
 use warp::Reply;
 
 pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
-    let check_ownership = warp::path("ownership")
+    let check_habit_ownership = warp::path("ownership")
+        .and(warp::path("habit"))
         .and(warp::get())
         .and(warp::path::param::<Uuid>())
         .and(with_db_manager(pool.clone()))
         .and(with_authenticator())
         .and_then(ownership_handler::check_ownership_handler);
 
-    check_ownership.boxed()
+    let check_data_ownership = warp::path("ownership")
+        .and(warp::path("data"))
+        .and(warp::get())
+        .and(warp::path::param::<Uuid>())
+        .and(with_db_manager(pool.clone()))
+        .and(with_authenticator())
+        .and_then(ownership_handler::check_data_ownership_handler);
+
+    check_habit_ownership.or(check_data_ownership).boxed()
 }

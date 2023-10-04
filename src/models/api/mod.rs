@@ -33,7 +33,7 @@ pub enum AuthRole {
 
 #[derive(Debug, Deserialize)]
 pub struct AuthData {
-    pub requester_id: Option<String>,
+    pub requester_id: String,
 
     pub role: AuthRole,
 }
@@ -43,11 +43,6 @@ pub struct AuthData {
 pub struct DateParams {
     pub start_date: Option<chrono::NaiveDate>,
     pub end_date: Option<chrono::NaiveDate>,
-}
-
-#[derive(Debug, Deserialize)]
-pub struct AdminParams {
-    pub user_id: Option<String>,
 }
 
 // Data include params matcher, we can easily tell a handler to include or not certain data in response

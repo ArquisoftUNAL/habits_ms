@@ -1,7 +1,7 @@
 use crate::{
     db::PostgresPool,
     handlers::habit_data_handler,
-    models::api::{AdminParams, RangeParams},
+    models::api::RangeParams,
     utils::{with_authenticator, with_db_manager},
 };
 
@@ -17,30 +17,29 @@ pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
     let create_habit_data = base_habit_data_route
         .and(warp::post())
         .and(with_db_manager(pool.clone()))
-        .and(with_authenticator())
         .and(warp::body::json())
+        .and(with_authenticator())
         .and_then(habit_data_handler::create_habit_data_handler);
 
     let update_habit_data = base_habit_data_route
         .and(warp::patch())
         .and(with_db_manager(pool.clone()))
-        .and(with_authenticator())
         .and(warp::path::param::<Uuid>())
         .and(warp::body::json())
+        .and(with_authenticator())
         .and_then(habit_data_handler::update_habit_data_handler);
 
     let delete_habit_data = base_habit_data_route
         .and(warp::delete())
         .and(with_db_manager(pool.clone()))
-        .and(with_authenticator())
         .and(warp::path::param::<Uuid>())
+        .and(with_authenticator())
         .and_then(habit_data_handler::delete_habit_data_handler);
 
     // Querying habit data
     let get_habit_data_by_user = base_habit_data_route
         .and(warp::get())
         .and(warp::query::<RangeParams>())
-        .and(warp::query::<AdminParams>())
         .and(with_db_manager(pool.clone()))
         .and(with_authenticator())
         .and(warp::path::end())
@@ -58,8 +57,8 @@ pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
     let get_habit_data_by_id = base_habit_data_route
         .and(warp::get())
         .and(with_db_manager(pool.clone()))
-        .and(with_authenticator())
         .and(warp::path::param::<Uuid>())
+        .and(with_authenticator())
         .and_then(habit_data_handler::get_data_by_id_handler);
 
     create_habit_data

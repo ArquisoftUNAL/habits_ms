@@ -2,7 +2,7 @@ use crate::{
     db::PostgresPool,
     handlers::events_handler,
     models::api::{DateParams, RangeParams},
-    utils::{with_authenticator, with_db_manager},
+    utils::with_db_manager,
 };
 
 use warp::filters::BoxedFilter;
@@ -20,7 +20,6 @@ pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
         .and(warp::query::<DateParams>())
         .and(warp::query::<RangeParams>())
         .and(with_db_manager(pool.clone()))
-        .and(with_authenticator())
         .and_then(events_handler::get_next_events_by_habit_handler);
 
     get_next_end_event_by_habit.boxed()

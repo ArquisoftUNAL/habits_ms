@@ -24,22 +24,15 @@ pub fn with_db_manager(
 pub fn with_authenticator() -> impl Filter<Extract = (AuthData,), Error = Rejection> + Clone {
     // Get authentication data
     warp::any()
-        .and(warp::header::<String>("credentials"))
+        .and(warp::header::<String>("user_id"))
         .map(|identification: String| -> AuthData {
-            if identification == "administrator" {
-                AuthData {
-                    requester_id: None,
-                    role: AuthRole::Administrator,
-                }
-            } else {
-                AuthData {
-                    requester_id: Some(identification),
-                    role: AuthRole::User,
-                }
+            AuthData {
+                requester_id: identification,
+                role: AuthRole::User,
             }
         })
         .or(warp::any().map(|| AuthData {
-            requester_id: None,
+            requester_id: "".to_string(),
             role: AuthRole::Guest,
         }))
         .unify()

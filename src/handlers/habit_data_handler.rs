@@ -16,30 +16,29 @@ use validator::Validate;
 // POST Route
 pub async fn create_habit_data_handler(
     manager: DBManager,
-    authentication: AuthData,
     data: HabitDataCreateSchema,
+    authentication: AuthData,
 ) -> Result<impl Reply, Rejection> {
-    // Check a user is logged in / provided the action
+    // Check if user is logged in
     if matches!(authentication.role, AuthRole::Guest) {
         return Err(warp::reject::custom(Error::AuthorizationError(
-            "User is not logged in".to_string(),
+            "Missing user id in request header (user_id)".to_string(),
         )));
     }
 
-    if matches!(authentication.role, AuthRole::User) {
-        // Check if habit is accessible by user
-        let is_accessible = manager
-            .is_habit_accessible_by_user(authentication.requester_id.unwrap(), data.habit_id);
+    let user_id = authentication.requester_id;
 
-        if is_accessible.is_err() {
-            return Err(warp::reject::custom(is_accessible.err().unwrap()));
-        }
+    // Check if user is the owner of the habit
+    let result = manager.is_habit_accessible_by_user(user_id, data.habit_id);
 
-        if !is_accessible.unwrap() {
-            return Err(warp::reject::custom(Error::AuthorizationError(
-                "User is not authorized to access this habit".to_string(),
-            )));
-        }
+    if result.is_err() {
+        return Err(warp::reject::custom(result.err().unwrap()));
+    }
+
+    if !result.unwrap() {
+        return Err(warp::reject::custom(Error::AuthorizationError(
+            "User is not the owner of the habit".to_string(),
+        )));
     }
 
     // Validate input
@@ -90,31 +89,28 @@ pub async fn create_habit_data_handler(
 // UPDATE (PATCH) Route
 pub async fn update_habit_data_handler(
     manager: DBManager,
-    authentication: AuthData,
     id: Uuid,
     data: HabitDataUpdateSchema,
+    authentication: AuthData,
 ) -> Result<impl Reply, Rejection> {
-    // Check a user is logged in / provided the action
+    // Check if user is logged in
     if matches!(authentication.role, AuthRole::Guest) {
         return Err(warp::reject::custom(Error::AuthorizationError(
-            "User is not logged in".to_string(),
+            "Missing user id in request header (user_id)".to_string(),
         )));
     }
 
-    if matches!(authentication.role, AuthRole::User) {
-        // Check if habit is accessible by user
-        let is_accessible =
-            manager.is_habitdata_accessible_by_user(authentication.requester_id.unwrap(), id);
+    // Check if habit is accessible by user
+    let result = manager.is_habitdata_accessible_by_user(authentication.requester_id, id);
 
-        if is_accessible.is_err() {
-            return Err(warp::reject::custom(is_accessible.err().unwrap()));
-        }
+    if result.is_err() {
+        return Err(warp::reject::custom(result.err().unwrap()));
+    }
 
-        if !is_accessible.unwrap() {
-            return Err(warp::reject::custom(Error::AuthorizationError(
-                "User is not authorized to access this habit data".to_string(),
-            )));
-        }
+    if !result.unwrap() {
+        return Err(warp::reject::custom(Error::AuthorizationError(
+            "User is not the owner of the habit data".to_string(),
+        )));
     }
 
     // Validate input
@@ -144,30 +140,27 @@ pub async fn update_habit_data_handler(
 // DELETE Route
 pub async fn delete_habit_data_handler(
     manager: DBManager,
-    authentication: AuthData,
     id: Uuid,
+    authentication: AuthData,
 ) -> Result<impl Reply, Rejection> {
-    // Check a user is logged in / provided the action
+    // Check if user is logged in
     if matches!(authentication.role, AuthRole::Guest) {
         return Err(warp::reject::custom(Error::AuthorizationError(
-            "User is not logged in".to_string(),
+            "Missing user id in request header (user_id)".to_string(),
         )));
     }
 
-    if matches!(authentication.role, AuthRole::User) {
-        // Check if habit is accessible by user
-        let is_accessible =
-            manager.is_habitdata_accessible_by_user(authentication.requester_id.unwrap(), id);
+    // Check if habit is accessible by user
+    let result = manager.is_habitdata_accessible_by_user(authentication.requester_id, id);
 
-        if is_accessible.is_err() {
-            return Err(warp::reject::custom(is_accessible.err().unwrap()));
-        }
+    if result.is_err() {
+        return Err(warp::reject::custom(result.err().unwrap()));
+    }
 
-        if !is_accessible.unwrap() {
-            return Err(warp::reject::custom(Error::AuthorizationError(
-                "User is not authorized to access this habit data".to_string(),
-            )));
-        }
+    if !result.unwrap() {
+        return Err(warp::reject::custom(Error::AuthorizationError(
+            "User is not the owner of the habit data".to_string(),
+        )));
     }
 
     let result = manager.delete_habit_data(id);
@@ -188,30 +181,27 @@ pub async fn delete_habit_data_handler(
 // GET Route
 pub async fn get_data_by_id_handler(
     manager: DBManager,
-    authentication: AuthData,
     id: Uuid,
+    authentication: AuthData,
 ) -> Result<impl Reply, Rejection> {
-    // Check a user is logged in / provided the action
+    // Check if user is logged in
     if matches!(authentication.role, AuthRole::Guest) {
         return Err(warp::reject::custom(Error::AuthorizationError(
-            "User is not logged in".to_string(),
+            "Missing user id in request header (user_id)".to_string(),
         )));
     }
 
-    if matches!(authentication.role, AuthRole::User) {
-        // Check if habit is accessible by user
-        let is_accessible =
-            manager.is_habitdata_accessible_by_user(authentication.requester_id.unwrap(), id);
+    // Check if habit is accessible by user
+    let result = manager.is_habitdata_accessible_by_user(authentication.requester_id, id);
 
-        if is_accessible.is_err() {
-            return Err(warp::reject::custom(is_accessible.err().unwrap()));
-        }
+    if result.is_err() {
+        return Err(warp::reject::custom(result.err().unwrap()));
+    }
 
-        if !is_accessible.unwrap() {
-            return Err(warp::reject::custom(Error::AuthorizationError(
-                "User is not authorized to access this habit data".to_string(),
-            )));
-        }
+    if !result.unwrap() {
+        return Err(warp::reject::custom(Error::AuthorizationError(
+            "User is not the owner of the habit data".to_string(),
+        )));
     }
 
     // Get habits from database
@@ -240,27 +230,24 @@ pub async fn get_data_by_habit_handler(
     manager: DBManager,
     authentication: AuthData,
 ) -> Result<impl Reply, Rejection> {
-    // Check a user is logged in / provided the action
+    // Check if user is logged in
     if matches!(authentication.role, AuthRole::Guest) {
         return Err(warp::reject::custom(Error::AuthorizationError(
-            "User is not logged in".to_string(),
+            "Missing user id in request header (user_id)".to_string(),
         )));
     }
 
-    if matches!(authentication.role, AuthRole::User) {
-        // Check if habit is accessible by user
-        let is_accessible =
-            manager.is_habit_accessible_by_user(authentication.requester_id.unwrap(), id);
+    // Check if habit is accessible by user
+    let result = manager.is_habit_accessible_by_user(authentication.requester_id, id);
 
-        if is_accessible.is_err() {
-            return Err(warp::reject::custom(is_accessible.err().unwrap()));
-        }
+    if result.is_err() {
+        return Err(warp::reject::custom(result.err().unwrap()));
+    }
 
-        if !is_accessible.unwrap() {
-            return Err(warp::reject::custom(Error::AuthorizationError(
-                "User is not authorized to access this habit".to_string(),
-            )));
-        }
+    if !result.unwrap() {
+        return Err(warp::reject::custom(Error::AuthorizationError(
+            "User is not the owner of the habit".to_string(),
+        )));
     }
 
     // Get habits from database
@@ -285,36 +272,17 @@ pub async fn get_data_by_habit_handler(
 // GET Route
 pub async fn get_data_by_user_handler(
     params: RangeParams,
-    admin_params: AdminParams,
     manager: DBManager,
     authentication: AuthData,
 ) -> Result<impl Reply, Rejection> {
     // Check a user is logged in / provided the action
     if matches!(authentication.role, AuthRole::Guest) {
         return Err(warp::reject::custom(Error::AuthorizationError(
-            "User is not logged in".to_string(),
+            "Missing user id in request header (user_id)".to_string(),
         )));
     }
 
-    let user_id: String;
-
-    if matches!(authentication.role, AuthRole::Administrator) {
-        if admin_params.user_id.is_none() {
-            return Err(warp::reject::custom(Error::AuthorizationError(
-                "Administrator must provide a user id".to_string(),
-            )));
-        }
-
-        user_id = admin_params.user_id.unwrap();
-    } else {
-        if authentication.requester_id.is_some() {
-            user_id = authentication.requester_id.unwrap();
-        } else {
-            return Err(warp::reject::custom(Error::AuthorizationError(
-                "Invalid user".to_string(),
-            )));
-        }
-    }
+    let user_id = authentication.requester_id;
 
     // Get habits from database
     let result = manager.get_all_user_habitdata(user_id, params.data_page, params.data_per_page);

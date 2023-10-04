@@ -1,7 +1,7 @@
 use crate::{
     db::PostgresPool,
     handlers::habit_handler,
-    models::api::{AdminParams, DataIncludeParams, RangeParams},
+    models::api::{DataIncludeParams, RangeParams},
     utils::{with_authenticator, with_db_manager},
 };
 
@@ -18,7 +18,6 @@ pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
         .and(with_db_manager(pool.clone()))
         .and(with_authenticator())
         .and(warp::body::json())
-        .and(warp::query::<AdminParams>())
         .and_then(habit_handler::create_habit_handler);
 
     let update_habit = base_habit_route
@@ -47,7 +46,6 @@ pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
         .and(warp::any().map(move || DataIncludeParams {
             ..Default::default()
         }))
-        .and(warp::query::<AdminParams>())
         .and(warp::path::end())
         .and_then(habit_handler::get_habits_by_user_id_handler);
 
@@ -59,7 +57,6 @@ pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
             include_data: Some(true),
             ..Default::default()
         }))
-        .and(warp::query::<AdminParams>())
         .and_then(habit_handler::get_habits_by_user_id_handler);
 
     // Getting habits by category id
@@ -70,7 +67,6 @@ pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
         .and(warp::query::<RangeParams>())
         .and(with_db_manager(pool.clone()))
         .and(with_authenticator())
-        .and(warp::query::<AdminParams>())
         .and_then(habit_handler::get_habits_by_category_handler);
 
     // Getting habits by id

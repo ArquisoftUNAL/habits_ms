@@ -22,34 +22,15 @@ pub async fn create_habit_handler(
     manager: DBManager,
     authentication: AuthData,
     data: HabitCreateSchema,
-    admin_params: AdminParams,
 ) -> Result<impl Reply, Rejection> {
     // Check a user is logged in / provided the action
     if matches!(authentication.role, AuthRole::Guest) {
         return Err(warp::reject::custom(Error::AuthorizationError(
-            "User is not logged in".to_string(),
+            "Missing user id in request header (user_id)".to_string(),
         )));
     }
 
-    let user_id: String;
-
-    if matches!(authentication.role, AuthRole::Administrator) {
-        if admin_params.user_id.is_none() {
-            return Err(warp::reject::custom(Error::AuthorizationError(
-                "Administrator must provide a user id".to_string(),
-            )));
-        }
-
-        user_id = admin_params.user_id.unwrap();
-    } else {
-        if authentication.requester_id.is_some() {
-            user_id = authentication.requester_id.unwrap();
-        } else {
-            return Err(warp::reject::custom(Error::AuthorizationError(
-                "Invalid user".to_string(),
-            )));
-        }
-    }
+    let user_id = authentication.requester_id;
 
     // Validate input
     let validation_result = data.validate();
@@ -87,27 +68,21 @@ pub async fn update_habits_handler(
     // Check a user is logged in / provided the action
     if matches!(authentication.role, AuthRole::Guest) {
         return Err(warp::reject::custom(Error::AuthorizationError(
-            "User is not logged in".to_string(),
+            "Missing user id in request header (user_id)".to_string(),
         )));
     }
 
-    // CHeck if user is allowed to modify this habit
-    let mut is_accessible = matches!(authentication.role, AuthRole::Administrator);
+    // Check if habit is accessible by user
+    let result = manager.is_habit_accessible_by_user(authentication.requester_id, id);
 
-    if !is_accessible {
-        let result = manager.is_habit_accessible_by_user(authentication.requester_id.unwrap(), id);
-
-        if result.is_err() {
-            let error = result.err().unwrap();
-            return Err(warp::reject::custom(error));
-        }
-
-        is_accessible = result.unwrap();
+    if result.is_err() {
+        let error = result.err().unwrap();
+        return Err(warp::reject::custom(error));
     }
 
-    if !is_accessible {
+    if !result.unwrap() {
         return Err(warp::reject::custom(Error::AuthorizationError(
-            "User is not allowed to modify this habit".to_string(),
+            "User has not access to this habit".to_string(),
         )));
     }
 
@@ -144,27 +119,21 @@ pub async fn delete_habits_handler(
     // Check a user is logged in / provided the action
     if matches!(authentication.role, AuthRole::Guest) {
         return Err(warp::reject::custom(Error::AuthorizationError(
-            "User is not logged in".to_string(),
+            "Missing user id in request header (user_id)".to_string(),
         )));
     }
 
-    // CHeck if user is allowed to modify this habit
-    let mut is_accessible = matches!(authentication.role, AuthRole::Administrator);
+    // Check if habit is accessible by user
+    let result = manager.is_habit_accessible_by_user(authentication.requester_id, id);
 
-    if !is_accessible {
-        let result = manager.is_habit_accessible_by_user(authentication.requester_id.unwrap(), id);
-
-        if result.is_err() {
-            let error = result.err().unwrap();
-            return Err(warp::reject::custom(error));
-        }
-
-        is_accessible = result.unwrap();
+    if result.is_err() {
+        let error = result.err().unwrap();
+        return Err(warp::reject::custom(error));
     }
 
-    if !is_accessible {
+    if !result.unwrap() {
         return Err(warp::reject::custom(Error::AuthorizationError(
-            "User is not allowed to modify this habit".to_string(),
+            "User has not access to this habit".to_string(),
         )));
     }
 
@@ -189,34 +158,15 @@ pub async fn get_habits_by_user_id_handler(
     manager: DBManager,
     authentication: AuthData,
     data_params: DataIncludeParams,
-    admin_params: AdminParams,
 ) -> Result<impl Reply, Rejection> {
     // Check a user is logged in / provided the action
     if matches!(authentication.role, AuthRole::Guest) {
         return Err(warp::reject::custom(Error::AuthorizationError(
-            "User is not logged in".to_string(),
+            "Missing user id in request header (user_id)".to_string(),
         )));
     }
 
-    let user_id: String;
-
-    if matches!(authentication.role, AuthRole::Administrator) {
-        if admin_params.user_id.is_none() {
-            return Err(warp::reject::custom(Error::AuthorizationError(
-                "Administrator must provide a user id".to_string(),
-            )));
-        }
-
-        user_id = admin_params.user_id.unwrap();
-    } else {
-        if authentication.requester_id.is_some() {
-            user_id = authentication.requester_id.unwrap();
-        } else {
-            return Err(warp::reject::custom(Error::AuthorizationError(
-                "Invalid user".to_string(),
-            )));
-        }
-    }
+    let user_id = authentication.requester_id;
 
     let result = manager.get_all_user_habits(user_id, params.habits_page, params.habits_per_page);
 
@@ -260,49 +210,30 @@ pub async fn get_habits_by_category_handler(
     params: RangeParams,
     manager: DBManager,
     authentication: AuthData,
-    admin_params: AdminParams,
 ) -> Result<impl Reply, Rejection> {
     if matches!(authentication.role, AuthRole::Guest) {
         return Err(warp::reject::custom(Error::AuthorizationError(
-            "User is not logged in".to_string(),
+            "Missing user id in request header (user_id)".to_string(),
         )));
     }
 
     let category_id = id.clone();
+    let user_id = authentication.requester_id;
     let result: Result<Vec<Habit>, Error>;
 
-    if matches!(authentication.role, AuthRole::Administrator) {
-        if admin_params.user_id.is_none() {
-            result = manager.get_all_category_habits(
-                category_id,
-                params.habits_page,
-                params.habits_per_page,
-            );
-        } else {
-            let user_id = admin_params.user_id.unwrap();
-
-            result = manager.get_all_user_category_habits(
-                user_id,
-                category_id,
-                params.habits_page,
-                params.habits_per_page,
-            );
-        }
+    if user_id == "admin".to_string() {
+        result = manager.get_all_category_habits(
+            category_id,
+            params.habits_page,
+            params.habits_per_page,
+        );
     } else {
-        if authentication.requester_id.is_some() {
-            let user_id = authentication.requester_id.unwrap();
-
-            result = manager.get_all_user_category_habits(
-                user_id,
-                category_id,
-                params.habits_page,
-                params.habits_per_page,
-            );
-        } else {
-            return Err(warp::reject::custom(Error::AuthorizationError(
-                "Invalid user".to_string(),
-            )));
-        }
+        result = manager.get_all_user_category_habits(
+            user_id,
+            category_id,
+            params.habits_page,
+            params.habits_per_page,
+        );
     }
 
     if result.is_err() {
@@ -332,23 +263,22 @@ pub async fn get_habit_by_id_handler(
     // Check a user is logged in / provided the action
     if matches!(authentication.role, AuthRole::Guest) {
         return Err(warp::reject::custom(Error::AuthorizationError(
-            "User is not logged in".to_string(),
+            "Missing user id in request header (user_id)".to_string(),
         )));
     }
 
-    if matches!(authentication.role, AuthRole::User) {
-        let result = manager.is_habit_accessible_by_user(authentication.requester_id.unwrap(), id);
+    // Check if habit is accessible by user
+    let result = manager.is_habit_accessible_by_user(authentication.requester_id, id);
 
-        if result.is_err() {
-            let error = result.err().unwrap();
-            return Err(warp::reject::custom(error));
-        }
+    if result.is_err() {
+        let error = result.err().unwrap();
+        return Err(warp::reject::custom(error));
+    }
 
-        if !result.unwrap() {
-            return Err(warp::reject::custom(Error::AuthorizationError(
-                "User is not allowed to modify this habit".to_string(),
-            )));
-        }
+    if !result.unwrap() {
+        return Err(warp::reject::custom(Error::AuthorizationError(
+            "User has not access to this habit".to_string(),
+        )));
     }
 
     // Get habits from database
