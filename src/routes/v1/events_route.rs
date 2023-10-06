@@ -2,7 +2,7 @@ use crate::{
     db::PostgresPool,
     handlers::events_handler,
     models::api::{DateParams, RangeParams},
-    utils::with_db_manager,
+    utils::{with_authenticator, with_db_manager},
 };
 
 use warp::filters::BoxedFilter;
@@ -22,5 +22,26 @@ pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
         .and(with_db_manager(pool.clone()))
         .and_then(events_handler::get_next_events_by_habit_handler);
 
-    get_next_end_event_by_habit.boxed()
+    let base_calendar_route = base_events_route
+        .and(warp::get())
+        .and(warp::path("calendar"))
+        .and(warp::query::<DateParams>());
+
+    let get_calendar_events_by_habit = base_calendar_route
+        .and(warp::path("habit"))
+        .and(warp::path::param::<uuid::Uuid>())
+        .and(with_db_manager(pool.clone()))
+        .and(with_authenticator())
+        .and_then(events_handler::get_data_by_habit_handler);
+
+    let get_calendar_events_by_user = base_calendar_route
+        .and(warp::path::end())
+        .and(with_db_manager(pool.clone()))
+        .and(with_authenticator())
+        .and_then(events_handler::get_data_by_user_handler);
+
+    get_next_end_event_by_habit
+        .or(get_calendar_events_by_habit)
+        .or(get_calendar_events_by_user)
+        .boxed()
 }

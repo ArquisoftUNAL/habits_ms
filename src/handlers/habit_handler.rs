@@ -294,7 +294,8 @@ pub async fn get_habit_by_id_handler(
 
     // Join data case
     if data_params.include_data.unwrap_or(false) {
-        let data = manager.get_all_habit_data(id, params.data_page, params.data_per_page);
+        let data =
+            manager.get_all_habit_data(id, None, None, params.data_page, params.data_per_page);
 
         if data.is_err() {
             let error = data.err().unwrap();

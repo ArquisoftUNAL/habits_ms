@@ -1,7 +1,10 @@
 use crate::{
     db::DBManager,
     error::Error,
-    models::{api::events_api_models::*, database::Habit},
+    models::{
+        api::events_api_models::*,
+        database::{Habit, HabitDataCollected},
+    },
     schema::*,
     utils::{time::DateRange, DEFAULT_QUERY_LIMIT, HABIT_CREATION_DATE_AS_REFERENCE},
 };
@@ -70,5 +73,98 @@ impl DBManager {
         vec.sort_by(|a, b| b.date.cmp(&a.date));
 
         Ok(vec)
+    }
+
+    // Summarize habit data between two dates
+    pub fn get_habitdata_as_calendar(
+        &self,
+        user_id: Option<String>,
+        habit_id: Option<Uuid>,
+        start_date: Option<chrono::NaiveDate>,
+        end_date: Option<chrono::NaiveDate>,
+    ) -> Result<Vec<CalendarEvent>, Error> {
+        let conn = self.connection.get();
+
+        if conn.is_err() {
+            return Err(Error::DBConnectionError(conn.err().unwrap()));
+        }
+
+        let mut query = habit_data_collected::table
+            .inner_join(habit::table)
+            .select((HabitDataCollected::as_select(), Habit::as_select()))
+            .filter(
+                habit_data_collected::hab_dat_collected_at
+                    .ge(start_date.unwrap_or(chrono::NaiveDate::MIN)),
+            )
+            .filter(
+                habit_data_collected::hab_dat_collected_at
+                    .le(end_date.unwrap_or(chrono::NaiveDate::MAX)),
+            )
+            .into_boxed();
+
+        if habit_id.is_some() {
+            query = query.filter(habit::hab_id.eq(habit_id.unwrap()));
+        } else if user_id.is_some() {
+            query = query.filter(habit::usr_id.eq(user_id.unwrap()));
+        } else {
+            return Err(Error::BadRequest("Missing habit_id or user_id".to_string()));
+        }
+
+        query = query.order(habit_data_collected::hab_dat_collected_at.desc());
+
+        // Execute query
+        let data = query.load::<(HabitDataCollected, Habit)>(&mut conn.unwrap());
+
+        if data.is_err() {
+            return Err(Error::QueryError(data.err().unwrap()));
+        }
+
+        let data = data.unwrap();
+
+        // Group data by date
+        let mut data_by_date: Vec<CalendarEvent> = Vec::new();
+
+        for (habit_data, habit) in data {
+            let mut found = false;
+
+            for data_by_date_item in &mut data_by_date {
+                if data_by_date_item.date == habit_data.hab_dat_collected_at {
+                    data_by_date_item.data += match habit.hab_is_yn {
+                        true => bigdecimal::BigDecimal::from(1),
+                        false => habit_data.hab_dat_amount.clone(),
+                    };
+
+                    found = true;
+                    break;
+                }
+            }
+
+            if !found {
+                let calendar_event = CalendarEvent {
+                    date: habit_data.hab_dat_collected_at,
+                    data: match habit.hab_is_yn {
+                        true => bigdecimal::BigDecimal::from(1),
+                        false => habit_data.hab_dat_amount,
+                    },
+                    relative_frequency: bigdecimal::BigDecimal::from(0),
+                };
+
+                data_by_date.push(calendar_event);
+            }
+        }
+
+        // Find relative frequency
+        let mut total_data = bigdecimal::BigDecimal::from(0);
+
+        for data_by_date_item in &data_by_date {
+            total_data += data_by_date_item.data.clone();
+        }
+
+        for data_by_date_item in &mut data_by_date {
+            data_by_date_item.relative_frequency =
+                data_by_date_item.data.clone() / total_data.clone();
+        }
+
+        Ok(data_by_date)
     }
 }

@@ -47,6 +47,8 @@ impl DBManager {
     pub fn get_all_habit_data(
         &self,
         id: Uuid,
+        start_date: Option<chrono::NaiveDate>,
+        end_date: Option<chrono::NaiveDate>,
         page: Option<i64>,
         per_page: Option<i64>,
     ) -> Result<Vec<HabitDataCollected>, Error> {
@@ -57,6 +59,9 @@ impl DBManager {
             per_page = MAX_QUERY_LIMIT;
         }
 
+        let start_date = start_date.unwrap_or(chrono::NaiveDate::MIN);
+        let end_date: chrono::NaiveDate = end_date.unwrap_or(chrono::NaiveDate::MAX);
+
         let conn = self.connection.get();
 
         if conn.is_err() {
@@ -66,6 +71,8 @@ impl DBManager {
         let search = habit_data_collected::table
             .select(HabitDataCollected::as_select())
             .filter(habit_data_collected::hab_id.eq(id))
+            .filter(habit_data_collected::hab_dat_collected_at.ge(start_date))
+            .filter(habit_data_collected::hab_dat_collected_at.le(end_date))
             .limit(per_page)
             .offset((page - 1) * per_page)
             .order_by(habit_data_collected::hab_dat_collected_at.asc())
@@ -175,6 +182,8 @@ impl DBManager {
     pub fn get_all_user_habitdata(
         &self,
         user_id: String,
+        start_date: Option<chrono::NaiveDate>,
+        end_date: Option<chrono::NaiveDate>,
         page: Option<i64>,
         per_page: Option<i64>,
     ) -> Result<Vec<HabitDataCollected>, Error> {
@@ -184,6 +193,9 @@ impl DBManager {
         if per_page > MAX_QUERY_LIMIT {
             per_page = MAX_QUERY_LIMIT;
         }
+
+        let start_date = start_date.unwrap_or(chrono::NaiveDate::MIN);
+        let end_date: chrono::NaiveDate = end_date.unwrap_or(chrono::NaiveDate::MAX);
 
         let conn = self.connection.get();
 
@@ -196,6 +208,8 @@ impl DBManager {
             .inner_join(habit::table)
             .select(HabitDataCollected::as_select())
             .filter(habit::usr_id.eq(user_id))
+            .filter(habit_data_collected::hab_dat_collected_at.ge(start_date))
+            .filter(habit_data_collected::hab_dat_collected_at.le(end_date))
             .limit(per_page)
             .offset((page - 1) * per_page)
             .order_by(habit_data_collected::hab_dat_collected_at.asc())

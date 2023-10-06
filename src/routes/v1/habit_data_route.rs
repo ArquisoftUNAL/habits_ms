@@ -1,7 +1,7 @@
 use crate::{
     db::PostgresPool,
     handlers::habit_data_handler,
-    models::api::RangeParams,
+    models::api::{DateParams, RangeParams},
     utils::{with_authenticator, with_db_manager},
 };
 
@@ -39,6 +39,7 @@ pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
     // Querying habit data
     let get_habit_data_by_user = base_habit_data_route
         .and(warp::get())
+        .and(warp::query::<DateParams>())
         .and(warp::query::<RangeParams>())
         .and(with_db_manager(pool.clone()))
         .and(with_authenticator())
@@ -49,6 +50,7 @@ pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
         .and(warp::get())
         .and(warp::path("habit"))
         .and(warp::path::param::<Uuid>())
+        .and(warp::query::<DateParams>())
         .and(warp::query::<RangeParams>())
         .and(with_db_manager(pool.clone()))
         .and(with_authenticator())

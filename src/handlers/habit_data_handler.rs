@@ -51,7 +51,7 @@ pub async fn create_habit_data_handler(
     }
 
     // Check if requested date is strictly after the last habit's data
-    let last_habit_data = manager.get_all_habit_data(data.habit_id, Some(1), Some(1));
+    let last_habit_data = manager.get_all_habit_data(data.habit_id, None, None, Some(1), Some(1));
 
     if last_habit_data.is_err() {
         return Err(warp::reject::custom(last_habit_data.err().unwrap()));
@@ -226,6 +226,7 @@ pub async fn get_data_by_id_handler(
 // GET Route
 pub async fn get_data_by_habit_handler(
     id: Uuid,
+    date_params: DateParams,
     params: RangeParams,
     manager: DBManager,
     authentication: AuthData,
@@ -251,7 +252,13 @@ pub async fn get_data_by_habit_handler(
     }
 
     // Get habits from database
-    let result = manager.get_all_habit_data(id, params.data_page, params.data_per_page);
+    let result = manager.get_all_habit_data(
+        id,
+        date_params.start_date,
+        date_params.end_date,
+        params.data_page,
+        params.data_per_page,
+    );
 
     if result.is_err() {
         let error = result.err().unwrap();
@@ -271,6 +278,7 @@ pub async fn get_data_by_habit_handler(
 
 // GET Route
 pub async fn get_data_by_user_handler(
+    date_params: DateParams,
     params: RangeParams,
     manager: DBManager,
     authentication: AuthData,
@@ -285,7 +293,13 @@ pub async fn get_data_by_user_handler(
     let user_id = authentication.requester_id;
 
     // Get habits from database
-    let result = manager.get_all_user_habitdata(user_id, params.data_page, params.data_per_page);
+    let result = manager.get_all_user_habitdata(
+        user_id,
+        date_params.start_date,
+        date_params.end_date,
+        params.data_page,
+        params.data_per_page,
+    );
 
     if result.is_err() {
         let error = result.err().unwrap();
