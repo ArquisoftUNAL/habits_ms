@@ -8,6 +8,7 @@ use crate::{
     },
     schema::*,
     utils::queries::join_habit_with_data,
+    utils::time::{MAXIMUM_DATE, MINIMUM_DATE},
     utils::{DEFAULT_QUERY_LIMIT, MAX_QUERY_LIMIT},
 };
 
@@ -59,8 +60,8 @@ impl DBManager {
             per_page = MAX_QUERY_LIMIT;
         }
 
-        let start_date = start_date.unwrap_or(chrono::NaiveDate::MIN);
-        let end_date: chrono::NaiveDate = end_date.unwrap_or(chrono::NaiveDate::MAX);
+        let start_date = start_date.unwrap_or(MINIMUM_DATE.unwrap());
+        let end_date: chrono::NaiveDate = end_date.unwrap_or(MAXIMUM_DATE.unwrap());
 
         let conn = self.connection.get();
 
@@ -87,6 +88,8 @@ impl DBManager {
 
     // Add a habit data record
     pub fn add_habit_data(&self, data: HabitDataCreateSchema) -> Result<HabitDataCollected, Error> {
+        println!("Log 2.5: {:?}", chrono::Utc::now().naive_utc().date());
+
         let habit_data = HabitDataCollected {
             hab_dat_id: Uuid::new_v4(),
             hab_dat_amount: data.amount,
@@ -95,6 +98,8 @@ impl DBManager {
                 .unwrap_or_else(|| chrono::Utc::now().naive_utc().date()),
             hab_id: data.habit_id,
         };
+
+        println!("Log 3: {:?}", habit_data);
 
         let conn = self.connection.get();
 
@@ -194,8 +199,8 @@ impl DBManager {
             per_page = MAX_QUERY_LIMIT;
         }
 
-        let start_date = start_date.unwrap_or(chrono::NaiveDate::MIN);
-        let end_date: chrono::NaiveDate = end_date.unwrap_or(chrono::NaiveDate::MAX);
+        let start_date = start_date.unwrap_or(MINIMUM_DATE.unwrap());
+        let end_date: chrono::NaiveDate = end_date.unwrap_or(MAXIMUM_DATE.unwrap());
 
         let conn = self.connection.get();
 

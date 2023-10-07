@@ -6,7 +6,10 @@ use crate::{
         database::{Habit, HabitDataCollected},
     },
     schema::*,
-    utils::{time::DateRange, DEFAULT_QUERY_LIMIT, HABIT_CREATION_DATE_AS_REFERENCE},
+    utils::{
+        time::{DateRange, MAXIMUM_DATE, MINIMUM_DATE},
+        DEFAULT_QUERY_LIMIT, HABIT_CREATION_DATE_AS_REFERENCE,
+    },
 };
 use diesel::prelude::*;
 use uuid::Uuid;
@@ -94,11 +97,11 @@ impl DBManager {
             .select((HabitDataCollected::as_select(), Habit::as_select()))
             .filter(
                 habit_data_collected::hab_dat_collected_at
-                    .ge(start_date.unwrap_or(chrono::NaiveDate::MIN)),
+                    .ge(start_date.unwrap_or(MINIMUM_DATE.unwrap())),
             )
             .filter(
                 habit_data_collected::hab_dat_collected_at
-                    .le(end_date.unwrap_or(chrono::NaiveDate::MAX)),
+                    .le(end_date.unwrap_or(MAXIMUM_DATE.unwrap())),
             )
             .into_boxed();
 

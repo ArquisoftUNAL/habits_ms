@@ -6,6 +6,9 @@ use std::mem;
 
 pub const REFERENCE_DATE: Option<NaiveDate> = NaiveDate::from_ymd_opt(2018, 1, 1);
 
+pub const MINIMUM_DATE: Option<NaiveDate> = NaiveDate::from_ymd_opt(2000, 1, 1);
+pub const MAXIMUM_DATE: Option<NaiveDate> = NaiveDate::from_ymd_opt(5000, 1, 1);
+
 pub struct DateRange {
     start_date: NaiveDate,
     end_date: NaiveDate,
