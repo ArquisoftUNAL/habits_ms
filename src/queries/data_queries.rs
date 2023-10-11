@@ -33,7 +33,7 @@ impl DBManager {
         let search = habit::table
             .inner_join(habit_data_collected::table)
             .select(habit::usr_id)
-            .filter(habit_data_collected::hab_id.eq(habitdata_id))
+            .filter(habit_data_collected::hab_dat_id.eq(habitdata_id))
             .first::<String>(&mut conn.unwrap());
 
         if search.is_err() {
@@ -228,8 +228,14 @@ impl DBManager {
 
         Ok(habits_data)
     }
+
     // Join habit data with a set set of habits (including recurrences as well)
-    pub fn join_habits_data(&self, habits: Vec<Habit>) -> Result<Vec<HabitWithData>, Error> {
+    pub fn join_habits_data(
+        &self,
+        habits: Vec<Habit>,
+        start_date: Option<chrono::NaiveDate>,
+        end_date: Option<chrono::NaiveDate>,
+    ) -> Result<Vec<HabitWithData>, Error> {
         let conn = self.connection.get();
 
         if conn.is_err() {
@@ -240,6 +246,14 @@ impl DBManager {
 
         let habits_data = HabitDataCollected::belonging_to(&habits)
             .select(HabitDataCollected::as_select())
+            .filter(
+                habit_data_collected::hab_dat_collected_at
+                    .ge(start_date.unwrap_or(MINIMUM_DATE.unwrap())),
+            )
+            .filter(
+                habit_data_collected::hab_dat_collected_at
+                    .le(end_date.unwrap_or(MAXIMUM_DATE.unwrap())),
+            )
             .order_by(habit_data_collected::hab_dat_collected_at.desc())
             .load::<HabitDataCollected>(&mut conn);
 

@@ -158,6 +158,7 @@ pub async fn get_habits_by_user_id_handler(
     manager: DBManager,
     authentication: AuthData,
     data_params: DataIncludeParams,
+    date_params: DateParams,
 ) -> Result<impl Reply, Rejection> {
     // Check a user is logged in / provided the action
     if matches!(authentication.role, AuthRole::Guest) {
@@ -179,7 +180,7 @@ pub async fn get_habits_by_user_id_handler(
 
     // Join data case
     if data_params.include_data.unwrap_or(false) {
-        let result = manager.join_habits_data(result);
+        let result = manager.join_habits_data(result, date_params.start_date, date_params.end_date);
 
         if result.is_err() {
             let error = result.err().unwrap();

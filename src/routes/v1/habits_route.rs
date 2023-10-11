@@ -1,7 +1,7 @@
 use crate::{
     db::PostgresPool,
     handlers::habit_handler,
-    models::api::{DataIncludeParams, RangeParams},
+    models::api::{DataIncludeParams, DateParams, RangeParams},
     utils::{with_authenticator, with_db_manager},
 };
 
@@ -47,6 +47,7 @@ pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
             ..Default::default()
         }))
         .and(warp::path::end())
+        .and(warp::query::<DateParams>())
         .and_then(habit_handler::get_habits_by_user_id_handler);
 
     let get_habits_data = base_get_habit_route
@@ -57,6 +58,7 @@ pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
             include_data: Some(true),
             ..Default::default()
         }))
+        .and(warp::query::<DateParams>())
         .and_then(habit_handler::get_habits_by_user_id_handler);
 
     // Getting habits by category id

@@ -113,7 +113,7 @@ impl DBManager {
             return Err(Error::BadRequest("Missing habit_id or user_id".to_string()));
         }
 
-        query = query.order(habit_data_collected::hab_dat_collected_at.desc());
+        query = query.order(habit_data_collected::hab_dat_collected_at.asc());
 
         // Execute query
         let data = query.load::<(HabitDataCollected, Habit)>(&mut conn.unwrap());
