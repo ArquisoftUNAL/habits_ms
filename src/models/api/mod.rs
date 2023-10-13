@@ -26,7 +26,6 @@ pub struct RangeParams {
 // Authentication data matcher
 #[derive(Debug, Clone, Deserialize)]
 pub enum AuthRole {
-    Administrator,
     User,
     Guest,
 }
