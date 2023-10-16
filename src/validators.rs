@@ -3,7 +3,9 @@ use bigdecimal::BigDecimal;
 use validator::ValidationError;
 
 pub fn validate_bigdecimal(value: &BigDecimal) -> Result<(), ValidationError> {
-    if value.sign() != bigdecimal::num_bigint::Sign::Plus {
+    if value.sign() != bigdecimal::num_bigint::Sign::Plus
+        && value.sign() != bigdecimal::num_bigint::Sign::NoSign
+    {
         return Err(ValidationError::new("Negative / zero value"));
     }
 
