@@ -75,6 +75,7 @@ impl DBManager {
             hab_freq_type: data.frequency_type,
 
             hab_next_closure_date: closure_date,
+            hab_location: data.location,
 
             usr_id: user_id,
             cat_id: data.category,

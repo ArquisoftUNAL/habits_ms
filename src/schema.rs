@@ -38,6 +38,8 @@ diesel::table! {
         #[max_length = 24]
         usr_id -> Varchar,
         cat_id -> Uuid,
+        #[max_length = 256]
+        hab_location -> Nullable<Varchar>,
     }
 }
 

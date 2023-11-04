@@ -71,6 +71,8 @@ pub struct Habit {
     pub usr_id: String,
 
     pub cat_id: Uuid,
+
+    pub hab_location: Option<String>,
 }
 
 #[derive(

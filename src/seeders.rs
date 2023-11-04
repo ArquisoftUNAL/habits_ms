@@ -70,6 +70,7 @@ pub fn seed_database(pool: PostgresPool) -> Result<(), String> {
             },
             color: Faker.fake::<String>().chars().take(6).collect::<String>(),
             category: categories_ids[(i % categories_ids.len() as i32) as usize].clone(),
+            location: Some(Faker.fake::<String>()),
         };
 
         let habit_id = manager.add_habit(user_id, habit);

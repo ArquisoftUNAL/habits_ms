@@ -1,0 +1,1 @@
+ALTER TABLE habit ADD COLUMN hab_location VARCHAR(256) NULL;

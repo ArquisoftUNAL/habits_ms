@@ -60,6 +60,8 @@ pub struct HabitCreateSchema {
     pub frequency_type: HabFreqTypeEnum,
 
     pub category: Uuid,
+
+    pub location: Option<String>,
 }
 
 // Requests schemas
@@ -97,6 +99,9 @@ pub struct HabitUpdateSchema {
 
     #[diesel(column_name = "cat_id")]
     pub category: Option<Uuid>,
+
+    #[diesel(column_name = "hab_location")]
+    pub location: Option<String>,
 }
 
 // Responses
