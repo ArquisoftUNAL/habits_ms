@@ -51,7 +51,5 @@ pub fn notify_habit_update_service(habit_id: uuid::Uuid) -> Result<(), reqwest::
         return Ok(());
     }
 
-    println!("{:#?}", response_data);
-
     Ok(())
 }

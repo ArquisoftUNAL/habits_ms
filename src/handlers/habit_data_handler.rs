@@ -19,7 +19,6 @@ pub async fn create_habit_data_handler(
     data: HabitDataCreateSchema,
     authentication: AuthData,
 ) -> Result<impl Reply, Rejection> {
-    println!("Log 0: {:?}", data);
     // Check if user is logged in
     if matches!(authentication.role, AuthRole::Guest) {
         return Err(warp::reject::custom(Error::AuthorizationError(
@@ -42,8 +41,6 @@ pub async fn create_habit_data_handler(
         )));
     }
 
-    println!("Log 1: {:?}", data);
-
     // Validate input
     let validation_result = data.validate();
 
@@ -52,8 +49,6 @@ pub async fn create_habit_data_handler(
             validation_result.err().unwrap(),
         )));
     }
-
-    println!("Log 1.5: {:?}", data);
 
     // Check if requested date is strictly after the last habit's data
     let last_habit_data = manager.get_all_habit_data(data.habit_id, None, None, Some(1), Some(1));
@@ -73,9 +68,6 @@ pub async fn create_habit_data_handler(
     }
 
     // Create model from request body
-    println!("Log 2: {:?}", data);
-
-    println!("About to enter");
 
     let result = manager.add_habit_data(data);
 

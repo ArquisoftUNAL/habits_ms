@@ -88,8 +88,6 @@ impl DBManager {
 
     // Add a habit data record
     pub fn add_habit_data(&self, data: HabitDataCreateSchema) -> Result<HabitDataCollected, Error> {
-        println!("Log 2.5: {:?}", chrono::Utc::now().naive_utc().date());
-
         let habit_data = HabitDataCollected {
             hab_dat_id: Uuid::new_v4(),
             hab_dat_amount: data.amount,
@@ -98,8 +96,6 @@ impl DBManager {
                 .unwrap_or_else(|| chrono::Utc::now().naive_utc().date()),
             hab_id: data.habit_id,
         };
-
-        println!("Log 3: {:?}", habit_data);
 
         let conn = self.connection.get();
 

@@ -66,7 +66,5 @@ pub async fn enqueue_reminders_service(habits: Vec<Habit>) -> Result<(), reqwest
         return Ok(());
     }
 
-    println!("{:#?}", response_data);
-
     Ok(())
 }
