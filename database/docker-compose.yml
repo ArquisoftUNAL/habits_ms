@@ -1,0 +1,27 @@
+version: '2'
+
+services:
+  postgresql-master:
+    #image: bitnami/postgresql:11-debian-10
+    build:
+      context: ./master
+      dockerfile: Dockerfile
+    ports:
+      - '5432:5432'
+    volumes:
+      - 'postgresql_master_data:/bitnami/postgresql'
+    env_file:
+      - ./master/.env
+
+  postgresql-slave:
+    image: bitnami/postgresql:11-debian-10
+    ports:
+      - '5433:5432'
+    depends_on:
+      - postgresql-master
+    env_file:
+      - ./slave/.env
+
+volumes:
+  postgresql_master_data:
+    driver: local
