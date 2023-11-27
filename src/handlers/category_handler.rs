@@ -27,7 +27,7 @@ pub async fn get_categories_handler(
         let response = GeneralResponse {
             message: format!("Error getting categories: {}", error),
         };
-        return Ok(with_status(json(&response), StatusCode::OK));
+        return Err(warp::reject::custom(error));
     }
 
     let response = CategoryMultipleQueryResponse {

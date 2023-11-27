@@ -52,6 +52,13 @@ diesel::table! {
     }
 }
 
+diesel::table! {
+    test (id) {
+        id -> Int4,
+        name -> Nullable<Text>,
+    }
+}
+
 diesel::joinable!(habit -> category (cat_id));
 diesel::joinable!(habit_data_collected -> habit (hab_id));
 
@@ -59,4 +66,5 @@ diesel::allow_tables_to_appear_in_same_query!(
     category,
     habit,
     habit_data_collected,
+    test,
 );

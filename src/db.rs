@@ -98,7 +98,7 @@ impl DBManager {
         let conn = self.connection_read.clone().unwrap().get();
 
         if conn.is_err() {
-            return Err(Error::DBConnectionError(conn.err().unwrap()));
+            return self.get_write_connection();
         }
 
         Ok(conn.unwrap())
