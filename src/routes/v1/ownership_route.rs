@@ -9,12 +9,15 @@ use warp::filters::BoxedFilter;
 use warp::Filter;
 use warp::Reply;
 
-pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
+pub fn get_routes(
+    pool_write: Option<PostgresPool>,
+    pool_read: Option<PostgresPool>,
+) -> BoxedFilter<(impl Reply,)> {
     let check_habit_ownership = warp::path("ownership")
         .and(warp::path("habit"))
         .and(warp::get())
         .and(warp::path::param::<Uuid>())
-        .and(with_db_manager(pool.clone()))
+        .and(with_db_manager(pool_write.clone(), pool_read.clone()))
         .and(with_authenticator())
         .and_then(ownership_handler::check_ownership_handler);
 
@@ -22,7 +25,7 @@ pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
         .and(warp::path("data"))
         .and(warp::get())
         .and(warp::path::param::<Uuid>())
-        .and(with_db_manager(pool.clone()))
+        .and(with_db_manager(pool_write.clone(), pool_read.clone()))
         .and(with_authenticator())
         .and_then(ownership_handler::check_data_ownership_handler);
 

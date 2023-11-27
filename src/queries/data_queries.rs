@@ -23,10 +23,10 @@ impl DBManager {
         user_id: String,
         habitdata_id: Uuid,
     ) -> Result<bool, Error> {
-        let conn = self.connection.get();
+        let conn = self.get_read_connection();
 
         if conn.is_err() {
-            return Err(Error::DBConnectionError(conn.err().unwrap()));
+            return Err(conn.err().unwrap());
         }
 
         // Check if habit exists
@@ -63,10 +63,10 @@ impl DBManager {
         let start_date = start_date.unwrap_or(MINIMUM_DATE.unwrap());
         let end_date: chrono::NaiveDate = end_date.unwrap_or(MAXIMUM_DATE.unwrap());
 
-        let conn = self.connection.get();
+        let conn = self.get_read_connection();
 
         if conn.is_err() {
-            return Err(Error::DBConnectionError(conn.err().unwrap()));
+            return Err(conn.err().unwrap());
         }
 
         let search = habit_data_collected::table
@@ -97,10 +97,10 @@ impl DBManager {
             hab_id: data.habit_id,
         };
 
-        let conn = self.connection.get();
+        let conn = self.get_write_connection();
 
         if conn.is_err() {
-            return Err(Error::DBConnectionError(conn.err().unwrap()));
+            return Err(conn.err().unwrap());
         }
 
         let query = diesel::insert_into(habit_data_collected::table)
@@ -116,10 +116,10 @@ impl DBManager {
 
     // Delete recurrence
     pub fn delete_habit_data(&self, id: Uuid) -> Result<HabitDataCollected, Error> {
-        let conn = self.connection.get();
+        let conn = self.get_write_connection();
 
         if conn.is_err() {
-            return Err(Error::DBConnectionError(conn.err().unwrap()));
+            return Err(conn.err().unwrap());
         }
 
         let query = diesel::delete(
@@ -140,10 +140,10 @@ impl DBManager {
         id: Uuid,
         data: HabitDataUpdateSchema,
     ) -> Result<HabitDataCollected, Error> {
-        let conn = self.connection.get();
+        let conn = self.get_write_connection();
 
         if conn.is_err() {
-            return Err(Error::DBConnectionError(conn.err().unwrap()));
+            return Err(conn.err().unwrap());
         }
 
         let query = diesel::update(
@@ -161,10 +161,10 @@ impl DBManager {
 
     // Filter a specific habit
     pub fn get_habit_data_by_id(&self, id: Uuid) -> Result<HabitDataCollected, Error> {
-        let conn = self.connection.get();
+        let conn = self.get_read_connection();
 
         if conn.is_err() {
-            return Err(Error::DBConnectionError(conn.err().unwrap()));
+            return Err(conn.err().unwrap());
         }
 
         let search = habit_data_collected::table
@@ -198,10 +198,10 @@ impl DBManager {
         let start_date = start_date.unwrap_or(MINIMUM_DATE.unwrap());
         let end_date: chrono::NaiveDate = end_date.unwrap_or(MAXIMUM_DATE.unwrap());
 
-        let conn = self.connection.get();
+        let conn = self.get_read_connection();
 
         if conn.is_err() {
-            return Err(Error::DBConnectionError(conn.err().unwrap()));
+            return Err(conn.err().unwrap());
         }
 
         // Get all habits from user
@@ -232,10 +232,10 @@ impl DBManager {
         start_date: Option<chrono::NaiveDate>,
         end_date: Option<chrono::NaiveDate>,
     ) -> Result<Vec<HabitWithData>, Error> {
-        let conn = self.connection.get();
+        let conn = self.get_read_connection();
 
         if conn.is_err() {
-            return Err(Error::DBConnectionError(conn.err().unwrap()));
+            return Err(conn.err().unwrap());
         }
 
         let mut conn = conn.unwrap();

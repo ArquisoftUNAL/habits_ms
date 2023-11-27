@@ -11,18 +11,21 @@ use warp::Reply;
 
 use uuid::Uuid;
 
-pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
+pub fn get_routes(
+    pool_write: Option<PostgresPool>,
+    pool_read: Option<PostgresPool>,
+) -> BoxedFilter<(impl Reply,)> {
     let base_category_route = warp::path("categories");
     let create_category = base_category_route
         .and(warp::post())
-        .and(with_db_manager(pool.clone()))
+        .and(with_db_manager(pool_write.clone(), pool_read.clone()))
         .and(with_authenticator())
         .and(warp::body::json())
         .and_then(category_handler::create_category_handler);
 
     let update_category = base_category_route
         .and(warp::patch())
-        .and(with_db_manager(pool.clone()))
+        .and(with_db_manager(pool_write.clone(), pool_read.clone()))
         .and(with_authenticator())
         .and(warp::path::param::<Uuid>())
         .and(warp::body::json())
@@ -30,21 +33,21 @@ pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
 
     let delete_category = base_category_route
         .and(warp::delete())
-        .and(with_db_manager(pool.clone()))
+        .and(with_db_manager(pool_write.clone(), pool_read.clone()))
         .and(with_authenticator())
         .and(warp::path::param::<Uuid>())
         .and_then(category_handler::delete_category_handler);
 
     let get_categories = base_category_route
         .and(warp::get())
-        .and(with_db_manager(pool.clone()))
+        .and(with_db_manager(pool_write.clone(), pool_read.clone()))
         .and(warp::query::<RangeParams>())
         .and(warp::path::end())
         .and_then(category_handler::get_categories_handler);
 
     let get_category_by_id = base_category_route
         .and(warp::get())
-        .and(with_db_manager(pool.clone()))
+        .and(with_db_manager(pool_write.clone(), pool_read.clone()))
         .and(warp::path::param::<Uuid>())
         .and(warp::query::<RangeParams>())
         .and(warp::any().map(move || DataIncludeParams {

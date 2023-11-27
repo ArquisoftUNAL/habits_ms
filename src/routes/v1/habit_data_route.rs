@@ -11,19 +11,22 @@ use warp::Reply;
 
 use uuid::Uuid;
 
-pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
+pub fn get_routes(
+    pool_write: Option<PostgresPool>,
+    pool_read: Option<PostgresPool>,
+) -> BoxedFilter<(impl Reply,)> {
     let base_habit_data_route = warp::path("habitdata");
 
     let create_habit_data = base_habit_data_route
         .and(warp::post())
-        .and(with_db_manager(pool.clone()))
+        .and(with_db_manager(pool_write.clone(), pool_read.clone()))
         .and(warp::body::json())
         .and(with_authenticator())
         .and_then(habit_data_handler::create_habit_data_handler);
 
     let update_habit_data = base_habit_data_route
         .and(warp::patch())
-        .and(with_db_manager(pool.clone()))
+        .and(with_db_manager(pool_write.clone(), pool_read.clone()))
         .and(warp::path::param::<Uuid>())
         .and(warp::body::json())
         .and(with_authenticator())
@@ -31,7 +34,7 @@ pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
 
     let delete_habit_data = base_habit_data_route
         .and(warp::delete())
-        .and(with_db_manager(pool.clone()))
+        .and(with_db_manager(pool_write.clone(), pool_read.clone()))
         .and(warp::path::param::<Uuid>())
         .and(with_authenticator())
         .and_then(habit_data_handler::delete_habit_data_handler);
@@ -41,7 +44,7 @@ pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
         .and(warp::get())
         .and(warp::query::<DateParams>())
         .and(warp::query::<RangeParams>())
-        .and(with_db_manager(pool.clone()))
+        .and(with_db_manager(pool_write.clone(), pool_read.clone()))
         .and(with_authenticator())
         .and(warp::path::end())
         .and_then(habit_data_handler::get_data_by_user_handler);
@@ -52,13 +55,13 @@ pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
         .and(warp::path::param::<Uuid>())
         .and(warp::query::<DateParams>())
         .and(warp::query::<RangeParams>())
-        .and(with_db_manager(pool.clone()))
+        .and(with_db_manager(pool_write.clone(), pool_read.clone()))
         .and(with_authenticator())
         .and_then(habit_data_handler::get_data_by_habit_handler);
 
     let get_habit_data_by_id = base_habit_data_route
         .and(warp::get())
-        .and(with_db_manager(pool.clone()))
+        .and(with_db_manager(pool_write.clone(), pool_read.clone()))
         .and(warp::path::param::<Uuid>())
         .and(with_authenticator())
         .and_then(habit_data_handler::get_data_by_id_handler);

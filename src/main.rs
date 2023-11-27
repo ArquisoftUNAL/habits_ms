@@ -25,23 +25,30 @@ use tokio_cron_scheduler::{Job, JobScheduler};
 #[tokio::main(flavor = "multi_thread", worker_threads = 4)]
 //#[tokio::main(flavor = "current_thread")]
 async fn main() {
-    let pool = db::create_pool();
+    let pool_write = db::create_pool_write();
+    let pool_read = db::create_pool_read();
 
-    if pool.is_err() {
-        println!("[MAIN] Error creating pool: {:?}", pool.err());
+    // if pool_write.is_err() {
+    //     println!("[MAIN] Error creating pool: {:?}", pool_write.err());
 
-        // Throw error and exit (in order to force container to restart)
-        panic!();
-    }
+    //     // Throw error and exit (in order to force container to restart)
+    //     panic!();
+    // }
 
-    let pool = pool.unwrap();
+    // let pool = pool_write.unwrap();
 
     let args: Vec<String> = env::args().collect();
 
     if args.len() > 1 {
         if args[1] == "seed" {
             println!("Seeding database");
-            let result = seeders::seed_database(pool.clone());
+
+            if pool_write.is_err() {
+                println!("[SEEDING] Error creating pool: {:?}", pool_write.err());
+                return;
+            }
+
+            let result = seeders::seed_database(pool_write.unwrap());
 
             if result.is_err() {
                 println!("[SEEDING] Error seeding database: {:?}", result.err());
@@ -56,7 +63,7 @@ async fn main() {
     if !sched.is_err() {
         let sched = sched.unwrap();
         let job = Job::new_async("0 0 0 12 * *", move |_, _| {
-            let jobs_pool = db::create_pool();
+            let jobs_pool = db::create_pool_write();
 
             if jobs_pool.is_err() {
                 println!("[JOBS] Error creating pool: {:?}", jobs_pool.err());
@@ -94,7 +101,7 @@ async fn main() {
         println!("Error creating scheduler: {:?}", sched.err());
     }
 
-    let routes = routes::get_routes(pool);
+    let routes = routes::get_routes(pool_write.ok(), pool_read.ok());
     println!("Preparing server to listen on port 3030");
 
     warp::serve(routes).run(([0, 0, 0, 0], 3030)).await;

@@ -9,7 +9,10 @@ use warp::filters::BoxedFilter;
 use warp::Filter;
 use warp::Reply;
 
-pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
+pub fn get_routes(
+    pool_write: Option<PostgresPool>,
+    pool_read: Option<PostgresPool>,
+) -> BoxedFilter<(impl Reply,)> {
     let base_events_route = warp::path("events");
 
     // Allow to get next ocurrences from habit
@@ -19,7 +22,7 @@ pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
         .and(warp::path::param::<uuid::Uuid>())
         .and(warp::query::<DateParams>())
         .and(warp::query::<RangeParams>())
-        .and(with_db_manager(pool.clone()))
+        .and(with_db_manager(pool_write.clone(), pool_read.clone()))
         .and_then(events_handler::get_next_events_by_habit_handler);
 
     let base_calendar_route = base_events_route
@@ -30,13 +33,13 @@ pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
     let get_calendar_events_by_habit = base_calendar_route
         .and(warp::path("habit"))
         .and(warp::path::param::<uuid::Uuid>())
-        .and(with_db_manager(pool.clone()))
+        .and(with_db_manager(pool_write.clone(), pool_read.clone()))
         .and(with_authenticator())
         .and_then(events_handler::get_data_by_habit_handler);
 
     let get_calendar_events_by_user = base_calendar_route
         .and(warp::path::end())
-        .and(with_db_manager(pool.clone()))
+        .and(with_db_manager(pool_write.clone(), pool_read.clone()))
         .and(with_authenticator())
         .and_then(events_handler::get_data_by_user_handler);
 

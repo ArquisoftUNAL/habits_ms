@@ -25,10 +25,10 @@ impl DBManager {
             per_page = MAX_QUERY_LIMIT;
         }
 
-        let conn = self.connection.get();
+        let conn = self.get_read_connection();
 
         if conn.is_err() {
-            return Err(Error::DBConnectionError(conn.err().unwrap()));
+            return Err(conn.err().unwrap());
         }
 
         let search = category::table
@@ -51,10 +51,10 @@ impl DBManager {
             cat_name: data.name,
         };
 
-        let conn = self.connection.get();
+        let conn = self.get_write_connection();
 
         if conn.is_err() {
-            return Err(Error::DBConnectionError(conn.err().unwrap()));
+            return Err(conn.err().unwrap());
         }
 
         let result = diesel::insert_into(category::table)
@@ -71,10 +71,10 @@ impl DBManager {
 
     // Delete category
     pub fn delete_category(&self, id: Uuid) -> Result<Uuid, Error> {
-        let conn = self.connection.get();
+        let conn = self.get_write_connection();
 
         if conn.is_err() {
-            return Err(Error::DBConnectionError(conn.err().unwrap()));
+            return Err(conn.err().unwrap());
         }
 
         let result = diesel::delete(category::table.filter(category::cat_id.eq(id)))
@@ -90,10 +90,10 @@ impl DBManager {
 
     // Update a category
     pub fn update_category(&self, id: Uuid, data: CategoryUpdateSchema) -> Result<Uuid, Error> {
-        let conn = self.connection.get();
+        let conn = self.get_write_connection();
 
         if conn.is_err() {
-            return Err(Error::DBConnectionError(conn.err().unwrap()));
+            return Err(conn.err().unwrap());
         }
 
         let result = diesel::update(category::table.filter(category::cat_id.eq(id)))
@@ -110,10 +110,10 @@ impl DBManager {
 
     // Filter a specific category
     pub fn get_category_by_id(&self, id: Uuid) -> Result<Category, Error> {
-        let conn = self.connection.get();
+        let conn = self.get_read_connection();
 
         if conn.is_err() {
-            return Err(Error::DBConnectionError(conn.err().unwrap()));
+            return Err(conn.err().unwrap());
         }
 
         let result = category::table

@@ -22,10 +22,10 @@ impl DBManager {
         user_id: String,
         habit_id: Uuid,
     ) -> Result<bool, Error> {
-        let conn = self.connection.get();
+        let conn = self.get_read_connection();
 
         if conn.is_err() {
-            return Err(Error::DBConnectionError(conn.err().unwrap()));
+            return Err(conn.err().unwrap());
         }
 
         // Check if habit exists
@@ -81,10 +81,10 @@ impl DBManager {
             cat_id: data.category,
         };
 
-        let conn = self.connection.get();
+        let conn = self.get_write_connection();
 
         if conn.is_err() {
-            return Err(Error::DBConnectionError(conn.err().unwrap()));
+            return Err(conn.err().unwrap());
         }
 
         let search = diesel::insert_into(habit::table)
@@ -101,10 +101,10 @@ impl DBManager {
 
     // Delete habit
     pub fn delete_habit(&self, id: Uuid) -> Result<Uuid, Error> {
-        let conn = self.connection.get();
+        let conn = self.get_write_connection();
 
         if conn.is_err() {
-            return Err(Error::DBConnectionError(conn.err().unwrap()));
+            return Err(conn.err().unwrap());
         }
 
         let search = diesel::delete(habit::table.filter(habit::hab_id.eq(id)))
@@ -120,10 +120,10 @@ impl DBManager {
 
     // Update an habit
     pub fn update_habit(&self, id: Uuid, data: HabitUpdateSchema) -> Result<Uuid, Error> {
-        let conn = self.connection.get();
+        let conn = self.get_write_connection();
 
         if conn.is_err() {
-            return Err(Error::DBConnectionError(conn.err().unwrap()));
+            return Err(conn.err().unwrap());
         }
 
         let search = diesel::update(habit::table.filter(habit::hab_id.eq(id)))
@@ -152,10 +152,10 @@ impl DBManager {
             per_page = MAX_QUERY_LIMIT;
         }
 
-        let conn = self.connection.get();
+        let conn = self.get_read_connection();
 
         if conn.is_err() {
-            return Err(Error::DBConnectionError(conn.err().unwrap()));
+            return Err(conn.err().unwrap());
         }
 
         let search = habit::table
@@ -186,10 +186,10 @@ impl DBManager {
             per_page = MAX_QUERY_LIMIT;
         }
 
-        let conn = self.connection.get();
+        let conn = self.get_read_connection();
 
         if conn.is_err() {
-            return Err(Error::DBConnectionError(conn.err().unwrap()));
+            return Err(conn.err().unwrap());
         }
 
         let search = habit::table
@@ -221,10 +221,10 @@ impl DBManager {
             per_page = MAX_QUERY_LIMIT;
         }
 
-        let conn = self.connection.get();
+        let conn = self.get_read_connection();
 
         if conn.is_err() {
-            return Err(Error::DBConnectionError(conn.err().unwrap()));
+            return Err(conn.err().unwrap());
         }
 
         let search = habit::table
@@ -244,10 +244,10 @@ impl DBManager {
 
     // Filter a specific habit
     pub fn get_habit_by_id(&self, id: Uuid) -> Result<Habit, Error> {
-        let conn = self.connection.get();
+        let conn = self.get_read_connection();
 
         if conn.is_err() {
-            return Err(Error::DBConnectionError(conn.err().unwrap()));
+            return Err(conn.err().unwrap());
         }
 
         let search = habit::table
@@ -267,10 +267,10 @@ impl DBManager {
         let current_datetime = chrono::Local::now().naive_local();
         let current_date = current_datetime.date();
 
-        let conn = self.connection.get();
+        let conn = self.get_read_connection();
 
         if conn.is_err() {
-            return Err(Error::DBConnectionError(conn.err().unwrap()));
+            return Err(conn.err().unwrap());
         }
 
         // Get habits to update
@@ -283,10 +283,10 @@ impl DBManager {
             return Err(Error::QueryError(search.err().unwrap()));
         }
 
-        let conn = self.connection.get();
+        let conn = self.get_write_connection();
 
         if conn.is_err() {
-            return Err(Error::DBConnectionError(conn.err().unwrap()));
+            return Err(conn.err().unwrap());
         }
 
         // Update all habits that are pending

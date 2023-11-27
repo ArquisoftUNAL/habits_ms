@@ -10,7 +10,8 @@ async fn test_category_creation() {
         }))
         .header("credentials", "administrator")
         .reply(&crate::routes::get_routes(
-            crate::db::create_pool().unwrap(),
+            Some(crate::db::create_pool_write().unwrap()),
+            None,
         ))
         .await;
 
@@ -27,7 +28,8 @@ async fn test_category_wrong_creation() {
         }))
         .header("credentials", "administrator")
         .reply(&crate::routes::get_routes(
-            crate::db::create_pool().unwrap(),
+            Some(crate::db::create_pool_write().unwrap()),
+            None,
         ))
         .await;
 
@@ -40,7 +42,8 @@ async fn test_category_query() {
         .method("GET")
         .path("/api/v1/categories")
         .reply(&crate::routes::get_routes(
-            crate::db::create_pool().unwrap(),
+            Some(crate::db::create_pool_write().unwrap()),
+            None,
         ))
         .await;
 
@@ -54,7 +57,8 @@ async fn test_habit_query() {
         .path("/api/v1/habits/")
         .header("credentials", "administrator")
         .reply(&crate::routes::get_routes(
-            crate::db::create_pool().unwrap(),
+            Some(crate::db::create_pool_write().unwrap()),
+            None,
         ))
         .await;
 

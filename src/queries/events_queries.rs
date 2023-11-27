@@ -23,10 +23,10 @@ impl DBManager {
         end_date: Option<chrono::NaiveDate>,
         events_limit: Option<i64>,
     ) -> Result<Vec<Event>, Error> {
-        let conn = self.connection.get();
+        let conn = self.get_read_connection();
 
         if conn.is_err() {
-            return Err(Error::DBConnectionError(conn.err().unwrap()));
+            return Err(conn.err().unwrap());
         }
 
         let events_limit = events_limit.unwrap_or(DEFAULT_QUERY_LIMIT);
@@ -86,10 +86,10 @@ impl DBManager {
         start_date: Option<chrono::NaiveDate>,
         end_date: Option<chrono::NaiveDate>,
     ) -> Result<Vec<CalendarEvent>, Error> {
-        let conn = self.connection.get();
+        let conn = self.get_read_connection();
 
         if conn.is_err() {
-            return Err(Error::DBConnectionError(conn.err().unwrap()));
+            return Err(conn.err().unwrap());
         }
 
         let mut query = habit_data_collected::table

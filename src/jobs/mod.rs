@@ -3,8 +3,8 @@ use crate::{
     services::reminders_service::enqueue_reminders_service,
 };
 
-pub async fn check_reminders_update(pool: PostgresPool) {
-    let manager = DBManager::new(pool);
+pub async fn check_reminders_update(pool_write: PostgresPool) {
+    let manager = DBManager::new(Some(pool_write), None);
 
     let updated_habits = manager.get_update_pending_habits();
 

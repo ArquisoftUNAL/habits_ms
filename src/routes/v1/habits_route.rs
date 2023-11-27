@@ -10,19 +10,22 @@ use warp::filters::BoxedFilter;
 use warp::Filter;
 use warp::Reply;
 
-pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
+pub fn get_routes(
+    pool_write: Option<PostgresPool>,
+    pool_read: Option<PostgresPool>,
+) -> BoxedFilter<(impl Reply,)> {
     let base_habit_route = warp::path("habits");
 
     let create_habit = base_habit_route
         .and(warp::post())
-        .and(with_db_manager(pool.clone()))
+        .and(with_db_manager(pool_write.clone(), pool_read.clone()))
         .and(with_authenticator())
         .and(warp::body::json())
         .and_then(habit_handler::create_habit_handler);
 
     let update_habit = base_habit_route
         .and(warp::patch())
-        .and(with_db_manager(pool.clone()))
+        .and(with_db_manager(pool_write.clone(), pool_read.clone()))
         .and(with_authenticator())
         .and(warp::path::param::<Uuid>())
         .and(warp::body::json())
@@ -30,7 +33,7 @@ pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
 
     let delete_habit = base_habit_route
         .and(warp::delete())
-        .and(with_db_manager(pool.clone()))
+        .and(with_db_manager(pool_write.clone(), pool_read.clone()))
         .and(with_authenticator())
         .and(warp::path::param::<Uuid>())
         .and_then(habit_handler::delete_habits_handler);
@@ -41,7 +44,7 @@ pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
         .and(warp::query::<RangeParams>());
 
     let get_habits = base_get_habit_route
-        .and(with_db_manager(pool.clone()))
+        .and(with_db_manager(pool_write.clone(), pool_read.clone()))
         .and(with_authenticator())
         .and(warp::any().map(move || DataIncludeParams {
             ..Default::default()
@@ -52,7 +55,7 @@ pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
 
     let get_habits_data = base_get_habit_route
         .and(warp::path("data"))
-        .and(with_db_manager(pool.clone()))
+        .and(with_db_manager(pool_write.clone(), pool_read.clone()))
         .and(with_authenticator())
         .and(warp::any().map(move || DataIncludeParams {
             include_data: Some(true),
@@ -67,7 +70,7 @@ pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
         .and(warp::path("category"))
         .and(warp::path::param::<Uuid>())
         .and(warp::query::<RangeParams>())
-        .and(with_db_manager(pool.clone()))
+        .and(with_db_manager(pool_write.clone(), pool_read.clone()))
         .and(with_authenticator())
         .and_then(habit_handler::get_habits_by_category_handler);
 
@@ -78,7 +81,7 @@ pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
         .and(warp::query::<RangeParams>());
 
     let get_habit_by_id = base_get_habit_id_route
-        .and(with_db_manager(pool.clone()))
+        .and(with_db_manager(pool_write.clone(), pool_read.clone()))
         .and(with_authenticator())
         .and(warp::any().map(move || DataIncludeParams {
             ..Default::default()
@@ -88,7 +91,7 @@ pub fn get_routes(pool: PostgresPool) -> BoxedFilter<(impl Reply,)> {
 
     let get_habit_by_id_data = base_get_habit_id_route
         .and(warp::path("data"))
-        .and(with_db_manager(pool.clone()))
+        .and(with_db_manager(pool_write.clone(), pool_read.clone()))
         .and(with_authenticator())
         .and(warp::any().map(move || DataIncludeParams {
             include_data: Some(true),

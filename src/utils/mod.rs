@@ -12,12 +12,15 @@ pub const MAX_DAYS_OFFSET: i64 = 1; // Grace period a user will be given to mark
 pub const HABIT_CREATION_DATE_AS_REFERENCE: bool = true; // Habit's creation date represents the start of its own recurrences
 
 pub fn with_db_manager(
-    pool: PostgresPool,
+    pool_write: Option<PostgresPool>,
+    pool_read: Option<PostgresPool>,
 ) -> impl Filter<Extract = (DBManager,), Error = Rejection> + Clone {
     warp::any()
-        .map(move || pool.clone())
+        .map(move || (pool_write.clone(), pool_read.clone()))
         .and_then(
-            |pool: PostgresPool| async move { Ok::<DBManager, Rejection>(DBManager::new(pool)) },
+            |pools: (Option<PostgresPool>, Option<PostgresPool>)| async move {
+                Ok::<DBManager, Rejection>(DBManager::new(pools.0, pools.1))
+            },
         )
 }
 

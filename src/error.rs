@@ -12,8 +12,14 @@ pub enum Error {
     #[error("Database connection error: {0}")]
     DBConnectionError(#[from] diesel::r2d2::PoolError),
 
+    #[error("Database connection error: {0}")]
+    DBConnectionError2(#[from] diesel::ConnectionError),
+
     #[error("Query error: {0}")]
     QueryError(#[from] diesel::result::Error),
+
+    #[error("Error: {0}")]
+    DBError(#[from] diesel::r2d2::Error),
 
     #[error("Authentication error: {0}")]
     AuthorizationError(String),
@@ -80,6 +86,11 @@ pub async fn handle_rejection(err: Rejection) -> std::result::Result<impl Reply,
                 format!("Database connection error: {}", error),
                 None,
             ),
+            Error::DBConnectionError2(error) => (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                format!("Database connection error: {}", error),
+                None,
+            ),
             Error::QueryError(error) => match error {
                 diesel::result::Error::NotFound => {
                     (StatusCode::NOT_FOUND, "Record not found".to_string(), None)
@@ -99,6 +110,11 @@ pub async fn handle_rejection(err: Rejection) -> std::result::Result<impl Reply,
             Error::BadRequest(error) => (
                 StatusCode::BAD_REQUEST,
                 format!("Bad request: {}", error),
+                None,
+            ),
+            Error::DBError(error) => (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                format!("Database Error: {}", error),
                 None,
             ),
         }

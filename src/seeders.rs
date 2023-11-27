@@ -11,8 +11,8 @@ use uuid::Uuid;
 
 const BASE_QUANTITY: i32 = 100;
 
-pub fn seed_database(pool: PostgresPool) -> Result<(), String> {
-    let manager = DBManager::new(pool);
+pub fn seed_database(pool_write: PostgresPool) -> Result<(), String> {
+    let manager = DBManager::new(Some(pool_write), None);
 
     println!("Seeding users");
     // Randomize user ids
