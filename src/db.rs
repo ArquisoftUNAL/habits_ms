@@ -70,6 +70,43 @@ pub fn create_pool_read() -> Result<PostgresPool, Error> {
     Ok(pool_read.unwrap())
 }
 
+pub fn get_write_connection_establish() -> Result<PgConnection, Error> {
+    dotenv().ok();
+
+    let database_url_write: String = format!("{}", env::var("DATABASE_URL_WRITE").unwrap());
+
+    let connection_write = PgConnection::establish(&database_url_write).or_else(|err| {
+        print!("Error connecting to write database: {:?}", err);
+        Err(Error::DBConnectionError2(ConnectionError::BadConnection(
+            "No write connection".to_string(),
+        )))
+    });
+
+    if connection_write.is_err() {
+        return Err(connection_write.err().unwrap());
+    }
+
+    Ok(connection_write.unwrap())
+}
+
+pub fn get_read_connection_establish() -> Result<PgConnection, Error> {
+    dotenv().ok();
+
+    let database_url_read: String = format!("{}", env::var("DATABASE_URL_READ").unwrap());
+
+    let connection_read = PgConnection::establish(&database_url_read).or_else(|err| {
+        Err(Error::DBConnectionError2(ConnectionError::BadConnection(
+            "No read connection".to_string(),
+        )))
+    });
+
+    if connection_read.is_err() {
+        return Err(connection_read.err().unwrap());
+    }
+
+    Ok(connection_read.unwrap())
+}
+
 impl DBManager {
     pub fn new(
         connection_write: Option<PostgresPool>,
@@ -123,39 +160,4 @@ impl DBManager {
     }
 
     // Other approach: Establish connection on each request
-    pub fn get_write_connection_establish() -> Result<PgConnection, Error> {
-        dotenv().ok();
-
-        let database_url_write: String = format!("{}", env::var("DATABASE_URL_WRITE").unwrap());
-
-        let connection_write = PgConnection::establish(&database_url_write).or_else(|err| {
-            Err(Error::DBConnectionError2(ConnectionError::BadConnection(
-                "No read connection".to_string(),
-            )))
-        });
-
-        if connection_write.is_err() {
-            return Err(connection_write.err().unwrap());
-        }
-
-        Ok(connection_write.unwrap())
-    }
-
-    pub fn get_read_connection_establish() -> Result<PgConnection, Error> {
-        dotenv().ok();
-
-        let database_url_read: String = format!("{}", env::var("DATABASE_URL_READ").unwrap());
-
-        let connection_read = PgConnection::establish(&database_url_read).or_else(|err| {
-            Err(Error::DBConnectionError2(ConnectionError::BadConnection(
-                "No read connection".to_string(),
-            )))
-        });
-
-        if connection_read.is_err() {
-            return Err(connection_read.err().unwrap());
-        }
-
-        Ok(connection_read.unwrap())
-    }
 }

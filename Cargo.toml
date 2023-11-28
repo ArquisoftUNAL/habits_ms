@@ -25,3 +25,4 @@ fake = { version = "2.8.0", features = ["chrono"]}
 tokio-cron-scheduler = "0.9.4"
 graphql_client = { version = "0.13.0", features = ["reqwest"] }
 reqwest = { version = "0.11.4", features = ["json"] }
+diesel_migrations = "2.1.0"

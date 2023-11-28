@@ -22,20 +22,36 @@ use std::env;
 
 use tokio_cron_scheduler::{Job, JobScheduler};
 
+use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
+
+const MIGRATIONS: EmbeddedMigrations = embed_migrations!();
+
+fn run_migrations() {
+    let connection = db::get_write_connection_establish();
+
+    if connection.is_err() {
+        println!(
+            "[MIGRATIONS] Error creating connection: {:?}",
+            connection.err()
+        );
+        return;
+    }
+
+    let mut connection = connection.unwrap();
+
+    connection
+        .run_pending_migrations(MIGRATIONS)
+        .expect("Error running migrations");
+}
+
 #[tokio::main(flavor = "multi_thread", worker_threads = 4)]
 //#[tokio::main(flavor = "current_thread")]
 async fn main() {
     let pool_write = db::create_pool_write();
     let pool_read = db::create_pool_read();
 
-    // if pool_write.is_err() {
-    //     println!("[MAIN] Error creating pool: {:?}", pool_write.err());
-
-    //     // Throw error and exit (in order to force container to restart)
-    //     panic!();
-    // }
-
-    // let pool = pool_write.unwrap();
+    // Always try to run pending migrations
+    run_migrations();
 
     let args: Vec<String> = env::args().collect();
 
