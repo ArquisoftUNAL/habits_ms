@@ -1,0 +1,1 @@
+DELETE FROM category WHERE cat_id IN ('4cf3e092-7d38-4c59-af9e-fbbf546299af', 'e17f33d3-1d68-4d60-8c20-cf1945a8af35', '40a3634a-14bf-4895-ac22-ecd2e6f6766e');
